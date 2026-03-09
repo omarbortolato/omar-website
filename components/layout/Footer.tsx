@@ -26,7 +26,7 @@ export function Footer() {
               href="/"
               className="text-lg font-bold text-primary-800"
             >
-              Omar<span className="text-accent-500">.</span>dev
+              Omar Bortolato
             </Link>
             <p className="mt-1 text-sm text-gray-500">
               Costruiamo qualcosa di bello insieme.

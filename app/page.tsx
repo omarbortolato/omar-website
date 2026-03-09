@@ -254,7 +254,7 @@ export default function HomePage() {
         <div className="container mx-auto max-w-5xl px-4">
           <Badge variant="accent" className="mb-3 text-xs">Progetti</Badge>
           <h2 className="text-3xl font-bold text-gray-900 md:text-4xl">
-            Cosa ho costruito con l&apos;AI
+            Cosa ho costruito con e senza AI
           </h2>
           <p className="mt-2 mb-10 max-w-xl text-gray-500">
             Progetti attivi, in sviluppo e in fase di lancio.

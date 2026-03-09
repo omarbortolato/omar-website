@@ -27,7 +27,7 @@ export function Header() {
           href="/"
           className="text-lg font-bold text-primary-800 hover:text-primary-700 transition-colors"
         >
-          Omar<span className="text-accent-500">.</span>dev
+          Omar Bortolato
         </Link>
 
         {/* Desktop nav */}
