@@ -18,6 +18,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { DynamicAge } from "@/components/DynamicAge";
 
 // ─── Metadata ────────────────────────────────────────────────────────────────
 
@@ -217,7 +218,7 @@ export default function HomePage() {
               AI Manager &amp; Practitioner
             </p>
             <p className="leading-relaxed text-gray-600 mb-6">
-              46 anni, Padova. Padre, manager, imprenditore seriale.
+              <DynamicAge /> anni, Padova. Padre, manager, imprenditore seriale.
               Da anni aiuto aziende e professionisti a passare dalla curiosità
               sull&apos;AI all&apos;implementazione concreta. Non vendo corsi
               teorici: mostro cosa ho costruito io stesso con l&apos;AI e come
