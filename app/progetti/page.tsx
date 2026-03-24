@@ -30,6 +30,7 @@ interface Project {
   tags: string[];
   image: string | null;
   imageAlt: string;
+  imagePosition?: string;
   href?: string;
 }
 
@@ -140,6 +141,7 @@ const projects: Project[] = [
     tags: ["RAG Framework", "LLM Privato", "API Integration", "Multi-channel"],
     image: "/images/docbit-screenshot.png",
     imageAlt: "DocBit AI Assistant",
+    imagePosition: "object-left",
     href: "https://www.docbit.ai",
   },
   {
@@ -184,7 +186,7 @@ const projects: Project[] = [
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
-function ProjectImage({ src, alt }: { src: string | null; alt: string }) {
+function ProjectImage({ src, alt, position = "object-center" }: { src: string | null; alt: string; position?: string }) {
   if (!src) {
     return (
       <div className="flex h-full min-h-[220px] w-full items-center justify-center rounded-2xl bg-gray-100">
@@ -201,7 +203,7 @@ function ProjectImage({ src, alt }: { src: string | null; alt: string }) {
         src={src}
         alt={alt}
         fill
-        className="object-cover object-top"
+        className={`object-cover ${position}`}
         sizes="(max-width: 768px) 100vw, 45vw"
       />
     </div>
@@ -246,7 +248,7 @@ export default function ProgettiPage() {
                   >
                     {/* Image */}
                     <div className="w-full md:w-[45%] flex-shrink-0">
-                      <ProjectImage src={project.image} alt={project.imageAlt} />
+                      <ProjectImage src={project.image} alt={project.imageAlt} position={project.imagePosition} />
                     </div>
 
                     {/* Text */}
