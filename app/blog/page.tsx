@@ -1,67 +1,144 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
 import { ArrowRight } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { getBlogPosts } from "@/lib/notion";
+
+// ─── Metadata ────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "Blog",
-  description: "Pensieri, guide e riflessioni su sviluppo, design e prodotto.",
+  title: "Blog — Omar Bortolato | AI, Automazione, Imprenditoria",
+  description:
+    "Riflessioni, esperimenti e casi reali su AI, automazione e imprenditoria. Idee che diventano pratica.",
 };
 
-const posts = [
-  {
-    slug: "primo-articolo",
-    title: "Come strutturare un progetto Next.js scalabile",
-    excerpt: "Una guida pratica per organizzare le cartelle, i componenti e la logica in un progetto Next.js che cresce nel tempo.",
-    date: "2024-03-01",
-    tags: ["Next.js", "Architettura"],
-    readTime: "5 min",
-  },
-  {
-    slug: "secondo-articolo",
-    title: "Design system con Tailwind CSS e shadcn/ui",
-    excerpt: "Come costruire un design system coerente e mantenibile usando Tailwind CSS e i componenti di shadcn/ui.",
-    date: "2024-02-15",
-    tags: ["Design System", "Tailwind"],
-    readTime: "7 min",
-  },
-];
+// ─── Helpers ─────────────────────────────────────────────────────────────────
 
-export default function BlogPage() {
+function formatDate(dateStr: string): string {
+  if (!dateStr) return "";
+  return new Date(dateStr).toLocaleDateString("it-IT", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+
+function truncate(str: string, max = 160): string {
+  if (!str) return "";
+  return str.length > max ? str.slice(0, max).trimEnd() + "…" : str;
+}
+
+// ─── Empty state ─────────────────────────────────────────────────────────────
+
+function EmptyState() {
   return (
-    <section className="container mx-auto max-w-3xl px-4 py-20">
-      <Badge variant="accent" className="mb-4">Blog</Badge>
-      <h1 className="text-4xl font-bold text-gray-900 mb-3">Articoli</h1>
-      <p className="text-gray-500 mb-12">
-        Pensieri su sviluppo, design e tutto quello che trovo interessante.
+    <div className="rounded-2xl border border-dashed border-gray-200 bg-gray-50 py-20 text-center">
+      <p className="text-lg font-medium text-gray-400">Nessun articolo pubblicato.</p>
+      <p className="mt-2 text-sm text-gray-400">
+        I prossimi contenuti arriveranno presto — seguimi su LinkedIn per non perderli.
       </p>
+    </div>
+  );
+}
 
-      <div className="space-y-8">
-        {posts.map((post) => (
-          <article key={post.slug} className="group border-b border-border/40 pb-8 last:border-0">
-            <div className="flex flex-wrap gap-2 mb-3">
-              {post.tags.map((tag) => (
-                <Badge key={tag} variant="secondary" className="text-xs">{tag}</Badge>
+// ─── Page ─────────────────────────────────────────────────────────────────────
+
+export default async function BlogPage() {
+  const posts = await getBlogPosts();
+
+  return (
+    <>
+      {/* ── HERO ─────────────────────────────────────────────────────────── */}
+      <section className="bg-gradient-to-br from-blue-50 via-white to-indigo-50/40">
+        <div className="container mx-auto max-w-5xl px-4 py-16 md:py-24">
+          <Badge variant="accent" className="mb-4 text-xs">Blog</Badge>
+          <h1 className="text-4xl font-bold tracking-tight text-gray-900 md:text-5xl lg:text-6xl">
+            Idee che diventano pratica.
+          </h1>
+          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
+            Riflessioni, esperimenti e casi reali su AI, automazione e imprenditoria.
+          </p>
+        </div>
+      </section>
+
+      {/* ── ARTICOLI ─────────────────────────────────────────────────────── */}
+      <section className="bg-white py-16 md:py-20">
+        <div className="container mx-auto max-w-5xl px-4">
+          {posts.length === 0 ? (
+            <EmptyState />
+          ) : (
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              {posts.map((post) => (
+                <article
+                  key={post.id}
+                  className="group flex flex-col rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
+                >
+                  {/* Tags */}
+                  {post.tags.length > 0 && (
+                    <div className="mb-3 flex flex-wrap gap-1.5">
+                      {post.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="inline-flex items-center rounded-full border border-primary-800/15 bg-primary-800/5 px-2.5 py-0.5 text-xs font-medium text-primary-800"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Title */}
+                  <Link href={`/blog/${post.slug}`} className="flex-1">
+                    <h2 className="mb-2 text-lg font-bold text-gray-900 leading-snug group-hover:text-primary-800 transition-colors">
+                      {post.title}
+                    </h2>
+                    {post.abstract && (
+                      <p className="text-sm leading-relaxed text-gray-500">
+                        {truncate(post.abstract)}
+                      </p>
+                    )}
+                  </Link>
+
+                  {/* Footer */}
+                  <div className="mt-4 flex items-center justify-between">
+                    {post.publishedDate && (
+                      <span className="text-xs text-gray-400">
+                        {formatDate(post.publishedDate)}
+                      </span>
+                    )}
+                    <Link
+                      href={`/blog/${post.slug}`}
+                      className="ml-auto inline-flex items-center gap-1 text-sm font-medium text-primary-800 transition-colors hover:text-primary-700"
+                    >
+                      Leggi
+                      <ArrowRight size={13} />
+                    </Link>
+                  </div>
+                </article>
               ))}
             </div>
-            <Link href={`/blog/${post.slug}`} className="block">
-              <h2 className="text-xl font-semibold text-gray-900 group-hover:text-primary-800 transition-colors mb-2">
-                {post.title}
-              </h2>
+          )}
+        </div>
+      </section>
+
+      {/* ── CTA FINALE ───────────────────────────────────────────────────── */}
+      <section className="bg-gradient-to-br from-primary-800 to-primary-900">
+        <div className="container mx-auto max-w-5xl px-4 py-20 text-center md:py-28">
+          <h2 className="text-3xl font-bold text-white md:text-4xl">
+            Vuoi applicare queste idee al tuo business?
+          </h2>
+          <p className="mt-4 mb-10 max-w-lg mx-auto text-lg text-primary-200">
+            Consulenze, partnership, co-building. Parliamone.
+          </p>
+          <Button asChild variant="accent" size="lg" className="px-8 text-base">
+            <Link href="/collabora">
+              Collaboriamo
+              <ArrowRight size={18} />
             </Link>
-            <p className="text-gray-500 text-sm leading-relaxed mb-4">{post.excerpt}</p>
-            <div className="flex items-center justify-between text-xs text-gray-400">
-              <span>{new Date(post.date).toLocaleDateString("it-IT", { year: "numeric", month: "long", day: "numeric" })}</span>
-              <div className="flex items-center gap-1">
-                <span>{post.readTime} di lettura</span>
-                <Link href={`/blog/${post.slug}`} className="ml-2 flex items-center gap-1 text-primary-800 hover:text-primary-700 font-medium">
-                  Leggi <ArrowRight size={12} />
-                </Link>
-              </div>
-            </div>
-          </article>
-        ))}
-      </div>
-    </section>
+          </Button>
+        </div>
+      </section>
+    </>
   );
 }

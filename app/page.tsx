@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { DynamicAge } from "@/components/DynamicAge";
+import { getBlogPosts } from "@/lib/notion";
 
 // ─── Metadata ────────────────────────────────────────────────────────────────
 
@@ -113,7 +114,8 @@ const tools = [
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-export default function HomePage() {
+export default async function HomePage() {
+  const latestPosts = (await getBlogPosts()).slice(0, 3);
   return (
     <>
       {/* ── 1. HERO ──────────────────────────────────────────────────────────── */}
@@ -390,7 +392,75 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── 7. CTA FINALE ────────────────────────────────────────────────────── */}
+      {/* ── 7. DAL BLOG ──────────────────────────────────────────────────────── */}
+      {latestPosts.length > 0 && (
+        <section className="container mx-auto max-w-5xl px-4 py-16 md:py-20">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <Badge variant="accent" className="mb-3 text-xs">Blog</Badge>
+              <h2 className="text-3xl font-bold text-gray-900 md:text-4xl">Dal blog</h2>
+            </div>
+            <Link
+              href="/blog"
+              className="hidden md:inline-flex items-center gap-1.5 text-sm font-medium text-primary-800 transition-colors hover:text-primary-700"
+            >
+              Vedi tutti
+              <ArrowRight size={15} />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+            {latestPosts.map((post) => (
+              <article
+                key={post.id}
+                className="group flex flex-col rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
+              >
+                {post.tags.length > 0 && (
+                  <div className="mb-3 flex flex-wrap gap-1.5">
+                    {post.tags.slice(0, 2).map((tag) => (
+                      <span
+                        key={tag}
+                        className="inline-flex items-center rounded-full border border-primary-800/15 bg-primary-800/5 px-2.5 py-0.5 text-xs font-medium text-primary-800"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                <Link href={`/blog/${post.slug}`} className="flex-1">
+                  <h3 className="mb-2 text-base font-bold text-gray-900 leading-snug group-hover:text-primary-800 transition-colors">
+                    {post.title}
+                  </h3>
+                  {post.abstract && (
+                    <p className="text-sm text-gray-500 leading-relaxed line-clamp-2">
+                      {post.abstract}
+                    </p>
+                  )}
+                </Link>
+                <Link
+                  href={`/blog/${post.slug}`}
+                  className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary-800 transition-colors hover:text-primary-700"
+                >
+                  Leggi
+                  <ArrowRight size={13} />
+                </Link>
+              </article>
+            ))}
+          </div>
+
+          <div className="mt-6 md:hidden">
+            <Link
+              href="/blog"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-primary-800 transition-colors hover:text-primary-700"
+            >
+              Vedi tutti gli articoli
+              <ArrowRight size={15} />
+            </Link>
+          </div>
+        </section>
+      )}
+
+      {/* ── 8. CTA FINALE ────────────────────────────────────────────────────── */}
       <section className="bg-gradient-to-br from-primary-800 to-primary-900">
         <div className="container mx-auto max-w-5xl px-4 py-20 text-center md:py-28">
           <h2 className="text-3xl font-bold text-white md:text-4xl">
