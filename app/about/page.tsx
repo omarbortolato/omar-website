@@ -244,16 +244,30 @@ export default function AboutPage() {
             Dietro le quinte
           </h2>
 
-          <div className="flex flex-wrap gap-3">
-            {personalItems.map(({ emoji, text }) => (
-              <div
-                key={text}
-                className="flex items-center gap-2.5 rounded-full border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm text-gray-700"
-              >
-                <span>{emoji}</span>
-                <span>{text}</span>
-              </div>
-            ))}
+          <div className="flex flex-col md:flex-row gap-10 md:gap-14 items-start">
+
+            <div className="flex flex-wrap gap-3 flex-1">
+              {personalItems.map(({ emoji, text }) => (
+                <div
+                  key={text}
+                  className="flex items-center gap-2.5 rounded-full border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm text-gray-700"
+                >
+                  <span>{emoji}</span>
+                  <span>{text}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="relative flex-shrink-0 w-full max-w-[280px] h-[340px] mx-auto md:mx-0 rounded-2xl overflow-hidden shadow-lg">
+              <Image
+                src="/images/omar-private.jpg"
+                alt="Omar Bortolato — vita privata"
+                fill
+                className="object-cover object-center"
+                sizes="280px"
+              />
+            </div>
+
           </div>
         </div>
       </section>
