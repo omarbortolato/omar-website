@@ -255,17 +255,6 @@ export default function AboutPage() {
               </div>
             ))}
           </div>
-
-          {/* Speaking photo */}
-          <div className="mt-12 relative w-full h-56 md:h-72 overflow-hidden rounded-2xl shadow-lg">
-            <Image
-              src="/images/omar-speaking3.jpg"
-              alt="Omar Bortolato sul palco"
-              fill
-              className="object-cover object-center"
-              sizes="(max-width: 1024px) 100vw, 960px"
-            />
-          </div>
         </div>
       </section>
 
