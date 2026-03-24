@@ -260,7 +260,7 @@ export default function AboutPage() {
 
             <div className="relative flex-shrink-0 w-full max-w-[280px] h-[340px] mx-auto md:mx-0 rounded-2xl overflow-hidden shadow-lg">
               <Image
-                src="/images/omar-private.jpg"
+                src="/images/omar-private-nobg.PNG"
                 alt="Omar Bortolato — vita privata"
                 fill
                 className="object-cover object-center"
