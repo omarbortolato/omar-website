@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Brain, Mic, Handshake, Calendar, Linkedin } from "lucide-react";
+import { ArrowRight, Brain, Mic, Handshake, Linkedin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -176,15 +176,13 @@ export default function CollaboraPage() {
           <h2 className="text-3xl font-bold text-gray-900 md:text-4xl mb-8">
             Oppure prenota direttamente
           </h2>
-          <div className="flex items-center justify-center rounded-2xl border border-dashed border-gray-200 bg-gray-50 py-20 text-center">
-            <div>
-              <Calendar size={36} className="mx-auto mb-4 text-gray-300" />
-              <p className="font-medium text-gray-500">Calendario disponibile a breve</p>
-              <p className="mt-1 text-sm text-gray-400">
-                Nel frattempo usa il form qui sopra — rispondo entro 48 ore.
-              </p>
-            </div>
-          </div>
+          <iframe
+            src="https://cal.eu/omarbortolato?embed=true"
+            className="w-full rounded-2xl border border-gray-100"
+            style={{ height: "700px" }}
+            frameBorder="0"
+            title="Prenota una call con Omar Bortolato"
+          />
         </div>
       </section>
 
