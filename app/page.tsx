@@ -41,6 +41,7 @@ const credibilityItems = [
 interface Project {
   id:          string;
   badge:       { label: string; classes: string };
+  logo?:       string;
   title:       string;
   description: string;
   tags:        string[];
@@ -55,6 +56,7 @@ const projects: Project[] = [
       label:   "Active",
       classes: "bg-green-100 text-green-700 border border-green-200",
     },
+    logo:        "/images/phoenix-re-logo.png",
     title:       "Phoenix RE Capital",
     description:
       "Fund immobiliare USA per investitori italiani. AI per market research, property analysis, investor reporting.",
@@ -68,6 +70,7 @@ const projects: Project[] = [
       label:   "In Development",
       classes: "bg-blue-100 text-blue-700 border border-blue-200",
     },
+    logo:        "/images/fastlien-logo.png",
     title:       "Fastlien",
     description:
       "Software per investimenti tax lien/deed. AI per analisi aste e scoring opportunità.",
@@ -81,6 +84,7 @@ const projects: Project[] = [
       label:   "Active",
       classes: "bg-green-100 text-green-700 border border-green-200",
     },
+    logo:        "/images/herbalife-logo.png",
     title:       "E-commerce Multi-Paese",
     description:
       "6 siti automatizzati (IT, FR, DE, UK, US, ES). SEO automation, contenuti multilingua, Google Ads optimization.",
@@ -270,6 +274,18 @@ export default async function HomePage() {
                 className="flex flex-col bg-white transition-shadow hover:shadow-md"
               >
                 <CardHeader className="pb-3">
+                  {/* Logo */}
+                  {project.logo && (
+                    <div className="mb-3 h-10 w-auto">
+                      <Image
+                        src={project.logo}
+                        alt={`${project.title} logo`}
+                        height={40}
+                        width={120}
+                        className="h-10 w-auto object-contain object-left"
+                      />
+                    </div>
+                  )}
                   {/* Status badge */}
                   <span
                     className={`inline-flex w-fit items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${project.badge.classes}`}
