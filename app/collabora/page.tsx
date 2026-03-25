@@ -96,7 +96,7 @@ export default function CollaboraPage() {
           </p>
 
           <form
-            action="mailto:hello@omarbortolato.it"
+            action="mailto:omarbortolato@gmail.com"
             method="get"
             encType="text/plain"
             className="space-y-5"
