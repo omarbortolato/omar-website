@@ -75,7 +75,7 @@ async function getPageBlocks(pageId: string): Promise<string> {
     `https://api.notion.com/v1/blocks/${pageId}/children`,
     {
       headers: notionHeaders(),
-      next: { revalidate: 3600 },
+      next: { revalidate: 300 },
     }
   );
 
@@ -198,7 +198,7 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
           },
         ],
       }),
-      next: { revalidate: 3600 },
+      next: { revalidate: 300 },
     }
   );
 
