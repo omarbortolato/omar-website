@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight, Brain, Mic, Handshake, Linkedin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { ContactForm } from "@/components/ContactForm";
 
 // ─── Metadata ────────────────────────────────────────────────────────────────
 
@@ -95,77 +96,7 @@ export default function CollaboraPage() {
             Rispondo entro 48 ore. Niente spam, niente newsletter automatiche.
           </p>
 
-          <form
-            action="mailto:omarbortolato@gmail.com"
-            method="get"
-            encType="text/plain"
-            className="space-y-5"
-          >
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-              <div>
-                <label htmlFor="nome" className="mb-1.5 block text-sm font-medium text-gray-700">
-                  Nome <span className="text-accent-500">*</span>
-                </label>
-                <input
-                  id="nome"
-                  name="nome"
-                  type="text"
-                  required
-                  placeholder="Il tuo nome"
-                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder-gray-400 outline-none transition focus:border-primary-800 focus:ring-2 focus:ring-primary-800/10"
-                />
-              </div>
-              <div>
-                <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-gray-700">
-                  Email <span className="text-accent-500">*</span>
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  placeholder="tua@email.com"
-                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder-gray-400 outline-none transition focus:border-primary-800 focus:ring-2 focus:ring-primary-800/10"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label htmlFor="tipo" className="mb-1.5 block text-sm font-medium text-gray-700">
-                Tipo di collaborazione
-              </label>
-              <select
-                id="tipo"
-                name="tipo"
-                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition focus:border-primary-800 focus:ring-2 focus:ring-primary-800/10"
-              >
-                <option value="">Seleziona...</option>
-                <option value="Consulenza AI">Consulenza AI</option>
-                <option value="Speaking & Workshop">Speaking &amp; Workshop</option>
-                <option value="Partnership">Partnership</option>
-                <option value="Altro">Altro</option>
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor="messaggio" className="mb-1.5 block text-sm font-medium text-gray-700">
-                Messaggio <span className="text-accent-500">*</span>
-              </label>
-              <textarea
-                id="messaggio"
-                name="messaggio"
-                required
-                rows={5}
-                placeholder="Raccontami il tuo progetto o la tua idea..."
-                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder-gray-400 outline-none transition focus:border-primary-800 focus:ring-2 focus:ring-primary-800/10 resize-none"
-              />
-            </div>
-
-            <Button type="submit" variant="accent" size="lg" className="w-full sm:w-auto px-8">
-              Invia messaggio
-              <ArrowRight size={16} />
-            </Button>
-          </form>
+          <ContactForm />
         </div>
       </section>
 

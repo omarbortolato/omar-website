@@ -5,7 +5,7 @@ const socialLinks = [
   { href: "https://github.com/omarbortolato", icon: Github, label: "GitHub" },
   { href: "https://linkedin.com/in/omarbortolato", icon: Linkedin, label: "LinkedIn" },
   { href: "https://twitter.com/omarbortolato", icon: Twitter, label: "Twitter" },
-  { href: "mailto:hello@omarbortolato.dev", icon: Mail, label: "Email" },
+  { href: "mailto:omarbortolato@gmail.com", icon: Mail, label: "Email" },
 ];
 
 const footerLinks = [
