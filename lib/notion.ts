@@ -196,7 +196,7 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
       body: JSON.stringify({
         filter: {
           property: "Status",
-          select: { equals: "Published" },
+          select: { equals: "Blog Published" },
         },
         sorts: [
           {
