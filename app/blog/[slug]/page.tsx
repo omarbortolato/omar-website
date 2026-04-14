@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, Calendar, Tag } from "lucide-react";
@@ -27,6 +28,12 @@ export async function generateMetadata(
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
+function resolveCoverImage(value: string | null): string | null {
+  if (!value || value.trim() === "") return null;
+  if (value.startsWith("http")) return value;
+  return `/Post Images/${value}`;
+}
+
 function formatDate(dateStr: string): string {
   if (!dateStr) return "";
   return new Date(dateStr).toLocaleDateString("it-IT", {
@@ -45,6 +52,7 @@ export default async function BlogPostPage(
   if (!post) notFound();
 
   const hasContent = post.content && post.content.trim().length > 0;
+  const coverSrc = resolveCoverImage(post.coverImage ?? null);
 
   return (
     <>
@@ -98,6 +106,19 @@ export default async function BlogPostPage(
             )}
           </div>
         </header>
+
+        {/* ── Cover Image ────────────────────────────────────────────────── */}
+        {coverSrc && (
+          <div className="relative w-full aspect-video">
+            <Image
+              src={coverSrc}
+              alt={post.title}
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
+        )}
 
         {/* ── Body ───────────────────────────────────────────────────────── */}
         <div className="container mx-auto max-w-3xl px-4 py-12 md:py-16">

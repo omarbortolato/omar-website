@@ -14,6 +14,7 @@ export interface BlogPost {
   slug: string;
   abstract: string;
   content: string; // HTML from page blocks
+  coverImage: string | null;
   tags: string[];
   publishedDate: string;
   metaTitle: string;
@@ -162,6 +163,7 @@ function parsePost(page: any): BlogPost {
     (t: { name: string }) => t.name
   );
   const publishedDate: string = props?.["Published Date"]?.date?.start ?? "";
+  const coverImage: string | null = props?.["Cover Image URL"]?.url ?? null;
 
   return {
     id: page.id,
@@ -169,6 +171,7 @@ function parsePost(page: any): BlogPost {
     slug: generateSlug(title),
     abstract,
     content: "", // populated only in getBlogPost()
+    coverImage,
     tags,
     publishedDate,
     metaTitle: metaTitle || title,
