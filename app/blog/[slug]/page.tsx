@@ -31,7 +31,7 @@ export async function generateMetadata(
 function resolveCoverImage(value: string | null): string | null {
   if (!value || value.trim() === "") return null;
   if (value.startsWith("http")) return value;
-  return `/Post Images/${value}`;
+  return `/Post%20Images/${encodeURIComponent(value.trim())}`;
 }
 
 function formatDate(dateStr: string): string {
@@ -107,13 +107,19 @@ export default async function BlogPostPage(
           </div>
         </header>
 
+        {/* ── DEBUG (rimuovere dopo verifica) ──────────────────────────── */}
+        <p className="text-xs text-center text-gray-400 py-1">
+          coverImage: {JSON.stringify(post.coverImage)} | coverSrc: {JSON.stringify(coverSrc)}
+        </p>
+
         {/* ── Cover Image ────────────────────────────────────────────────── */}
         {coverSrc && (
-          <div className="relative w-full aspect-video">
+          <div className="relative w-full aspect-video overflow-hidden">
             <Image
               src={coverSrc}
               alt={post.title}
               fill
+              sizes="100vw"
               className="object-cover"
               priority
             />

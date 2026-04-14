@@ -163,7 +163,11 @@ function parsePost(page: any): BlogPost {
     (t: { name: string }) => t.name
   );
   const publishedDate: string = props?.["Published Date"]?.date?.start ?? "";
-  const coverImage: string | null = props?.["Cover Image URL"]?.url ?? null;
+  // Cover Image URL can be a Notion "url" field or "rich_text" field
+  const coverProp = props?.["Cover Image URL"];
+  const coverImageRaw: string =
+    (coverProp?.url ?? extractRichText(coverProp?.rich_text ?? [])) || "";
+  const coverImage: string | null = coverImageRaw || null;
 
   return {
     id: page.id,
