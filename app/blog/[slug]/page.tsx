@@ -107,22 +107,19 @@ export default async function BlogPostPage(
           </div>
         </header>
 
-        {/* ── DEBUG (rimuovere dopo verifica) ──────────────────────────── */}
-        <p className="text-xs text-center text-gray-400 py-1">
-          coverImage: {JSON.stringify(post.coverImage)} | coverSrc: {JSON.stringify(coverSrc)}
-        </p>
-
         {/* ── Cover Image ────────────────────────────────────────────────── */}
         {coverSrc && (
-          <div className="relative w-full aspect-video overflow-hidden">
-            <Image
-              src={coverSrc}
-              alt={post.title}
-              fill
-              sizes="100vw"
-              className="object-cover"
-              priority
-            />
+          <div className="container mx-auto max-w-3xl px-4 pt-8">
+            <div className="relative w-full aspect-video overflow-hidden rounded-xl">
+              <Image
+                src={coverSrc}
+                alt={post.title}
+                fill
+                sizes="(max-width: 768px) 100vw, 768px"
+                className="object-cover"
+                priority
+              />
+            </div>
           </div>
         )}
 
