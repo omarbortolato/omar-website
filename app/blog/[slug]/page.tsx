@@ -110,16 +110,15 @@ export default async function BlogPostPage(
         {/* ── Cover Image ────────────────────────────────────────────────── */}
         {coverSrc && (
           <div className="container mx-auto max-w-3xl px-4 pt-8">
-            <div className="relative w-full aspect-video overflow-hidden rounded-xl">
-              <Image
-                src={coverSrc}
-                alt={post.title}
-                fill
-                sizes="(max-width: 768px) 100vw, 768px"
-                className="object-cover"
-                priority
-              />
-            </div>
+            <Image
+              src={coverSrc}
+              alt={post.title}
+              width={1200}
+              height={630}
+              style={{ width: "100%", height: "auto" }}
+              className="rounded-xl"
+              priority
+            />
           </div>
         )}
 
