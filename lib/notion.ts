@@ -33,6 +33,13 @@ export function generateSlug(title: string): string {
     .replace(/\s+/g, "-");
 }
 
+// Builds the full public URL for a blog post given its Notion page title.
+// Uses the same slugify logic as generateSlug — must stay in sync.
+// Example: "Come ho costruito un sistema..." → "https://omarbortolato.it/blog/come-ho-costruito-un-sistema..."
+export function buildBlogUrl(title: string): string {
+  return `https://omarbortolato.it/blog/${generateSlug(title)}`;
+}
+
 function notionHeaders() {
   return {
     Authorization: `Bearer ${NOTION_API_KEY}`,
