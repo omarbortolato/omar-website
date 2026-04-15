@@ -13,19 +13,20 @@ Long-term vision: Evolve into AI-powered business platform with courses, ecommer
 - Authentic (shares failures and iterations)
 - Built with AI (proof of concept)
 
-## Tech Stack (All FREE)
+## Tech Stack
 - Framework: Next.js 14 (App Router)
 - Styling: Tailwind CSS + shadcn/ui
 - Language: TypeScript
-- Hosting: Vercel (auto-deploy)
+- Hosting: Vercel (auto-deploy) — dominio custom omarbortolato.it
 - Version Control: GitHub (public repo)
 - Development: Claude Code + Claude.ai Projects
 - Icons: Lucide React
 - Font: Inter (Google Fonts)
+- n8n self-hosted 2.9.4 — https://wf.n8n.herbago.it
 
 ## Repository Info
 - GitHub: https://github.com/omarbortolato/omar-website
-- Live Site: https://omarbortolato-site.vercel.app
+- Live Site: https://www.omarbortolato.it
 - Vercel: https://vercel.com/omarbortolatos-projects/omarbortolato-site
 
 ## Design System
@@ -46,73 +47,70 @@ app/
 ├─ page.tsx                # Homepage ✅
 ├─ about/page.tsx          # About page ✅
 ├─ progetti/page.tsx       # Projects portfolio ✅
-├─ blog/page.tsx           # Blog listing ⏳ (Notion CMS)
-├─ blog/[slug]/page.tsx    # Blog article ⏳ (Notion CMS)
-└─ collabora/page.tsx      # Contact/collaboration 📋 (TODO)
+├─ blog/page.tsx           # Blog listing ✅ (Notion CMS)
+├─ blog/[slug]/page.tsx    # Blog article ✅ (Notion CMS)
+└─ collabora/page.tsx      # Contact/collaboration ✅ (Cal.com attivo)
 components/
 ├─ layout/
 │  ├─ Header.tsx           # Navigation
 │  └─ Footer.tsx           # Social links
-└─ ui/                     # shadcn components
+└─ ui/
+   ├─ cover-image.tsx      # Client component — cover articolo con onError
+   └─ (shadcn components)
 lib/
-└─ notion.ts               # Notion API utility ⏳ (TODO)
+└─ notion.ts               # Notion API utility ✅
 public/
-└─ images/
-   ├─ omar-hero.png
-   ├─ omar-profile.jpg
-   ├─ omar-speaking.jpg / omar-speaking2.jpg / omar-speaking3.jpg
-   ├─ omar-private-nobg.PNG
-   ├─ omar-figlio.JPEG
-   ├─ herbalife-screenshot.png
-   ├─ phoenixre-screenshot.png
-   ├─ fastlien-screenshot.png
-   ├─ fastland-screenshot.png
-   ├─ docbit-screenshot.png
-   └─ wahooapp-screenshot.png
+├─ images/                 # Immagini statiche sito
+└─ post-images/            # Cover image articoli blog (nome file da Notion)
 ```
 
-## Current Status
-- Infrastructure setup complete ✅
-- Homepage live with real content ✅
+## Current Status (aggiornato 15 aprile 2026)
+- Homepage live ✅
 - About page live ✅
 - Progetti page live ✅
-- Git + Vercel workflow functional ✅
-- Blog (in development — Notion CMS) ⏳
-- Collabora page (planned) 📋
-- Redesign globale (after all pages have content) 🔮
+- Blog live con Notion CMS ✅
+- Collabora page live con Cal.com ✅
+- Cover image articoli (locale + URL esterno) ✅
+- Campo Blog URL compilato automaticamente da WRITE_ARTICLE ✅
+- Pipeline content E2E testata e funzionante ✅
+- Redesign globale 🔮 (dopo che il contenuto è stabile)
 
 ## Notion CMS (Blog)
 
-The blog uses Notion as CMS. n8n automatically generates articles in the
-"Blog Expanded" field of the Content Inbox database. The site reads directly
-from Notion API — no separate DB, no MDX files, no extra infrastructure.
+Il blog usa Notion come CMS. n8n genera i contenuti, il sito legge via Notion API.
 
-### Database
-- ID: 2cfef582-d259-806b-a7a6-efc8bff25a68
-- Env variable: NOTION_API_KEY (configured on Vercel)
-- Filter: Status = "Published" only
+### Database Content Inbox
+- ID: `2cfef582-d259-806b-a7a6-efc8bff25a68`
+- Env variable: `NOTION_API_KEY` (configurata su Vercel)
+- Filter: `Status = "Blog Published"` — solo questi appaiono sul sito
 - Sort: Published Date descending
+- Revalidate: 300 secondi (5 minuti)
 
-### Fields used
-| Field            | Type         | Usage                     |
-|------------------|--------------|---------------------------|
-| Title            | title        | Article title             |
-| Blog Abstract    | rich_text    | Excerpt / card preview    |
-| Blog Expanded    | rich_text    | Article body (HTML)       |
-| Meta Title       | rich_text    | SEO <title>               |
-| Meta Description | rich_text    | SEO <meta description>    |
-| Tags             | multi_select | Category badges           |
-| Published Date   | date         | Publication date          |
-| Status           | select       | Filter "Published" only   |
+### Schema campi usati dal sito
+| Campo                  | Tipo         | Uso                                          |
+|------------------------|--------------|----------------------------------------------|
+| Title                  | title        | Titolo articolo                              |
+| Status                 | select       | Filtro: solo "Blog Published" appare sul sito |
+| Blog Abstract          | rich_text    | Excerpt card e articolo                      |
+| Cover Image URL        | url          | Nome file locale o URL esterno               |
+| Meta Title             | rich_text    | SEO `<title>`                                |
+| Meta Description       | rich_text    | SEO `<meta description>`                     |
+| Tags                   | multi_select | Badge categoria                              |
+| Published Date         | date         | Data pubblicazione                           |
+| Blog URL               | url          | Compilata automaticamente da WRITE_ARTICLE   |
 
-### lib/notion.ts interface
+### Valori Status (flusso completo)
+`IDEA → Ready to Generate → LinkedIn Published → Blog Published → ⚠️ Need Review`
+
+### lib/notion.ts — funzioni esportate
 ```typescript
 interface BlogPost {
   id: string
   title: string
-  slug: string        // generated from Title at runtime
+  slug: string        // generato da Title a runtime
   abstract: string
-  content: string     // HTML from Blog Expanded
+  content: string     // HTML da block Notion
+  coverImage: string | null
   tags: string[]
   publishedDate: string
   metaTitle: string
@@ -122,36 +120,61 @@ interface BlogPost {
 export async function getBlogPosts(): Promise<BlogPost[]>
 export async function getBlogPost(slug: string): Promise<BlogPost | null>
 export function generateSlug(title: string): string
+export function buildBlogUrl(title: string): string  // https://www.omarbortolato.it/blog/{slug}
 ```
 
-### Important technical notes
-- Blog Expanded is pure HTML (h2, h3, p, ul, li, strong, em, a) — NOT MDX
-- Notion API requires header: "Notion-Version": "2022-06-28"
-- Tags is multi_select → array of objects {name, color}
-- Published Date may be null for drafts — handle gracefully
-- Slug: generated from Title (lowercase, spaces→hyphens, no special chars)
-- Caching: fetch with revalidate: 3600 (1 hour)
-- Install: @tailwindcss/typography for prose styling
+### Note tecniche
+- Body articolo: letto dai block Notion (paragraph, heading_2, heading_3, quote, code, list)
+- Notion API header: `"Notion-Version": "2022-06-28"`
+- Cover image: se nome file → `/post-images/{filename}`, se URL esterno → usato direttamente
+- Cover image: validata per estensione (.jpg .jpeg .png .webp .gif), null altrimenti
+- Slug: lowercase, rimuove diacritici e caratteri speciali (apostrofi rimossi, non trattino)
+- `@tailwindcss/typography` installato per prose styling
 
-## Content Pipeline
+## Content Pipeline (stato LIVE)
 ```
-Telegram/Gmail → n8n → GPT-4.1 → Notion Content Inbox
-                                         ↓
-                             Blog Expanded (HTML)
-                             Blog Abstract
-                             Meta Title/Description
-                             Tags, Published Date
-                                         ↓
-                             Next.js reads via Notion API
-                             (only when Status = "Published")
+INPUT
+├── Telegram → n8n → Content Inbox (status: IDEA)
+└── Gmail tag → Signals Inbox
+
+      ↓ Ogni lunedì ore 7
+
+Weekly Editorial Planner (n8n)
+→ GPT-4.1 propone 3 idee → Telegram con bottoni 1/2/3
+
+      ↓ Omar sceglie e aggiunge Raw Notes → status "Ready to Generate"
+
+Trigger 1 — webhook n8n
+→ OpenAI GPT-4.1-mini: LinkedIn post, hashtag, image prompt, meta, tags
+→ Notifica Telegram con link pagina
+
+      ↓ Omar pubblica su LinkedIn → status "LinkedIn Published"
+
+Trigger 2 — webhook n8n
+→ Claude Sonnet genera Markdown
+→ Manda page_id via Telegram: "WRITE_ARTICLE: {page_id}"
+
+      ↓ Omar scrive WRITE_ARTICLE in Claude.ai
+
+Claude legge pagina, scrive body via MCP, compila Blog URL
+
+      ↓ Omar revisiona → status "Blog Published"
+
+Sito aggiornato entro 5 minuti (revalidate 300s)
 ```
+
+### Bug noto — workaround definitivo
+n8n 2.9.4 non scrive nel body di Notion (errore 400 su HTTP Request e Append Block nativo).
+Soluzione stabile: n8n manda il `page_id` via Telegram, Omar scrive `WRITE_ARTICLE: {page_id}`
+in qualsiasi chat Claude.ai del progetto.
 
 ## Development Workflow
 1. Make changes locally in Claude Code
-2. Preview: npm run dev (localhost:3000)
-3. Commit: git add . && git commit -m "Description"
-4. Push: git push
+2. Preview: `npm run dev` (localhost:3000)
+3. Commit: `git add . && git commit -m "Description"`
+4. Push: `git push`
 5. Auto-deploy on Vercel (2-3 min)
+6. Per aggiornamento immediato blog: redeploy manuale da Vercel dashboard
 
 ## Key Decisions Made
 - Public repository (build in public, show code)
@@ -159,9 +182,9 @@ Telegram/Gmail → n8n → GPT-4.1 → Notion Content Inbox
 - Next.js over WordPress (modern, scalable, AI-friendly)
 - Vercel over Siteground (optimized for Next.js)
 - Personal storytelling tone (not generic corporate)
-- Image-heavy design (show don't tell)
 - Notion as CMS for blog (zero extra infrastructure, already in pipeline)
-- n8n generates blog articles automatically from LinkedIn content ideas
+- n8n genera articoli automaticamente dal contenuto LinkedIn
+- WRITE_ARTICLE via Claude.ai MCP come workaround stabile al bug n8n
 
 ## Content Strategy
 Projects to showcase:
@@ -173,34 +196,24 @@ Projects to showcase:
 - Azoa Seed (AI-native startup factory)
 - Wahooapp.io (WhatsApp business)
 
-Blog categories:
-- Tools AI
-- Business & Imprenditoria
-- Mindset & Produttività
+Blog categories: Tools AI, Business & Imprenditoria, Mindset & Produttività, Automazione, n8n, Produttività
 
 Guides pipeline:
-1. "Come ho costruito questo sito con Claude Code" (meta-guide)
+1. "Come ho costruito questo sito con Claude Code" (meta-guide) — priorità alta
 2. "Sistema Notion + AI per knowledge management"
 3. "Da audio WhatsApp a riassunto in 5 minuti" (NotebookLM)
 4. "Google Ads automation: il mio stack"
 5. "Land investment research con AI"
 
-## Meta Tags (to update in layout.tsx)
-- og:title → "Omar Bortolato — AI Manager & Imprenditore"
-- og:description → "AI pratica per chi vuole fare, non solo sapere."
-- og:url → https://omarbortolato.it
-- twitter:title/description → align with og
-
 ## Future Features
-- Newsletter (when justified by content volume)
-- Analytics (Plausible free tier or Vercel Analytics)
-- Cal.com integration (booking — Collabora page)
-- Redesign globale: dark mode toggle, new typography, micro-animations
+- Guida gratuita scaricabile — "Come ho costruito questo sito con Claude Code" con email gate + PDF
+- Redesign globale: light mode default, dark mode toggle, amber accents, display font, scroll animations
+- Analytics (Plausible free tier o Vercel Analytics)
 - Notion auto-sync webhook (on-demand revalidation)
-- Telegram → n8n → Claude API automation (long-term)
+- Test Signals Roundup — 2 email con tag Gmail → webhook roundup
+- Aggiornare Weekly Planner n8n con status IDEA (invece di Draft)
 - Course platform integration
 - Ecommerce demos
-- Startup showcases
 
 ## Common Commands
 ```bash
@@ -221,7 +234,7 @@ git log --oneline -10   # See recent commits
 
 ## Troubleshooting
 - Deploy not updating? Check Vercel is connected to correct repo
-- Images not loading? Check files are in /public/images/
+- Images not loading? Check files are in /public/post-images/ (cover blog) or /public/images/ (sito)
 - Build failing? Check npm run build locally first
 - Style not applying? Clear .next folder and rebuild
 - Notion API 401? Check NOTION_API_KEY in Vercel env variables
@@ -257,6 +270,12 @@ title.toLowerCase()
      .replace(/\s+/g, "-")
 ```
 Esempio: `"un'idea"` → `"unidea"` (apostrofo rimosso, non trattino)
+
+## Riferimenti esterni
+- Content Inbox Notion: `2cfef582-d259-806b-a7a6-efc8bff25a68`
+- Signals Inbox Notion: `2d8ef582-d259-801d-9eda-d1d7be952c48`
+- Weekly Planner Notion: `2d9ef582-d259-8080-bb9a-ecee59587a39`
+- n8n: https://wf.n8n.herbago.it
 
 ## Contact & Context
 Owner: Omar Bortolato
