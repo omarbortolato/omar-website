@@ -232,21 +232,22 @@ git log --oneline -10   # See recent commits
 Quando ricevo il messaggio `WRITE_ARTICLE: {page_id}`:
 
 1. Leggo la pagina Notion con quell'ID via MCP (`notion-fetch`)
-2. Estraggo: Title, LinkedIn Post (fallback su LinkedIn Post Formatted), Raw Notes
-3. Genero un articolo blog in Markdown (800-1200 parole) — stile Omar:
+2. Estraggo: Title, LinkedIn Post (fallback su LinkedIn Post Formatted se vuoto), Raw Notes
+3. Genero articolo blog Markdown 800-1200 parole — stile Omar:
    - Conversazionale e diretto, mai accademico
    - Paragrafi brevi, niente blocchi di testo
    - Zero hype, zero buzzword
    - Struttura: apertura narrativa → problema/sfida → processo/soluzione → takeaway → chiusura con domanda
    - `##` per H2, `###` per H3, niente H1, niente emoji, Markdown puro
 4. Scrivo il body nella pagina Notion via `notion-update-page` con `command: replace_content`
-5. Costruisco la Blog URL dallo slug del titolo con la stessa logica usata da Next.js
-   e la scrivo nel campo Blog URL della pagina Notion via `notion-update-page` `update_properties`
-6. Confermo con il link alla pagina Notion e la Blog URL generata
+5. Costruisco lo slug dal titolo con la stessa funzione usata da Next.js per generare gli slug
+   delle pagine blog, e scrivo la Blog URL nel campo Notion:
+   `https://www.omarbortolato.it/blog/{slug}`
+6. Confermo con link Notion e Blog URL generata
 
 Non serve contesto aggiuntivo — il page_id è sufficiente.
 
-### Logica slug (deve restare identica a `generateSlug` in lib/notion.ts)
+### Logica slug (identica a `generateSlug` in lib/notion.ts)
 ```
 title.toLowerCase()
      .normalize("NFD")
@@ -255,7 +256,7 @@ title.toLowerCase()
      .trim()
      .replace(/\s+/g, "-")
 ```
-Esempio: `"un'idea"` → `"unidea"` (apostrofo rimosso, non sostituito con trattino)
+Esempio: `"un'idea"` → `"unidea"` (apostrofo rimosso, non trattino)
 
 ## Contact & Context
 Owner: Omar Bortolato

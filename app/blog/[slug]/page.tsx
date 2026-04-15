@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, Calendar, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { CoverImage } from "@/components/ui/cover-image";
 import { getBlogPost, getBlogPosts } from "@/lib/notion";
 
 // ─── Static params ────────────────────────────────────────────────────────────
@@ -28,10 +28,19 @@ export async function generateMetadata(
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
+const IMAGE_EXTENSIONS = /\.(jpg|jpeg|png|webp|gif)$/i;
+
 function resolveCoverImage(value: string | null): string | null {
   if (!value || value.trim() === "") return null;
-  if (value.startsWith("http")) return value;
-  return `/Post%20Images/${encodeURIComponent(value.trim())}`;
+  const v = value.trim();
+  if (v.startsWith("http")) {
+    // External URL: validate extension from the path portion
+    const pathname = new URL(v).pathname;
+    return IMAGE_EXTENSIONS.test(pathname) ? v : null;
+  }
+  // Local filename: must have a valid image extension
+  if (!IMAGE_EXTENSIONS.test(v)) return null;
+  return `/post-images/${v}`;
 }
 
 function formatDate(dateStr: string): string {
@@ -110,15 +119,7 @@ export default async function BlogPostPage(
         {/* ── Cover Image ────────────────────────────────────────────────── */}
         {coverSrc && (
           <div className="container mx-auto max-w-3xl px-4 pt-8">
-            <Image
-              src={coverSrc}
-              alt={post.title}
-              width={1200}
-              height={630}
-              style={{ width: "100%", height: "auto" }}
-              className="rounded-xl"
-              priority
-            />
+            <CoverImage src={coverSrc} alt={post.title} />
           </div>
         )}
 
