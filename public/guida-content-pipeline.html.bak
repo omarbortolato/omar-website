@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Come ho costruito una content pipeline AI — Omar Bortolato</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0F1117;
+    --paper: #F7F4EF;
+    --amber: #E8A020;
+    --amber-light: #FDF3E0;
+    --muted: #6B6860;
+    --border: #E0DBD3;
+    --serif: 'Instrument Serif', Georgia, serif;
+    --sans: 'DM Sans', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-left {
+    padding: 5rem 4rem 5rem 5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-right {
+    background: var(--ink);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-right-inner {
+    padding: 3rem;
+    width: 100%;
+  }
+
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--amber);
+    border: 1px solid var(--amber);
+    padding: 5px 12px;
+    border-radius: 2px;
+    margin-bottom: 2rem;
+  }
+
+  h1 {
+    font-family: var(--serif);
+    font-size: clamp(2.8rem, 5vw, 4.2rem);
+    line-height: 1.1;
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--amber);
+  }
+
+  .hero-sub {
+    font-size: 1.05rem;
+    color: var(--muted);
+    max-width: 440px;
+    margin-bottom: 3rem;
+    line-height: 1.75;
+  }
+
+  .cta-group {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 14px 28px;
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s, transform 0.15s;
+    letter-spacing: 0.01em;
+  }
+
+  .btn-primary:hover { background: #2a2a2a; transform: translateY(-1px); }
+
+  .btn-secondary {
+    color: var(--muted);
+    font-size: 14px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s;
+  }
+
+  .btn-secondary:hover { color: var(--ink); }
+
+  /* FLOW DIAGRAM inside hero-right */
+  .flow-diagram {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .flow-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    opacity: 0;
+    transform: translateX(20px);
+    animation: slideIn 0.5s forwards;
+  }
+
+  .flow-item:last-child { border-bottom: none; }
+
+  @keyframes slideIn {
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .flow-item:nth-child(1) { animation-delay: 0.3s; }
+  .flow-item:nth-child(2) { animation-delay: 0.5s; }
+  .flow-item:nth-child(3) { animation-delay: 0.7s; }
+  .flow-item:nth-child(4) { animation-delay: 0.9s; }
+  .flow-item:nth-child(5) { animation-delay: 1.1s; }
+  .flow-item:nth-child(6) { animation-delay: 1.3s; }
+
+  .flow-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--amber);
+    margin-top: 7px;
+    flex-shrink: 0;
+  }
+
+  .flow-dot.gray { background: rgba(255,255,255,0.3); }
+
+  .flow-text {
+    color: rgba(255,255,255,0.5);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .flow-text strong {
+    display: block;
+    color: rgba(255,255,255,0.92);
+    font-weight: 500;
+    font-size: 14px;
+    margin-bottom: 2px;
+  }
+
+  /* CREDIBILITY BAR */
+  .bar {
+    background: var(--ink);
+    padding: 1.2rem 5rem;
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    overflow-x: auto;
+  }
+
+  .bar-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+    color: rgba(255,255,255,0.5);
+    font-size: 13px;
+    font-weight: 300;
+  }
+
+  .bar-item strong { color: rgba(255,255,255,0.9); font-weight: 500; }
+
+  .bar-sep {
+    width: 1px;
+    height: 20px;
+    background: rgba(255,255,255,0.15);
+    flex-shrink: 0;
+  }
+
+  /* SECTIONS */
+  section { padding: 6rem 5rem; }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 1rem;
+  }
+
+  h2 {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 3.5vw, 2.8rem);
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+  }
+
+  /* COSA TROVI */
+  .cosa-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem 5rem;
+    margin-top: 3rem;
+  }
+
+  .cosa-item {
+    border-top: 2px solid var(--border);
+    padding-top: 1.5rem;
+  }
+
+  .cosa-num {
+    font-family: var(--serif);
+    font-size: 3rem;
+    font-weight: 400;
+    color: var(--border);
+    line-height: 1;
+    margin-bottom: 0.75rem;
+  }
+
+  .cosa-item h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+
+  .cosa-item p {
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+
+  /* STACK */
+  .stack-section {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .stack-section h2 { color: white; }
+  .stack-section .section-label { }
+
+  .stack-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: rgba(255,255,255,0.1);
+    margin-top: 3rem;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .stack-item {
+    background: var(--ink);
+    padding: 2rem;
+  }
+
+  .stack-role {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 0.75rem;
+  }
+
+  .stack-name {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: white;
+    margin-bottom: 0.5rem;
+  }
+
+  .stack-desc {
+    font-size: 13px;
+    color: rgba(255,255,255,0.45);
+    line-height: 1.55;
+  }
+
+  /* BUG CALLOUT */
+  .bug-callout {
+    background: var(--amber-light);
+    border-left: 3px solid var(--amber);
+    padding: 2rem 2.5rem;
+    margin: 3rem 0;
+    max-width: 680px;
+  }
+
+  .bug-callout .bug-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 0.75rem;
+  }
+
+  .bug-callout p {
+    font-size: 0.95rem;
+    color: #4a3a10;
+    line-height: 1.7;
+  }
+
+  /* QUOTE */
+  .quote-section {
+    background: var(--amber);
+    padding: 5rem;
+  }
+
+  .quote-text {
+    font-family: var(--serif);
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    line-height: 1.3;
+    font-weight: 400;
+    color: var(--ink);
+    max-width: 780px;
+    margin: 0 auto;
+    text-align: center;
+    font-style: italic;
+  }
+
+  .quote-attr {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(0,0,0,0.5);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  /* STATUS FLOW */
+  .status-flow {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin: 3rem 0;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+
+  .status-pill {
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+    border: 1.5px solid var(--border);
+    background: white;
+  }
+
+  .status-pill.active {
+    background: var(--ink);
+    color: white;
+    border-color: var(--ink);
+  }
+
+  .status-pill.amber {
+    background: var(--amber);
+    color: var(--ink);
+    border-color: var(--amber);
+  }
+
+  .status-arrow {
+    font-size: 18px;
+    color: var(--border);
+    padding: 0 4px;
+    flex-shrink: 0;
+  }
+
+  /* CTA FINALE */
+  .cta-section {
+    text-align: center;
+    padding: 7rem 5rem;
+  }
+
+  .cta-section h2 { margin-bottom: 1rem; }
+  .cta-section p { color: var(--muted); max-width: 520px; margin: 0 auto 2.5rem; }
+
+  /* FOOTER */
+  footer {
+    background: var(--ink);
+    color: rgba(255,255,255,0.4);
+    padding: 2rem 5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+  }
+
+  footer a { color: rgba(255,255,255,0.6); text-decoration: none; }
+  footer a:hover { color: white; }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-left { padding: 4rem 2rem; min-height: auto; }
+    .hero-right { min-height: 400px; }
+    .hero-right-inner { padding: 2rem; }
+    section { padding: 4rem 2rem; }
+    .bar { padding: 1.2rem 2rem; }
+    .cosa-grid { grid-template-columns: 1fr; }
+    .stack-grid { grid-template-columns: 1fr; }
+    .quote-section { padding: 4rem 2rem; }
+    .cta-section { padding: 5rem 2rem; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; padding: 2rem; }
+  }
+
+  /* Animate on load */
+  .hero-left > * {
+    opacity: 0;
+    transform: translateY(16px);
+    animation: fadeUp 0.6s forwards;
+  }
+  .hero-left > *:nth-child(1) { animation-delay: 0.1s; }
+  .hero-left > *:nth-child(2) { animation-delay: 0.25s; }
+  .hero-left > *:nth-child(3) { animation-delay: 0.4s; }
+  .hero-left > *:nth-child(4) { animation-delay: 0.55s; }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero" style="padding:0">
+  <div class="hero-left">
+    <span class="tag">Guida pratica · AI applicata</span>
+    <h1>Da un'idea a un articolo online.<br><em>Quasi in automatico.</em></h1>
+    <p class="hero-sub">Come ho costruito una content pipeline completa con n8n, Notion, OpenAI e Claude — con i bug reali, i workaround concreti e le scelte che contano davvero.</p>
+    <div class="cta-group">
+      <a href="#guida" class="btn-primary">
+        Leggi la guida
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="https://omarbortolato.it/blog" class="btn-secondary">
+        Vai al blog
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-right-inner">
+      <div style="font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:1.5rem;">Il flusso completo</div>
+      <div class="flow-diagram">
+        <div class="flow-item">
+          <div class="flow-dot gray"></div>
+          <div class="flow-text">
+            <strong>Input idea</strong>
+            Telegram voce/testo, Gmail, manuale su Notion
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-dot"></div>
+          <div class="flow-text">
+            <strong>Ready to Generate</strong>
+            Notion Automation → webhook n8n
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-dot"></div>
+          <div class="flow-text">
+            <strong>OpenAI STEP 1</strong>
+            LinkedIn post + hashtag + meta + image prompt
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-dot gray"></div>
+          <div class="flow-text">
+            <strong>LinkedIn Published</strong>
+            Omar pubblica manualmente → cambio stato
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-dot"></div>
+          <div class="flow-text">
+            <strong>Claude STEP 2</strong>
+            Articolo 800-1200 parole scritto via MCP su Notion
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-dot"></div>
+          <div class="flow-text">
+            <strong>Blog Published</strong>
+            Next.js mostra l'articolo — live entro 1 ora
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BAR -->
+<div class="bar">
+  <div class="bar-item"><strong>n8n</strong> self-hosted</div>
+  <div class="bar-sep"></div>
+  <div class="bar-item"><strong>Notion</strong> come CMS</div>
+  <div class="bar-sep"></div>
+  <div class="bar-item"><strong>OpenAI</strong> GPT-4.1-mini</div>
+  <div class="bar-sep"></div>
+  <div class="bar-item"><strong>Claude</strong> Sonnet + MCP</div>
+  <div class="bar-sep"></div>
+  <div class="bar-item"><strong>Next.js 14</strong> su Vercel</div>
+  <div class="bar-sep"></div>
+  <div class="bar-item" style="color:rgba(255,255,255,0.3);">Costo infrastruttura: <strong style="color:rgba(255,255,255,0.7)">€0</strong></div>
+</div>
+
+<!-- COSA TROVI -->
+<section id="guida">
+  <div class="section-label">Cosa trovi in questa guida</div>
+  <h2>Non teoria. Ogni scelta<br>ha un motivo concreto.</h2>
+  <div class="cosa-grid">
+    <div class="cosa-item">
+      <div class="cosa-num">01</div>
+      <h3>L'architettura del sistema</h3>
+      <p>Come sono collegati Telegram, Notion, n8n, OpenAI e Claude. Perché ogni pezzo fa quello che fa — e cosa succederebbe senza.</p>
+    </div>
+    <div class="cosa-item">
+      <div class="cosa-num">02</div>
+      <h3>I due trigger Notion</h3>
+      <p>Come configurare le Notion Automations per innescare i workflow n8n al cambio di status. Payload, URL webhook, configurazione passo per passo.</p>
+    </div>
+    <div class="cosa-item">
+      <div class="cosa-num">03</div>
+      <h3>Il bug di n8n e la soluzione</h3>
+      <p>n8n 2.9.4 non riesce a scrivere nel body di Notion. Ecco perché, come l'ho scoperto, e il workaround via Claude MCP che funziona meglio della soluzione originale.</p>
+    </div>
+    <div class="cosa-item">
+      <div class="cosa-num">04</div>
+      <h3>Il comando WRITE_ARTICLE</h3>
+      <p>Come funziona il pattern di delega a Claude via MCP. Un messaggio di 4 parole da qualsiasi device genera e pubblica l'articolo su Notion.</p>
+    </div>
+    <div class="cosa-item">
+      <div class="cosa-num">05</div>
+      <h3>Il sito Next.js come output</h3>
+      <p>Come il blog legge Notion come CMS, filtra per status, gestisce immagini e slug. Il codice che connette tutto.</p>
+    </div>
+    <div class="cosa-item">
+      <div class="cosa-num">06</div>
+      <h3>Il principio che guida tutto</h3>
+      <p>Si crea imparando, si impara creando. Come documentare mentre si costruisce genera valore doppio — tecnico e editoriale.</p>
+    </div>
+  </div>
+</section>
+
+<!-- STATUS FLOW -->
+<section style="background:white; padding: 5rem;">
+  <div class="section-label">Il ciclo di vita di un contenuto</div>
+  <h2>Cinque stati.<br>Zero ambiguità.</h2>
+  <p style="color:var(--muted);max-width:560px;margin-bottom:2rem;">Ogni contenuto passa attraverso stati precisi su Notion. Ogni cambio di stato può triggerare un'automazione — o no, se Omar preferisce il controllo manuale.</p>
+
+  <div class="status-flow">
+    <div class="status-pill">IDEA</div>
+    <div class="status-arrow">→</div>
+    <div class="status-pill amber">Ready to Generate</div>
+    <div class="status-arrow">→</div>
+    <div class="status-pill">IDEA</div>
+    <div class="status-arrow">→</div>
+    <div class="status-pill amber">LinkedIn Published</div>
+    <div class="status-arrow">→</div>
+    <div class="status-pill active">Blog Published</div>
+  </div>
+
+  <div class="bug-callout">
+    <div class="bug-label">Il workaround che non ti aspetti</div>
+    <p>Il nodo n8n non riesce a scrivere nel body di Notion (errore 400, bug ambiente 2.9.4). La soluzione non è stata fixare n8n — è stato usare Claude.ai con il Notion MCP. Un messaggio da mobile, 30 secondi, e l'articolo è scritto. Zero infrastruttura aggiuntiva. A volte il workaround è meglio della soluzione originale.</p>
+  </div>
+</section>
+
+<!-- STACK -->
+<section class="stack-section">
+  <div class="section-label">Lo stack completo</div>
+  <h2>Ogni tool ha<br>un ruolo preciso.</h2>
+  <div class="stack-grid">
+    <div class="stack-item">
+      <div class="stack-role">Cattura idee</div>
+      <div class="stack-name">Telegram + n8n</div>
+      <div class="stack-desc">Voce o testo → trascrizione automatica → record Notion. Qualsiasi idea catturata in meno di 10 secondi.</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-role">Segnali esterni</div>
+      <div class="stack-name">Gmail → Signals Inbox</div>
+      <div class="stack-desc">Newsletter taggate in Gmail finiscono nel Signals Inbox. Il planner settimanale le usa come input per le proposte editoriali.</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-role">Piano editoriale</div>
+      <div class="stack-name">Weekly Planner (lunedì 7:00)</div>
+      <div class="stack-desc">GPT-4.1 legge segnali, idee e pubblicazioni recenti. Propone 3 idee. Omar sceglie su Telegram con un click.</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-role">Generazione LinkedIn</div>
+      <div class="stack-name">OpenAI GPT-4.1-mini</div>
+      <div class="stack-desc">Da raw notes a post LinkedIn formattato, hashtag, image prompt, meta title e meta description. In 30 secondi.</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-role">Articolo blog</div>
+      <div class="stack-name">Claude Sonnet + MCP</div>
+      <div class="stack-desc">Da LinkedIn post e raw notes a articolo 800-1200 parole in stile Omar. Scritto direttamente nel body Notion via MCP.</div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-role">Pubblicazione</div>
+      <div class="stack-name">Next.js 14 + Vercel</div>
+      <div class="stack-desc">Il sito filtra Status = "Blog Published" da Notion. Revalidation ogni ora. Deploy gratuito, zero server da gestire.</div>
+    </div>
+  </div>
+</section>
+
+<!-- QUOTE -->
+<div class="quote-section">
+  <p class="quote-text">"Si crea imparando, si impara creando. Il sistema che costruisco diventa la storia che racconto. Non c'è separazione tra il fare e il documentare."</p>
+  <p class="quote-attr">Omar Bortolato — AI Practitioner</p>
+</div>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="section-label">Leggi l'articolo completo</div>
+  <h2>Il sistema è live.<br>Puoi vederlo funzionare.</h2>
+  <p>Questo articolo è stato creato usando esattamente il sistema che descrive. L'idea è nata su Telegram. Il post LinkedIn è stato generato con GPT. L'articolo è stato scritto da Claude. Il sito lo mostra in automatico.</p>
+  <div class="cta-group" style="justify-content:center;">
+    <a href="https://omarbortolato.it/blog/come-ho-costruito-un-sistema-quasi-automatico-per-trasformare-unidea-in-un-articolo" class="btn-primary">
+      Leggi l'articolo
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <a href="https://omarbortolato.it" class="btn-secondary">
+      omarbortolato.it
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+    </a>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 Omar Bortolato — AI Pratica per chi vuole fare, non solo sapere.</span>
+  <a href="https://omarbortolato.it">omarbortolato.it</a>
+</footer>
+
+</body>
+</html>

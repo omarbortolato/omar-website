@@ -476,7 +476,59 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* ── 8. CTA FINALE ────────────────────────────────────────────────────── */}
+      {/* ── 8. CTA GUIDA GRATUITA ────────────────────────────────────────────── */}
+      <section className="bg-gradient-to-br from-primary-800/5 via-white to-indigo-50/50 py-16 md:py-20 border-y border-primary-800/10">
+        <div className="container mx-auto max-w-5xl px-4">
+          <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16">
+
+            {/* ── Text ── */}
+            <div className="flex-1 text-center md:text-left">
+              <span className="mb-4 inline-flex items-center rounded-full border border-accent-500/40 bg-accent-500/10 px-3 py-1 text-xs font-semibold tracking-wide text-accent-600 uppercase">
+                Risorsa gratuita
+              </span>
+              <h2 className="mt-4 text-3xl font-bold text-gray-900 md:text-4xl leading-tight">
+                Ho costruito questo sito in 2 settimane con l&apos;AI.
+                Ti mostro come.
+              </h2>
+              <p className="mt-4 mb-8 max-w-lg mx-auto md:mx-0 text-gray-500 leading-relaxed">
+                La guida completa: strumenti, processo, errori e soluzioni.
+                Tutto gratuito.
+              </p>
+              <Button asChild variant="default" size="lg" className="px-8">
+                <Link href="/guide/come-ho-costruito-questo-sito">
+                  Scarica la guida
+                  <ArrowRight size={16} />
+                </Link>
+              </Button>
+            </div>
+
+            {/* ── Visual — stacked pages ── */}
+            <div className="flex-shrink-0">
+              <div className="relative w-52 h-64 mx-auto">
+                <div className="absolute inset-0 translate-x-6 translate-y-6 rounded-2xl bg-primary-800/10 border border-primary-800/15" />
+                <div className="absolute inset-0 translate-x-3 translate-y-3 rounded-2xl bg-primary-800/15 border border-primary-800/20" />
+                <div className="absolute inset-0 rounded-2xl bg-white shadow-xl border border-gray-200 p-6 flex flex-col gap-2">
+                  <div className="w-12 h-1.5 rounded bg-accent-500 mb-2" />
+                  <div className="h-2 w-full rounded bg-gray-100" />
+                  <div className="h-2 w-5/6 rounded bg-gray-100" />
+                  <div className="h-2 w-4/5 rounded bg-gray-100" />
+                  <div className="h-px bg-gray-100 my-2" />
+                  <div className="h-1.5 w-full rounded bg-gray-50" />
+                  <div className="h-1.5 w-full rounded bg-gray-50" />
+                  <div className="h-1.5 w-3/4 rounded bg-gray-50" />
+                  <div className="h-1.5 w-full rounded bg-gray-50" />
+                  <div className="h-1.5 w-5/6 rounded bg-gray-50" />
+                  <div className="h-1.5 w-full rounded bg-gray-50" />
+                  <div className="mt-auto h-8 w-full rounded-xl bg-primary-800/80" />
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ── 9. CTA FINALE ────────────────────────────────────────────────────── */}
       <section className="bg-gradient-to-br from-primary-800 to-primary-900">
         <div className="container mx-auto max-w-5xl px-4 py-20 text-center md:py-28">
           <h2 className="text-3xl font-bold text-white md:text-4xl">
