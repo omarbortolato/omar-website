@@ -9,6 +9,7 @@ interface SubscribeFormProps {
 }
 
 export function SubscribeForm({ guide }: SubscribeFormProps) {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
@@ -25,7 +26,7 @@ export function SubscribeForm({ guide }: SubscribeFormProps) {
       const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, guide }),
+        body: JSON.stringify({ name: name.trim(), email: email.trim(), guide }),
       });
 
       const data = await res.json();
@@ -50,7 +51,9 @@ export function SubscribeForm({ guide }: SubscribeFormProps) {
         <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-green-100">
           <Download size={24} className="text-green-600" />
         </div>
-        <h3 className="mb-2 text-xl font-bold text-gray-900">Perfetto, ci siamo!</h3>
+        <h3 className="mb-2 text-xl font-bold text-gray-900">
+          {name ? `Grazie ${name}!` : "Perfetto, ci siamo!"}
+        </h3>
         <p className="mb-6 text-gray-600">
           Ti abbiamo inviato un&apos;email con il link di download.
           Puoi anche scaricare la guida direttamente qui sotto.
@@ -67,37 +70,49 @@ export function SubscribeForm({ guide }: SubscribeFormProps) {
     );
   }
 
+  const inputClass =
+    "w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder-gray-400 outline-none transition focus:border-primary-800 focus:ring-2 focus:ring-primary-800/20";
+
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      {/* Nome + Email affiancati su desktop, impilati su mobile */}
       <div className="flex flex-col sm:flex-row gap-3">
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Il tuo nome (opzionale)"
+          className={inputClass}
+        />
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="La tua email"
           required
-          className="flex-1 rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder-gray-400 outline-none transition focus:border-primary-800 focus:ring-2 focus:ring-primary-800/20"
+          className={inputClass}
         />
-        <Button
-          type="submit"
-          disabled={status === "loading"}
-          variant="default"
-          size="lg"
-          className="whitespace-nowrap"
-        >
-          {status === "loading" ? (
-            <>
-              <Loader2 size={16} className="animate-spin" />
-              Invio...
-            </>
-          ) : (
-            <>
-              Scarica la guida gratuita
-              <ArrowRight size={16} />
-            </>
-          )}
-        </Button>
       </div>
+
+      <Button
+        type="submit"
+        disabled={status === "loading"}
+        variant="default"
+        size="lg"
+        className="w-full sm:w-auto sm:self-start"
+      >
+        {status === "loading" ? (
+          <>
+            <Loader2 size={16} className="animate-spin" />
+            Invio...
+          </>
+        ) : (
+          <>
+            Scarica la guida gratuita
+            <ArrowRight size={16} />
+          </>
+        )}
+      </Button>
 
       {status === "error" && (
         <p className="text-sm text-red-600">{errorMsg}</p>
