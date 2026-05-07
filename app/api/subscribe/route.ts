@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
     if (resendKey && resendKey.length > 0) {
       try {
         const resend = new Resend(resendKey);
-        const { error } = await resend.emails.send({
+        const { data, error } = await resend.emails.send({
           from: "Omar Bortolato <onboarding@resend.dev>",
           to: [email],
           subject: "Ecco la tua guida gratuita!",
@@ -55,8 +55,9 @@ export async function POST(request: NextRequest) {
           `,
         });
         if (error) {
-          console.error("[subscribe] Resend error:", error);
+          console.error("[subscribe] Resend error:", JSON.stringify(error));
         } else {
+          console.log("[subscribe] Email sent, id:", data?.id);
           emailSent = true;
         }
       } catch (emailError) {

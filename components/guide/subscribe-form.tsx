@@ -13,6 +13,7 @@ export function SubscribeForm({ guide }: SubscribeFormProps) {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+  const [emailSent, setEmailSent] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
@@ -38,6 +39,7 @@ export function SubscribeForm({ guide }: SubscribeFormProps) {
       }
 
       setDownloadUrl(data.downloadUrl ?? null);
+      setEmailSent(data.emailSent === true);
       setStatus("success");
     } catch {
       setStatus("error");
@@ -55,8 +57,9 @@ export function SubscribeForm({ guide }: SubscribeFormProps) {
           {name ? `Grazie ${name}!` : "Perfetto, ci siamo!"}
         </h3>
         <p className="mb-6 text-gray-600">
-          Ti abbiamo inviato un&apos;email con il link di download.
-          Puoi anche scaricare la guida direttamente qui sotto.
+          {emailSent
+            ? "Ti abbiamo inviato un'email con il link di download. Puoi anche scaricare la guida direttamente qui sotto."
+            : "Scarica la guida qui sotto. Il tuo posto è riservato."}
         </p>
         {downloadUrl && (
           <Button asChild variant="default" size="lg" className="px-8">
