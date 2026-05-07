@@ -102,7 +102,7 @@ const projects: Project[] = [
     tags: ["ChatGPT", "Claude", "Google Sheets", "Notion", "Document AI"],
     image: "/images/phoenixre-screenshot.png",
     imageAlt: "Phoenix RE Capital",
-    href: "https://phoenixrecapital.com",
+    href: "https://phoenixrecapital.us/",
   },
   {
     id: "fastlien",
@@ -160,8 +160,8 @@ const projects: Project[] = [
       { value: "AI-first", label: "ogni prodotto nasce così" },
     ],
     tags: ["Claude Code", "Cowork", "Full Stack AI", "DAO Governance"],
-    image: null,
-    imageAlt: "Azoa Seed",
+    image: "/images/Azoa-Process.png",
+    imageAlt: "Azoa Seed — Dal'Idea alla Startup",
   },
   {
     id: "wahooapp",

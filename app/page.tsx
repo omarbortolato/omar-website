@@ -75,7 +75,7 @@ const projects: Project[] = [
     description:
       "Fund immobiliare USA per investitori italiani. AI per market research, property analysis, investor reporting.",
     tags:     ["ChatGPT", "n8n", "Census API"],
-    href:     "https://phoenixrecapital.com",
+    href:     "https://phoenixrecapital.us/",
     external: true,
   },
   {
