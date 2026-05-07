@@ -186,7 +186,7 @@ const projects: Project[] = [
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
-function ProjectImage({ src, alt, position = "object-center" }: { src: string | null; alt: string; position?: string }) {
+function ProjectImage({ src, alt, position = "object-center", href }: { src: string | null; alt: string; position?: string; href?: string }) {
   if (!src) {
     return (
       <div className="flex h-full min-h-[220px] w-full items-center justify-center rounded-2xl bg-gray-100">
@@ -197,16 +197,22 @@ function ProjectImage({ src, alt, position = "object-center" }: { src: string | 
       </div>
     );
   }
-  return (
+  const img = (
     <div className="relative w-full min-h-[220px] md:min-h-[300px] overflow-hidden rounded-2xl shadow-md">
       <Image
         src={src}
         alt={alt}
         fill
-        className={`object-cover ${position}`}
+        className={`object-cover ${position} transition-opacity hover:opacity-90`}
         sizes="(max-width: 768px) 100vw, 45vw"
       />
     </div>
+  );
+  if (!href) return img;
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" className="block cursor-pointer">
+      {img}
+    </a>
   );
 }
 
@@ -248,7 +254,7 @@ export default function ProgettiPage() {
                   >
                     {/* Image */}
                     <div className="w-full md:w-[45%] flex-shrink-0">
-                      <ProjectImage src={project.image} alt={project.imageAlt} position={project.imagePosition} />
+                      <ProjectImage src={project.image} alt={project.imageAlt} position={project.imagePosition} href={project.href} />
                     </div>
 
                     {/* Text */}

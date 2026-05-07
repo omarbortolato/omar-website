@@ -296,13 +296,27 @@ export default async function HomePage() {
                   {/* Logo */}
                   {project.logo && (
                     <div className="mb-3 h-10 w-auto">
-                      <Image
-                        src={project.logo}
-                        alt={`${project.title} logo`}
-                        height={40}
-                        width={120}
-                        className="h-10 w-auto object-contain object-left"
-                      />
+                      {project.external ? (
+                        <a href={project.href} target="_blank" rel="noopener noreferrer">
+                          <Image
+                            src={project.logo}
+                            alt={`${project.title} logo`}
+                            height={40}
+                            width={120}
+                            className="h-10 w-auto object-contain object-left transition-opacity hover:opacity-75"
+                          />
+                        </a>
+                      ) : (
+                        <Link href={project.href}>
+                          <Image
+                            src={project.logo}
+                            alt={`${project.title} logo`}
+                            height={40}
+                            width={120}
+                            className="h-10 w-auto object-contain object-left transition-opacity hover:opacity-75"
+                          />
+                        </Link>
+                      )}
                     </div>
                   )}
                   {/* Status badge */}
