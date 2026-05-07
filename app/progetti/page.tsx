@@ -45,6 +45,27 @@ const STATUS = {
 
 const projects: Project[] = [
   {
+    id: "docbit",
+    status: { label: "Active", classes: STATUS.active },
+    title: "DocBit",
+    subtitle: "L'assistente AI che protegge i tuoi dati — intelligenza aziendale facile, sicura e conforme.",
+    description: [
+      "DocBit è un framework RAG per assistenti virtuali aziendali, sviluppato con Jera Solutions. Non un chatbot generico: un assistente che parla il linguaggio della TUA azienda, usa esclusivamente i TUOI documenti, e risponde ai TUOI clienti 24/7 in totale sicurezza.",
+      "Questo è il progetto su cui sto puntando di più come \"AI pragmatica\" — quella che funziona davvero. Casi pratici, facili da capire, vicini al cliente. Italiana, sicura, conforme GDPR e AI Act. Multi-canale: sito web, WhatsApp, Telegram, Messenger.",
+    ],
+    metrics: [
+      { value: "0", label: "allucinazioni con LLM privato" },
+      { value: "GDPR", label: "e AI Act compliant" },
+      { value: "Giorni", label: "setup, zero coding" },
+      { value: "4+", label: "canali (web, WhatsApp, TG…)" },
+    ],
+    tags: ["RAG Framework", "LLM Privato", "API Integration", "Multi-channel"],
+    image: "/images/docbit-screenshot.png",
+    imageAlt: "DocBit AI Assistant",
+    imagePosition: "object-left",
+    href: "https://www.docbit.ai",
+  },
+  {
     id: "herbalife",
     status: { label: "Active", classes: STATUS.active },
     title: "E-commerce Multi-Paese",
@@ -122,27 +143,6 @@ const projects: Project[] = [
     image: "/images/fastland-screenshot.png",
     imageAlt: "FastLand",
     href: "https://fastland.co",
-  },
-  {
-    id: "docbit",
-    status: { label: "Active", classes: STATUS.active },
-    title: "DocBit",
-    subtitle: "L'assistente AI che protegge i tuoi dati — intelligenza aziendale facile, sicura e conforme.",
-    description: [
-      "DocBit è un framework RAG per assistenti virtuali aziendali, sviluppato con Jera Solutions. Non un chatbot generico: un assistente che parla il linguaggio della TUA azienda, usa esclusivamente i TUOI documenti, e risponde ai TUOI clienti 24/7 in totale sicurezza.",
-      "Questo è il progetto su cui sto puntando di più come \"AI pragmatica\" — quella che funziona davvero. Casi pratici, facili da capire, vicini al cliente. Italiana, sicura, conforme GDPR e AI Act. Multi-canale: sito web, WhatsApp, Telegram, Messenger.",
-    ],
-    metrics: [
-      { value: "0", label: "allucinazioni con LLM privato" },
-      { value: "GDPR", label: "e AI Act compliant" },
-      { value: "Giorni", label: "setup, zero coding" },
-      { value: "4+", label: "canali (web, WhatsApp, TG…)" },
-    ],
-    tags: ["RAG Framework", "LLM Privato", "API Integration", "Multi-channel"],
-    image: "/images/docbit-screenshot.png",
-    imageAlt: "DocBit AI Assistant",
-    imagePosition: "object-left",
-    href: "https://www.docbit.ai",
   },
   {
     id: "azoa",

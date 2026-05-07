@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, CheckCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function ContactForm() {
@@ -11,6 +11,8 @@ export function ContactForm() {
     tipo: "",
     messaggio: "",
   });
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState("");
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -18,19 +20,45 @@ export function ContactForm() {
     setFields((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const subject = encodeURIComponent(
-      fields.tipo ? `[${fields.tipo}] da ${fields.nome}` : `Messaggio da ${fields.nome}`
-    );
-    const body = encodeURIComponent(
-      `Nome: ${fields.nome}\nEmail: ${fields.email}\nTipo: ${fields.tipo || "—"}\n\n${fields.messaggio}`
-    );
-    window.location.href = `mailto:omarbortolato@gmail.com?subject=${subject}&body=${body}`;
+    setStatus("loading");
+    setErrorMsg("");
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(fields),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setStatus("error");
+        setErrorMsg(data.error ?? "Qualcosa è andato storto. Riprova.");
+        return;
+      }
+      setStatus("success");
+    } catch {
+      setStatus("error");
+      setErrorMsg("Errore di rete. Controlla la connessione e riprova.");
+    }
   }
 
   const inputClass =
     "w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder-gray-400 outline-none transition focus:border-primary-800 focus:ring-2 focus:ring-primary-800/10";
+
+  if (status === "success") {
+    return (
+      <div className="rounded-2xl border border-green-200 bg-green-50 p-10 text-center">
+        <CheckCircle size={40} className="mx-auto mb-4 text-green-500" />
+        <h3 className="mb-2 text-xl font-bold text-gray-900">Messaggio inviato!</h3>
+        <p className="text-gray-600">
+          Grazie {fields.nome}, ti rispondo entro 48 ore.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
@@ -102,9 +130,28 @@ export function ContactForm() {
         />
       </div>
 
-      <Button type="submit" variant="accent" size="lg" className="w-full sm:w-auto px-8">
-        Invia messaggio
-        <ArrowRight size={16} />
+      {status === "error" && (
+        <p className="text-sm text-red-600">{errorMsg}</p>
+      )}
+
+      <Button
+        type="submit"
+        disabled={status === "loading"}
+        variant="accent"
+        size="lg"
+        className="w-full sm:w-auto px-8"
+      >
+        {status === "loading" ? (
+          <>
+            <Loader2 size={16} className="animate-spin" />
+            Invio in corso...
+          </>
+        ) : (
+          <>
+            Invia messaggio
+            <ArrowRight size={16} />
+          </>
+        )}
       </Button>
     </form>
   );

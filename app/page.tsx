@@ -51,6 +51,20 @@ interface Project {
 
 const projects: Project[] = [
   {
+    id: "docbit",
+    badge: {
+      label:   "Active",
+      classes: "bg-green-100 text-green-700 border border-green-200",
+    },
+    logo:        "/images/docbit-logo.png",
+    title:       "DocBit",
+    description:
+      "L'assistente AI che parla il linguaggio della tua azienda. RAG framework GDPR-compliant su web, WhatsApp, Telegram.",
+    tags:     ["RAG Framework", "LLM Privato", "Multi-channel"],
+    href:     "https://www.docbit.ai",
+    external: true,
+  },
+  {
     id: "phoenix",
     badge: {
       label:   "Active",
@@ -90,19 +104,6 @@ const projects: Project[] = [
       "6 siti automatizzati (IT, FR, DE, UK, US, ES). SEO automation, contenuti multilingua, Google Ads optimization.",
     tags:     ["ChatGPT", "n8n", "WordPress"],
     href:     "/progetti#herbalife",
-    external: false,
-  },
-  {
-    id: "azoa",
-    badge: {
-      label:   "Founding",
-      classes: "bg-purple-100 text-purple-700 border border-purple-200",
-    },
-    title:       "Azoa Seed",
-    description:
-      "AI-native startup factory. Fast prototyping, DAO governance, proprietary infrastructure.",
-    tags:     ["Claude Code", "Cowork", "Full Stack AI"],
-    href:     "/progetti#azoa",
     external: false,
   },
 ];
@@ -189,7 +190,25 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── 2. CREDIBILITY STRIP ─────────────────────────────────────────────── */}
+      {/* ── 2. BANNER GUIDA GRATUITA ─────────────────────────────────────────── */}
+      <div className="bg-accent-500">
+        <div className="container mx-auto max-w-5xl px-4 py-3">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-center sm:text-left">
+            <span className="text-sm font-semibold text-white">
+              Nuova guida gratuita: come ho costruito questo sito con Claude Code
+            </span>
+            <Link
+              href="/guide/come-ho-costruito-questo-sito"
+              className="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-1.5 text-xs font-bold text-accent-600 transition-opacity hover:opacity-90 whitespace-nowrap"
+            >
+              Scarica gratis
+              <ArrowRight size={12} />
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* ── 3. CREDIBILITY STRIP ─────────────────────────────────────────────── */}
       <section className="border-y border-gray-100 bg-white">
         <div className="container mx-auto max-w-5xl px-4 py-6 md:py-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
