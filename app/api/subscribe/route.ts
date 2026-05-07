@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
       try {
         const resend = new Resend(resendKey);
         const { data, error } = await resend.emails.send({
-          from: "Omar Bortolato <onboarding@resend.dev>",
+          from: "Omar Bortolato <omar@omarbortolato.it>",
           to: [email],
           subject: "Ecco la tua guida gratuita!",
           html: `
