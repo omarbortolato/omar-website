@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     "Non riassunti. Rielaborazioni. Quello che ho capito, applicato e trasformato in azione da ogni libro che leggo. Scaricabili gratis.",
 };
 
-export const revalidate = 3600;
+export const revalidate = 300;
 
 export default async function LibriPage() {
   const books = await getBooks();
