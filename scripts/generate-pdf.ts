@@ -150,26 +150,30 @@ async function generatePdf() {
   console.log(`📖  Lettura template: ${templatePath}`);
   let html = fs.readFileSync(templatePath, "utf-8");
 
-  // Iniezione Amazon Link da Notion
-  const notionKey = process.env.NOTION_API_KEY;
-  if (notionKey) {
-    const amazonUrl = await getAmazonLink(notionKey);
-    if (amazonUrl) {
-      html = html.replace('href="AMAZON_PLACEHOLDER"', `href="${amazonUrl}"`);
+  // Iniezione Amazon Link da Notion (solo se il template usa il placeholder)
+  const hasPlaceholder = html.includes('href="AMAZON_PLACEHOLDER"');
+  if (hasPlaceholder) {
+    const notionKey = process.env.NOTION_API_KEY;
+    if (notionKey) {
+      const amazonUrl = await getAmazonLink(notionKey);
+      if (amazonUrl) {
+        html = html.replace('href="AMAZON_PLACEHOLDER"', `href="${amazonUrl}"`);
+      } else {
+        // Rimuove il div amazon-btn-wrap se link assente
+        html = html.replace(
+          /<div class="amazon-btn-wrap">[\s\S]*?<\/div>\s*<\/div>/,
+          ""
+        );
+      }
     } else {
-      // Rimuove il div amazon-btn-wrap se link assente
+      console.warn("⚠️  NOTION_API_KEY non configurata — Amazon Link skippato.");
       html = html.replace(
         /<div class="amazon-btn-wrap">[\s\S]*?<\/div>\s*<\/div>/,
         ""
       );
     }
   } else {
-    console.warn("⚠️  NOTION_API_KEY non configurata — Amazon Link skippato.");
-    // Rimuove il bottone placeholder se non abbiamo Notion
-    html = html.replace(
-      /<div class="amazon-btn-wrap">[\s\S]*?<\/div>\s*<\/div>/,
-      ""
-    );
+    console.log("ℹ️   Amazon Link già presente nel template — nessuna sostituzione necessaria.");
   }
 
   console.log("🚀  Avvio Puppeteer...");
