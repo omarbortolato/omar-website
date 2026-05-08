@@ -1,190 +1,287 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mastery — Robert Greene | Spremuta di Omar Bortolato</title>
-  <!--
-    ⚠️  PLACEHOLDER — sostituisci con l'HTML completo dall'artifact Claude.
-    Questo file è il template di esempio con la struttura corretta.
-    Incolla l'HTML della Spremuta di Mastery qui sopra (tutto, incluso il CSS inline).
-  -->
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Georgia', serif;
-      background: #fff;
-      color: #111827;
-      line-height: 1.7;
-    }
-    .cover {
-      background: linear-gradient(135deg, #1E3A8A 0%, #1e2d6b 100%);
-      color: white;
-      padding: 80px 60px;
-      min-height: 297mm;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-    .cover-label {
-      font-size: 12px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: #F59E0B;
-      margin-bottom: 24px;
-      font-family: sans-serif;
-    }
-    .cover h1 {
-      font-size: 64px;
-      font-weight: bold;
-      line-height: 1.1;
-      margin-bottom: 16px;
-    }
-    .cover .author {
-      font-size: 22px;
-      color: rgba(255,255,255,0.7);
-      margin-bottom: 48px;
-    }
-    .cover .divider {
-      width: 60px;
-      height: 3px;
-      background: #F59E0B;
-      margin-bottom: 48px;
-    }
-    .cover .meta {
-      font-family: sans-serif;
-      font-size: 14px;
-      color: rgba(255,255,255,0.5);
-    }
-    .section {
-      padding: 60px;
-      page-break-inside: avoid;
-    }
-    .section-label {
-      font-size: 11px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: #1E3A8A;
-      font-family: sans-serif;
-      margin-bottom: 12px;
-    }
-    .section h2 {
-      font-size: 32px;
-      margin-bottom: 24px;
-      color: #111827;
-    }
-    .section p {
-      font-size: 16px;
-      margin-bottom: 16px;
-      color: #374151;
-    }
-    .quote {
-      border-left: 4px solid #F59E0B;
-      padding: 20px 28px;
-      margin: 32px 0;
-      background: #FEFCE8;
-      font-style: italic;
-      font-size: 18px;
-    }
-    .footer {
-      background: #F9FAFB;
-      padding: 40px 60px;
-      font-family: sans-serif;
-      font-size: 12px;
-      color: #9CA3AF;
-      text-align: center;
-    }
-  </style>
-</head>
-<body>
 
-  <!-- COPERTINA -->
-  <div class="cover">
-    <div class="cover-label">Spremuta di libro — Omar Bortolato</div>
-    <h1>Mastery</h1>
-    <div class="author">Robert Greene</div>
-    <div class="divider"></div>
-    <div class="meta">omarbortolato.it · 2024</div>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--color-text-primary);line-height:1.7;background:var(--color-background-primary)}
+.cover{background:#1E3A8A;color:#fff;padding:52px 48px 44px;position:relative;overflow:hidden}
+.cover::after{content:'';position:absolute;right:-50px;top:-50px;width:260px;height:260px;border-radius:50%;border:36px solid rgba(245,158,11,0.14)}
+.badge{display:inline-block;background:#F59E0B;color:#1E3A8A;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 14px;border-radius:20px;margin-bottom:24px;position:relative;z-index:1}
+.cover-title{font-size:44px;font-weight:900;line-height:1.05;margin-bottom:6px;position:relative;z-index:1;color:#fff}
+.cover-title span{color:#F59E0B}
+.cover-sub{font-size:14px;color:rgba(255,255,255,.55);margin-bottom:32px;position:relative;z-index:1}
+.cover-foot{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1}
+.cover-brand{font-size:12px;color:rgba(255,255,255,.5)}
+.cover-brand strong{color:#fff;font-weight:600}
+.cover-cats{display:flex;gap:8px}
+.cover-cats span{font-size:11px;color:rgba(255,255,255,.45);border:1px solid rgba(255,255,255,.2);padding:2px 10px;border-radius:12px}
+.wrap{padding:0 40px 56px;max-width:100%}
+.intro{background:var(--color-background-info);border-left:4px solid #1E3A8A;padding:20px 24px;margin:40px 0 36px;border-radius:0 8px 8px 0}
+.intro .lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--color-text-info);margin-bottom:8px}
+.intro p{font-size:14px;color:var(--color-text-primary);line-height:1.7}
+.sec{margin:40px 0}
+.sec-hdr{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.snum{width:32px;height:32px;background:#1E3A8A;color:#fff;font-size:13px;font-weight:700;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.stitle{font-size:18px;font-weight:700;color:var(--color-text-primary);line-height:1.2}
+.stitle small{display:block;font-size:12px;font-weight:400;color:var(--color-text-secondary);margin-top:2px}
+.divider{height:1px;background:var(--color-border-tertiary);margin:40px 0}
+.prose{font-size:14px;color:var(--color-text-secondary);line-height:1.75}
+.prose + .prose{margin-top:12px}
+.insight-grid{display:flex;flex-direction:column;gap:14px}
+.ic{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:12px;padding:18px 20px;display:flex;gap:16px}
+.ic.acc{border-color:#F59E0B;background:var(--color-background-warning)}
+.ic-icon{font-size:22px;flex-shrink:0;margin-top:2px}
+.ic-title{font-size:14px;font-weight:600;color:var(--color-text-primary);margin-bottom:5px}
+.ic.acc .ic-title{color:var(--color-text-warning)}
+.ic-text{font-size:13px;color:var(--color-text-secondary);line-height:1.65}
+.act-list{display:flex;flex-direction:column;gap:16px}
+.act{display:flex;gap:14px}
+.anum{width:26px;height:26px;background:#F59E0B;color:#fff;font-size:11px;font-weight:700;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:3px}
+.at{font-size:14px;font-weight:600;color:var(--color-text-primary);margin-bottom:4px}
+.ax{font-size:13px;color:var(--color-text-secondary);line-height:1.65}
+.ai-tip{margin-top:8px;font-size:12px;color:var(--color-text-tertiary);background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:6px;padding:7px 11px;display:flex;gap:8px;line-height:1.5}
+.ai-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ai-card{border-radius:10px;padding:16px 18px}
+.ai-card.holds{background:var(--color-background-success)}
+.ai-card.changes{background:var(--color-background-warning)}
+.ai-card .lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px}
+.ai-card.holds .lbl{color:var(--color-text-success)}
+.ai-card.changes .lbl{color:var(--color-text-warning)}
+.ai-card p{font-size:13px;color:var(--color-text-primary);line-height:1.6}
+.ai-ins{margin-top:14px;background:#1E3A8A;color:#fff;border-radius:10px;padding:18px 22px;font-size:13px;line-height:1.7}
+.ai-ins strong{color:#F59E0B}
+.quote{text-align:center;padding:32px 20px}
+.qmark{font-size:64px;color:var(--color-border-secondary);line-height:.4;display:block;margin-bottom:20px;font-family:Georgia,serif}
+.qtext{font-size:20px;font-weight:600;color:var(--color-text-primary);line-height:1.4;font-style:italic;max-width:440px;margin:0 auto 12px}
+.qsrc{font-size:12px;color:var(--color-text-tertiary)}
+.books{display:flex;flex-direction:column;gap:10px}
+.book{display:flex;gap:12px;padding:12px 14px;background:var(--color-background-secondary);border-radius:8px;border:0.5px solid var(--color-border-tertiary)}
+.book-icon{font-size:18px;flex-shrink:0;margin-top:2px}
+.bt{font-size:13px;font-weight:600;color:var(--color-text-primary)}
+.ba{font-size:12px;color:var(--color-text-secondary)}
+.bw{font-size:12px;color:var(--color-text-secondary);margin-top:2px;line-height:1.5}
+.cta{background:#1E3A8A;border-radius:14px;padding:36px 36px 32px;text-align:center;margin-top:40px}
+.cta h3{font-size:20px;font-weight:700;color:#fff;margin-bottom:10px;line-height:1.3}
+.cta h3 span{color:#F59E0B}
+.cta p{font-size:14px;color:rgba(255,255,255,.7);margin-bottom:24px;max-width:380px;margin-left:auto;margin-right:auto;line-height:1.7}
+.btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn-p{background:#F59E0B;color:#1E3A8A;font-size:13px;font-weight:700;padding:11px 24px;border-radius:7px;text-decoration:none;display:inline-block}
+.btn-s{background:transparent;color:#fff;font-size:13px;font-weight:500;padding:11px 24px;border-radius:7px;border:1px solid rgba(255,255,255,.25);text-decoration:none;display:inline-block}
+.amz{margin-top:16px;font-size:11px;color:rgba(255,255,255,.35)}
+.amz a{color:rgba(255,255,255,.6);text-decoration:underline}
+.footer{border-top:0.5px solid var(--color-border-tertiary);margin-top:48px;padding:22px 40px;display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--color-text-tertiary);flex-wrap:wrap;gap:8px}
+.footer-brand{font-size:12px;font-weight:600;color:#1E3A8A}
+.footer-links{display:flex;gap:14px}
+.footer-links a{color:var(--color-text-secondary);text-decoration:none;font-size:11px}
+.footer-note{font-size:10px;color:var(--color-text-tertiary);text-align:center;padding:0 40px 24px}
+</style>
+
+<div class="cover">
+  <div class="badge">🍋 Spremuta di libro</div>
+  <div class="cover-title">Mastery<br><span>di Robert Greene</span></div>
+  <div class="cover-sub">La rielaborazione di Omar Bortolato · omarbortolato.it</div>
+  <div class="cover-foot">
+    <div class="cover-brand"><strong>omarbortolato.it</strong><br>AI Pratica per chi vuole fare, non solo sapere.</div>
+    <div class="cover-cats"><span>Crescita personale</span><span>Business</span></div>
   </div>
+</div>
 
-  <!-- SEZIONE 1: L'IDEA PRINCIPALE -->
-  <div class="section">
-    <div class="section-label">01 — L'idea principale</div>
-    <h2>La maestria non è un talento. È un processo.</h2>
-    <p>
-      Greene demolisce il mito del genio nato. Da Darwin a Mozart, ogni caso che
-      sembra "talento puro" rivela migliaia di ore di apprendimento intenso, fallimenti
-      nascosti, mentori cercati con ossessione.
-    </p>
-    <div class="quote">
-      "The future belongs to those who learn more skills and combine them in creative ways."
+<div class="wrap">
+
+<div class="intro">
+  <div class="lbl">Prima di iniziare</div>
+  <p>Questa non è una sintesi del libro. È quello che ho portato a casa <em>io</em> dopo averlo letto — filtrato attraverso anni di imprenditoria, errori e tentativi. Leggi con spirito critico e trovaci la tua applicazione. Quella che vale per te è diversa dalla mia. E se ci riesci, scrivimi.</p>
+</div>
+
+<div class="sec">
+  <div class="sec-hdr">
+    <div class="snum">1</div>
+    <div class="stitle">Il libro in 90 secondi<small>Di cosa parla, perché vale il tuo tempo</small></div>
+  </div>
+  <p class="prose">Robert Greene studia le vite di Leonardo da Vinci, Darwin, Mozart, Coltrane e una ventina di altri maestri per trovare il filo rosso comune. Il risultato è brutalmente semplice e scomodo: non esistono scorciatoie. La mastery — quell'abilità rara che rende qualcuno veramente irripetibile — arriva solo dopo anni di lavoro deliberato, umiltà radicale e curiosità instancabile.</p>
+  <p class="prose" style="margin-top:12px">Ma Greene non ti sta dicendo di soffrire in silenzio. Ti sta dicendo qualcosa di più interessante: il percorso verso la mastery ha una logica precisa, e chiunque può seguirla a patto di capire come funziona davvero.</p>
+  <p class="prose" style="margin-top:12px"><strong style="color:var(--color-text-primary)">Chi dovrebbe leggerlo:</strong> chiunque voglia costruire qualcosa di duraturo. Imprenditori, manager, freelance, artigiani digitali. Soprattutto chi si sente "già bravo" — per loro è il libro più utile.</p>
+</div>
+
+<div class="divider"></div>
+
+<div class="sec">
+  <div class="sec-hdr">
+    <div class="snum">2</div>
+    <div class="stitle">Le 5 idee che mi hanno cambiato il modo di pensare<small>Non del libro — mie. Filtrate attraverso la mia esperienza.</small></div>
+  </div>
+  <div class="insight-grid">
+    <div class="ic acc">
+      <div class="ic-icon">🏗️</div>
+      <div>
+        <div class="ic-title">Le fondamenta non sono noiose — sono il vantaggio competitivo</div>
+        <div class="ic-text">Tutti vogliono bruciare le tappe. Greene mostra che i maestri fanno l'opposto: si ossessionano con le basi, spesso per anni. Darwin collezionava fossili senza senso apparente per decenni. Quello che sembrava tempo perso era la costruzione di un pattern matching impossibile da copiare. Le fondamenta profonde non rallentano — fanno sembrare lento chi non le ha.</div>
+      </div>
     </div>
-    <p>
-      La tesi centrale: esiste un percorso neurologico verso la padronanza. Chiunque
-      può percorrerlo. La variabile non è il QI, è la strategia e la durata dell'impegno.
-    </p>
+    <div class="ic">
+      <div class="ic-icon">🌱</div>
+      <div>
+        <div class="ic-title">L'apprendistato è un investimento, non una fase da superare</div>
+        <div class="ic-text">Greene chiama "apprenticeship phase" il periodo in cui si impara da un maestro, da un ambiente, da un'industria — stando in basso, osservando, eseguendo. Il problema è che la nostra cultura tratta questa fase come qualcosa da bruciare il prima possibile. Chi la abbraccia davvero esce con intuizioni costruite sul campo, non sui libri.</div>
+      </div>
+    </div>
+    <div class="ic">
+      <div class="ic-icon">⚡</div>
+      <div>
+        <div class="ic-title">La serendipity non è fortuna — è preparazione accumulata</div>
+        <div class="ic-text">Il colpo di genio è quasi sempre la sedimentazione di anni di lavoro che si manifesta all'improvviso. Greene lo chiama il momento del "creative breakthrough" e dimostra che arriva sempre dopo una fase di saturazione. Non puoi accelerarlo. Puoi solo creare le condizioni. Il che significa: smettila di aspettare l'illuminazione e inizia ad accumulare.</div>
+      </div>
+    </div>
+    <div class="ic">
+      <div class="ic-icon">🎯</div>
+      <div>
+        <div class="ic-title">Il tuo Life's Task non è una passione — è una direzione</div>
+        <div class="ic-text">Greene introduce il concetto di Life's Task: non un obiettivo fisso ma una direzione profonda verso cui ti senti naturalmente attratto. La differenza con "segui la tua passione" è sostanziale — la passione cambia, la direzione no. Capire la propria direzione ti libera dalla tirannia di dover decidere ogni scelta come se fosse definitiva.</div>
+      </div>
+    </div>
+    <div class="ic">
+      <div class="ic-icon">🔄</div>
+      <div>
+        <div class="ic-title">Il viaggio è il prodotto, non il mezzo</div>
+        <div class="ic-text">Quello che mi ha colpito di più e che trovo più difficile da applicare in un'era dove tutto è veloce e misurabile. Greene mostra che i maestri non si tormentano sulla destinazione — si immedesimano nel processo. Chi si gode il viaggio costruisce meglio di chi corre verso la meta. Non come filosofia new age: come strategia concreta.</div>
+      </div>
+    </div>
   </div>
+</div>
 
-  <!-- SEZIONE 2: IL PERCORSO -->
-  <div class="section">
-    <div class="section-label">02 — Il percorso</div>
-    <h2>Le tre fasi verso la maestria</h2>
-    <p><strong>1. Apprendistato</strong> — Abbandona l'ego. Osserva. Imita. Fai lavoro
-    di basso livello con attenzione massima. La fase più sottovalutata.</p>
-    <p><strong>2. Fase creativa/attiva</strong> — Smetti di imitare. Sperimenta.
-    Cerca frizioni e feedback. Qui si costruisce lo stile personale.</p>
-    <p><strong>3. Maestria</strong> — La conoscenza diventa intuitiva. Non "pensi"
-    più al processo — lo vivi.</p>
+<div class="divider"></div>
+
+<div class="sec">
+  <div class="sec-hdr">
+    <div class="snum">3</div>
+    <div class="stitle">Mettilo in pratica: 5 azioni concrete<small>Applicabili a qualsiasi lavoro, ruolo, contesto</small></div>
   </div>
-
-  <!-- SEZIONE 3: COSA HO APPLICATO -->
-  <div class="section">
-    <div class="section-label">03 — Cosa ho applicato</div>
-    <h2>La mia lettura pratica</h2>
-    <p>
-      Il framework dell'apprendistato mi ha fatto ripensare il mio rapporto con l'AI.
-      Sono in fase di apprendistato con Claude Code — sto deliberatamente rallentando
-      per capire i meccanismi, non solo usare l'output.
-    </p>
-    <p>
-      Il concetto di "vocazione profonda" — trovare l'intersezione tra ciò che ti assorbe
-      naturalmente e ciò che il mondo necessita — è diventato il mio framework per
-      valutare nuovi progetti.
-    </p>
+  <div class="act-list">
+    <div class="act">
+      <div class="anum">1</div>
+      <div>
+        <div class="at">Identifica il tuo livello fondamenta e torna lì</div>
+        <div class="ax">Qualunque cosa tu faccia, c'è un livello base che probabilmente hai saltato o dimenticato di consolidare. Dedicagli 20 minuti al giorno per 30 giorni. Non per diventare esperto, ma per capire cosa ti manca. Spesso la risposta ti sorprenderà.</div>
+        <div class="ai-tip">🤖 Usa l'AI per mappare i gap: descrivi il tuo lavoro a Claude e chiedi "quali sono le competenze fondamentali che un esperto deve padroneggiare, dalla più basilare alla più avanzata?" Hai una mappa in 2 minuti.</div>
+      </div>
+    </div>
+    <div class="act">
+      <div class="anum">2</div>
+      <div>
+        <div class="at">Trova il tuo maestro — fisico o digitale</div>
+        <div class="ax">L'apprendistato non richiede un contratto. Puoi fare l'apprendista di qualcuno che non ti conosce: studia il suo metodo, replica i suoi esercizi, analizza i suoi errori pubblici. Scegli una persona nel tuo campo che ammiri e trascorri 3 mesi a studiare come pensa, non solo cosa produce.</div>
+        <div class="ai-tip">🤖 L'AI può fare da maestro simulato: chiedi a Claude di comportarsi come un esperto senior del tuo settore e di criticare il tuo lavoro senza filtri. Non è un mentore vero, ma è disponibile alle 2 di notte.</div>
+      </div>
+    </div>
+    <div class="act">
+      <div class="anum">3</div>
+      <div>
+        <div class="at">Crea un sistema per accumulare, non solo per fare</div>
+        <div class="ax">Il breakthrough arriva perché sotto c'è un accumulo. Costruisci un sistema personale di raccolta: osservazioni, pattern, connessioni tra idee distanti. Non deve essere elegante. Può essere un file di testo, una nota vocale, un Notion. L'importante è che sia regolare e che tu lo rilegga periodicamente.</div>
+        <div class="ai-tip">🤖 Usa l'AI per trovare connessioni: copia le tue note in un prompt e chiedi "trovami i pattern ricorrenti e le idee che si collegano". Spesso vede connessioni che tu, troppo vicino al materiale, non vedi.</div>
+      </div>
+    </div>
+    <div class="act">
+      <div class="anum">4</div>
+      <div>
+        <div class="at">Misura il processo, non solo i risultati</div>
+        <div class="ax">Tieni traccia delle ore di pratica deliberata, non solo degli output. Quante ore questa settimana hai fatto qualcosa che ti metteva a disagio perché eri al limite della tua competenza? Se zero, sei in modalità esecuzione, non in modalità crescita. Sono due cose diverse e vanno bilanciate.</div>
+        <div class="ai-tip">🤖 Chiedi all'AI di fare da coach di processo: a fine settimana descrivi cosa hai fatto e chiedi "quanta di questa attività era pratica deliberata e quanta esecuzione di routine?" Risposta onesta garantita.</div>
+      </div>
+    </div>
+    <div class="act">
+      <div class="anum">5</div>
+      <div>
+        <div class="at">Proteggi il tempo di non-produttività apparente</div>
+        <div class="ax">I maestri di Greene avevano tutti periodi di incubazione — fasi in cui sembravano non fare nulla di rilevante. In un mondo ossessionato dalla produttività, questi momenti vengono eliminati. Schedulali invece come appuntamenti sacri: passeggiate senza telefono, lettura fuori dal tuo campo, esperimenti senza obiettivo.</div>
+        <div class="ai-tip">🤖 Questo è l'unico step dove non usare l'AI. Il cervello che fa connessioni ha bisogno di assenza di input, non di più input. Stacca.</div>
+      </div>
+    </div>
   </div>
+</div>
 
-  <!-- SEZIONE 4: I 3 TAKEAWAY -->
-  <div class="section">
-    <div class="section-label">04 — I 3 takeaway</div>
-    <h2>Quello che rimane dopo 6 mesi</h2>
-    <p>→ <strong>L'apprendistato va cercato, non subito.</strong> Trovati mentori, ambienti,
-    contesti che ti costringono a migliorare.</p>
-    <p>→ <strong>La specializzazione profonda batte la poliedricità superficiale.</strong>
-    Ma serve prima una base larga per capire dove specializzarsi.</p>
-    <p>→ <strong>Il tempo è la variabile reale.</strong> Non "lavorare di più" ma
-    "lavorare deliberatamente per più tempo" su cosa conta davvero.</p>
+<div class="divider"></div>
+
+<div class="sec">
+  <div class="sec-hdr">
+    <div class="snum">4</div>
+    <div class="stitle">L'angolo AI<small>Come leggere Mastery nel 2026</small></div>
   </div>
-
-  <!-- SEZIONE 5: VALE LA PENA LEGGERLO? -->
-  <div class="section">
-    <div class="section-label">05 — Vale la pena leggerlo?</div>
-    <h2>Il mio voto: 😍 TOP</h2>
-    <p>
-      Sì, anche se è lungo (~500 pagine). Puoi leggerlo in modo non lineare:
-      parti dalle biografie che ti interessano (Leonardo, Darwin, Proust, Einstein)
-      e poi leggi i capitoli teorici. Ogni storia è autosufficiente.
-    </p>
-    <p>
-      Non è un libro di "produttività". È più profondo: ti fa ripensare la relazione
-      con il tempo, l'apprendimento, la carriera.
-    </p>
+  <div class="ai-grid">
+    <div class="ai-card holds">
+      <div class="lbl">✅ Regge all'era AI</div>
+      <p>La profondità batte la velocità. L'AI genera contenuti in secondi, ma non sostituisce il pattern matching costruito dopo 10.000 ore nel tuo campo. Chi ha le fondamenta profonde usa l'AI per moltiplicare. Chi non ce le ha, usa l'AI per nasconderlo.</p>
+    </div>
+    <div class="ai-card changes">
+      <div class="lbl">⚡ Cambia nell'era AI</div>
+      <p>La fase di apprendistato si comprime, non sparisce. Puoi simulare scenari complessi in tempi più brevi con l'AI come sparring partner. Il rischio è credere che la simulazione sostituisca il campo — non lo fa, ma lo prepara meglio.</p>
+    </div>
   </div>
-
-  <!-- FOOTER -->
-  <div class="footer">
-    Spremuta di Omar Bortolato — omarbortolato.it<br/>
-    AI pratica per chi vuole fare, non solo sapere.
+  <div class="ai-ins">
+    <strong>L'insight più stuzzicante:</strong> nell'era dell'AI, la vera mastery potrebbe spostarsi dall'esecuzione tecnica all'orchestrazione. Saper dirigere sistemi AI complessi richiede la stessa intuizione profonda che Greene descrive — non si improvvisa, si costruisce. Il maestro del futuro forse non è il miglior coder: è quello che capisce profondamente il problema e sa combinare strumenti, persone e AI in modo che gli altri non vedono nemmeno.
   </div>
+</div>
 
-</body>
-</html>
+<div class="divider"></div>
+
+<div class="quote">
+  <span class="qmark">"</span>
+  <div class="qtext">The future belongs to those who learn more skills and combine them in creative ways.</div>
+  <div class="qsrc">Robert Greene, Mastery</div>
+</div>
+
+<div class="divider"></div>
+
+<div class="sec">
+  <div class="sec-hdr">
+    <div class="snum">5</div>
+    <div class="stitle">Per andare più in profondità<small>3 libri che completano il quadro</small></div>
+  </div>
+  <div class="books">
+    <div class="book">
+      <div class="book-icon">📖</div>
+      <div>
+        <div class="bt">Deep Work — Cal Newport</div>
+        <div class="ba">Il complemento pratico di Mastery</div>
+        <div class="bw">Greene ti dice perché la profondità conta, Newport ti dice come creare le condizioni per raggiungerla nel quotidiano. Insieme sono micidiali.</div>
+      </div>
+    </div>
+    <div class="book">
+      <div class="book-icon">📖</div>
+      <div>
+        <div class="bt">The Art of Learning — Josh Waitzkin</div>
+        <div class="ba">Il manuale operativo dell'apprendimento profondo</div>
+        <div class="bw">Campione mondiale di scacchi e tai chi — due campi opposti. La sua prospettiva su come si costruisce competenza reale è concreta e applicabile a qualsiasi contesto.</div>
+      </div>
+    </div>
+    <div class="book">
+      <div class="book-icon">📖</div>
+      <div>
+        <div class="bt">Range — David Epstein</div>
+        <div class="ba">La prospettiva opposta — e vale la pena leggerla</div>
+        <div class="bw">Epstein argomenta che in molti campi la varietà di esperienze è un vantaggio rispetto alla specializzazione precoce. Non è il contrario di Mastery: è la conversazione che Mastery non fa con se stesso.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cta">
+  <h3>Come lo hai <span>applicato tu?</span></h3>
+  <p>Hai letto questa Spremuta e qualcosa ti ha colpito in modo diverso da me? Stai già mettendo in pratica uno di questi principi con risultati concreti? O hai una super idea di business? Scrivimi — le storie vere mi interessano più dei like.</p>
+  <div class="btns">
+    <a href="mailto:omar@omarbortolato.it" class="btn-p">Scrivimi</a>
+    <a href="https://omarbortolato.it/collabora" class="btn-s">Collaboriamo</a>
+  </div>
+  <div class="amz">Vuoi comprare il libro? <a href="https://amzn.to/mastery-greene" target="_blank">Trovalo su Amazon →</a></div>
+</div>
+
+</div>
+
+<div class="footer">
+  <div class="footer-brand">omarbortolato.it</div>
+  <div class="footer-links">
+    <a href="https://omarbortolato.it">Sito</a>
+    <a href="https://omarbortolato.it/guide">Guide</a>
+    <a href="https://linkedin.com/in/omarbortolato">LinkedIn</a>
+  </div>
+  <div>AI Pratica per chi vuole fare, non solo sapere.</div>
+</div>
+<div class="footer-note">Rielaborazione personale, non riassunto del testo originale. Tutti i diritti dell'opera appartengono all'autore e all'editore.</div>
