@@ -25,7 +25,7 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 max-w-5xl items-center justify-between px-4">
         {/* Logo */}
-        <Link href="/" className="flex-shrink-0">
+        <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
           <Image
             src="/images/logo_omarbortolato.jpg"
             alt="Omar Bortolato"
@@ -34,6 +34,9 @@ export function Header() {
             className="h-9 w-auto object-contain"
             priority
           />
+          <span className="text-sm font-bold tracking-widest text-primary-800 uppercase">
+            Omar Bortolato
+          </span>
         </Link>
 
         {/* Desktop nav */}
