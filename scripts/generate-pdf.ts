@@ -88,7 +88,9 @@ async function getAmazonLink(notionKey: string): Promise<string | null> {
         "Content-Type": "application/json",
         "Notion-Version": NOTION_VERSION,
       },
-      body: JSON.stringify({}),
+      body: JSON.stringify({
+        filter: { property: "Voto", select: { equals: "😍 TOP" } },
+      }),
     }
   );
 
@@ -100,14 +102,27 @@ async function getAmazonLink(notionKey: string): Promise<string | null> {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const data: { results: any[] } = await res.json();
-  const page = data.results.find((p) => {
-    const title: string =
-      p.properties?.Titolo?.title?.[0]?.plain_text ?? "";
+  // Cerca prima per slug da titolo (match esatto), poi per Link PDF che contiene lo slug
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let page = data.results.find((p: any) => {
+    const title: string = p.properties?.Titolo?.title?.[0]?.plain_text ?? "";
     return slugify(title) === slug;
   });
 
   if (!page) {
-    console.warn(`⚠️  Libro con slug "${slug}" non trovato in Notion.`);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    page = data.results.find((p: any) => {
+      const pdfUrl: string = p.properties?.["Link PDF"]?.url ?? "";
+      return pdfUrl.includes(slug);
+    });
+    if (page) {
+      const found: string = page.properties?.Titolo?.title?.[0]?.plain_text ?? "";
+      console.log(`ℹ️   Match trovato via Link PDF → titolo: "${found}"`);
+    }
+  }
+
+  if (!page) {
+    console.warn(`⚠️  Libro "${slug}" non trovato in Notion (né per slug titolo né per Link PDF).`);
     return null;
   }
 
