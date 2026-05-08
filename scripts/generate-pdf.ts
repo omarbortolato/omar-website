@@ -11,9 +11,9 @@
  * Output: public/spremute/[slug].pdf
  */
 
-import puppeteer from "puppeteer";
 import fs from "fs";
 import path from "path";
+import { loadEnv, generatePdf as runPuppeteer } from "../lib/pdf-generator";
 
 // ─── Args ────────────────────────────────────────────────────────────────────
 
@@ -38,23 +38,7 @@ if (!fs.existsSync(templatePath)) {
   process.exit(1);
 }
 
-// ─── Env loader (.env.local) ─────────────────────────────────────────────────
-
-function loadEnv() {
-  const envPath = path.join(ROOT, ".env.local");
-  if (!fs.existsSync(envPath)) return;
-  const content = fs.readFileSync(envPath, "utf-8");
-  for (const line of content.split("\n")) {
-    const match = line.match(/^([^#=\s][^=]*)=(.*)$/);
-    if (match) {
-      const key = match[1].trim();
-      const val = match[2].trim().replace(/^["']|["']$/g, "");
-      if (!process.env[key]) process.env[key] = val;
-    }
-  }
-}
-
-loadEnv();
+loadEnv(ROOT);
 
 // ─── Notion helpers ───────────────────────────────────────────────────────────
 
@@ -191,23 +175,8 @@ async function generatePdf() {
     console.log("ℹ️   Amazon Link già presente nel template — nessuna sostituzione necessaria.");
   }
 
-  console.log("🚀  Avvio Puppeteer...");
-  const browser = await puppeteer.launch({ headless: true });
-  const page = await browser.newPage();
-
-  await page.setContent(html, { waitUntil: "networkidle0" });
-
-  console.log("📄  Generazione PDF...");
-  fs.mkdirSync(outputDir, { recursive: true });
-
-  await page.pdf({
-    path: outputPath,
-    format: "A4",
-    printBackground: true,
-    margin: { top: "0", right: "0", bottom: "0", left: "0" },
-  });
-
-  await browser.close();
+  console.log("🚀  Generazione PDF...");
+  await runPuppeteer(html, outputPath);
 
   const sizeKb = Math.round(fs.statSync(outputPath).size / 1024);
   console.log(`✅  PDF salvato: ${outputPath} (${sizeKb} KB)`);

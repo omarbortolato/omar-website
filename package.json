@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "generate-pending": "npx tsx scripts/generate-all-pending.ts"
+    "generate-pending": "npx tsx scripts/generate-all-pending.ts",
+    "spremuta": "npx tsx scripts/spremuta.ts"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.4",
@@ -22,6 +23,7 @@
     "tailwind-merge": "^2.5.4"
   },
   "devDependencies": {
+    "@notionhq/client": "^5.20.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
