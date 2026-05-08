@@ -81,9 +81,14 @@ export async function getBooks(): Promise<Book[]> {
     }
   );
 
-  if (!res.ok) return [];
+  if (!res.ok) {
+    const errBody = await res.json().catch(() => ({}));
+    console.error("[books] Notion query failed:", res.status, JSON.stringify(errBody));
+    return [];
+  }
 
   const data = await res.json();
+  console.log(`[books] Notion returned ${data.results?.length ?? 0} results`);
   return (data.results ?? [])
     .map(parseBook)
     .filter((b: Book) => b.title);
