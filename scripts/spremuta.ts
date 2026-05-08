@@ -1,243 +1,200 @@
 /**
  * scripts/spremuta.ts
- * Comando unico: dalla pagina Notion al deploy in un colpo solo.
- *
- * Dato il page_id di un libro Notion:
- *  1. Legge proprietà del libro (titolo, autore, categoria, Amazon link)
- *  2. Recupera il contenuto strutturato (JSON) dalla pagina:
- *     - Prima cerca in "Dati Spremuta" (rich_text property, scritto da n8n)
- *     - Poi cerca un code block nel body (scritto da Claude MCP)
- *  3. Genera il PDF da TEMPLATE.html
- *  4. Aggiorna "Link PDF" su Notion
- *  5. git add, commit, push
+ * Dato un page_id Notion: genera la Spremuta da zero e fa il deploy.
  *
  * Usage:
  *   npm run spremuta -- --page-id=75cef582-d259-8235-87ab-8142a076a1fc
  *
- * Se "Link PDF" è già presente chiede conferma prima di sovrascrivere.
+ * Env richiesti in .env.local:
+ *   NOTION_API_KEY
+ *   ANTHROPIC_API_KEY
  */
 
-import { Client } from "@notionhq/client";
-import type {
-  PageObjectResponse,
-  BlockObjectResponse,
-  CodeBlockObjectResponse,
-  ParagraphBlockObjectResponse,
-} from "@notionhq/client/build/src/api-endpoints";
 import * as fs from "fs";
 import * as path from "path";
 import * as readline from "readline";
 import { execSync } from "child_process";
-import {
-  loadEnv,
-  makeSlug,
-  fillTemplate,
-  generatePdf,
-  SpremutaContent,
-  BookData,
-} from "../lib/pdf-generator";
-
-// ─── Config ───────────────────────────────────────────────────────────────────
+import { loadEnv, makeSlug, fillTemplate, generatePdf, SpremutaContent, BookData } from "../lib/pdf-generator";
 
 const ROOT = process.cwd();
-const TEMPLATE_PATH = path.join(ROOT, "templates", "spremute", "TEMPLATE.html");
-const SPRE_DIR = path.join(ROOT, "public", "spremute");
-const BASE_URL = "https://www.omarbortolato.it";
-
 loadEnv(ROOT);
 
-// ─── Args ────────────────────────────────────────────────────────────────────
+// ─── 1. Argomento ─────────────────────────────────────────────────────────────
 
 const pageId = process.argv.find((a) => a.startsWith("--page-id="))?.split("=")[1];
 if (!pageId) {
-  console.error("❌  Manca --page-id=<id>");
-  console.error("   Esempio: npm run spremuta -- --page-id=75cef582-d259-8235-87ab-8142a076a1fc");
+  console.error("❌  Manca --page-id");
+  console.error("   Uso: npm run spremuta -- --page-id=<notion-page-id>");
   process.exit(1);
 }
 
-const notionKey = process.env.NOTION_API_KEY;
-if (!notionKey) {
+const NOTION_KEY = process.env.NOTION_API_KEY;
+if (!NOTION_KEY) {
   console.error("❌  NOTION_API_KEY non trovata in .env.local");
   process.exit(1);
 }
 
-if (!fs.existsSync(TEMPLATE_PATH)) {
-  console.error(`❌  Template non trovato: ${TEMPLATE_PATH}`);
+const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY;
+if (!ANTHROPIC_KEY) {
+  console.error("❌  ANTHROPIC_API_KEY non trovata in .env.local");
+  console.error("   Aggiungila con: echo \"ANTHROPIC_API_KEY=sk-ant-...\" >> .env.local");
   process.exit(1);
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-function extractRichText(arr: { plain_text: string }[] | undefined): string {
-  if (!Array.isArray(arr)) return "";
-  return arr.map((r) => r.plain_text).join("");
+function richText(arr: { plain_text: string }[] | undefined): string {
+  return Array.isArray(arr) ? arr.map((r) => r.plain_text).join("") : "";
 }
 
 async function confirm(question: string): Promise<boolean> {
   const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
   return new Promise((resolve) => {
-    rl.question(`${question} [y/N] `, (answer) => {
-      rl.close();
-      resolve(answer.trim().toLowerCase() === "y");
-    });
+    rl.question(`${question} [y/N] `, (ans) => { rl.close(); resolve(ans.trim().toLowerCase() === "y"); });
   });
-}
-
-// ─── Content extraction from page blocks ─────────────────────────────────────
-
-async function extractContentFromBlocks(
-  notion: Client,
-  blockId: string
-): Promise<SpremutaContent | null> {
-  const response = await notion.blocks.children.list({ block_id: blockId });
-
-  for (const block of response.results) {
-    const b = block as BlockObjectResponse;
-
-    // Code block → parse as JSON
-    if (b.type === "code") {
-      const cb = b as CodeBlockObjectResponse;
-      const text = extractRichText(cb.code.rich_text as { plain_text: string }[]);
-      const cleaned = text.replace(/^```(?:json)?\s*/m, "").replace(/```\s*$/m, "").trim();
-      try {
-        return JSON.parse(cleaned) as SpremutaContent;
-      } catch {
-        // not valid JSON, continue
-      }
-    }
-
-    // Paragraph that looks like JSON (fallback)
-    if (b.type === "paragraph") {
-      const pb = b as ParagraphBlockObjectResponse;
-      const text = extractRichText(pb.paragraph.rich_text as { plain_text: string }[]).trim();
-      if (text.startsWith("{")) {
-        try {
-          return JSON.parse(text) as SpremutaContent;
-        } catch {
-          // not valid JSON, continue
-        }
-      }
-    }
-  }
-
-  return null;
 }
 
 // ─── Main ────────────────────────────────────────────────────────────────────
 
 async function main() {
-  const notion = new Client({ auth: notionKey });
 
-  // ── 1. Leggi proprietà libro ──────────────────────────────────────────────
-  console.log(`\n📖  Leggo la pagina Notion ${pageId}...`);
-  const page = await notion.pages.retrieve({ page_id: pageId as string });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const props = (page as PageObjectResponse).properties as any;
-
-  const title = extractRichText(props?.Titolo?.title ?? []);
-  if (!title) {
-    console.error("❌  Campo Titolo vuoto o non trovato nella pagina.");
+  // ── 2. Leggi da Notion ────────────────────────────────────────────────────
+  console.log(`\n📖  Leggo libro da Notion...`);
+  const pageRes = await fetch(`https://api.notion.com/v1/pages/${pageId}`, {
+    headers: { Authorization: `Bearer ${NOTION_KEY}`, "Notion-Version": "2022-06-28" },
+  });
+  if (!pageRes.ok) {
+    console.error(`❌  Notion error ${pageRes.status}: ${await pageRes.text()}`);
     process.exit(1);
   }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const props = ((await pageRes.json()) as any).properties;
 
-  const author = extractRichText(props?.Autore?.rich_text ?? []);
+  const title    = richText(props?.Titolo?.title);
+  const author   = richText(props?.Autore?.rich_text);
   const category: string = props?.Categoria?.select?.name ?? "";
   const amazonLink: string | null = props?.["Amazon Link"]?.url ?? null;
-  const existingPdfUrl: string | null = props?.["Link PDF"]?.url ?? null;
+  const existingPdf: string | null = props?.["Link PDF"]?.url ?? null;
 
-  console.log(`   Titolo:    ${title}`);
-  console.log(`   Autore:    ${author}`);
-  console.log(`   Categoria: ${category}`);
-  console.log(`   Amazon:    ${amazonLink ?? "(nessuno)"}`);
+  if (!title) { console.error("❌  Titolo non trovato nella pagina."); process.exit(1); }
 
-  // ── 2. Controllo sovrascrittura ───────────────────────────────────────────
-  if (existingPdfUrl) {
-    console.log(`\n⚠️   Link PDF già presente: ${existingPdfUrl}`);
-    const ok = await confirm("Vuoi rigenerare e sovrascrivere il PDF esistente?");
-    if (!ok) {
-      console.log("❌  Annullato.");
-      process.exit(0);
-    }
+  console.log(`   📚 ${title} — ${author}`);
+  if (amazonLink) console.log(`   🛒 Amazon: ${amazonLink}`);
+
+  if (existingPdf) {
+    console.log(`\n⚠️   Link PDF già presente: ${existingPdf}`);
+    const ok = await confirm("Vuoi rigenerare e sovrascrivere?");
+    if (!ok) { console.log("Annullato."); process.exit(0); }
   }
 
-  // ── 3. Recupera contenuto strutturato ────────────────────────────────────
-  console.log("\n🔍  Cerco contenuto Spremuta...");
+  // ── 3. Chiama Anthropic ───────────────────────────────────────────────────
+  console.log("\n🤖  Genero contenuto con Claude...");
 
-  // Priorità 1: property "Dati Spremuta" (da n8n)
-  const datiRaw = extractRichText(props?.["Dati Spremuta"]?.rich_text ?? []).trim();
-  let content: SpremutaContent | null = null;
+  const userPrompt = `Crea una Spremuta per il libro "${title}" di ${author} (categoria: ${category}).
+Restituisci SOLO questo JSON valido, nessun testo fuori:
+{
+  "intro": "2 righe — perché questa non è una sintesi",
+  "libro_90s": "max 100 parole — di cosa parla e chi dovrebbe leggerlo",
+  "idee": [
+    {"emoji": "...", "titolo": "...", "testo": "max 80 caratteri"},
+    {"emoji": "...", "titolo": "...", "testo": "max 80 caratteri"},
+    {"emoji": "...", "titolo": "...", "testo": "max 80 caratteri"},
+    {"emoji": "...", "titolo": "...", "testo": "max 80 caratteri"},
+    {"emoji": "...", "titolo": "...", "testo": "max 80 caratteri"}
+  ],
+  "azioni": [
+    {"numero": 1, "titolo": "...", "testo": "max 80 caratteri", "ai_tip": "max 60 caratteri"},
+    {"numero": 2, "titolo": "...", "testo": "max 80 caratteri", "ai_tip": "max 60 caratteri"},
+    {"numero": 3, "titolo": "...", "testo": "max 80 caratteri", "ai_tip": "max 60 caratteri"},
+    {"numero": 4, "titolo": "...", "testo": "max 80 caratteri", "ai_tip": "max 60 caratteri"},
+    {"numero": 5, "titolo": "...", "testo": "max 80 caratteri", "ai_tip": "max 60 caratteri"}
+  ],
+  "ai_regge": "max 80 caratteri",
+  "ai_cambia": "max 80 caratteri",
+  "ai_insight": "max 120 caratteri",
+  "citazione": "max 15 parole dalla letteratura generale sul tema",
+  "citazione_fonte": "Autore, Opera",
+  "libri_correlati": [
+    {"titolo": "...", "autore": "...", "perche": "max 60 caratteri"},
+    {"titolo": "...", "autore": "...", "perche": "max 60 caratteri"},
+    {"titolo": "...", "autore": "...", "perche": "max 60 caratteri"}
+  ]
+}`;
 
-  if (datiRaw) {
-    console.log('   Trovato in "Dati Spremuta" (property Notion)');
-    try {
-      content = JSON.parse(datiRaw) as SpremutaContent;
-    } catch (e) {
-      console.warn(`   ⚠️  JSON non valido in "Dati Spremuta": ${e}`);
-    }
-  }
-
-  // Priorità 2: code block nel body della pagina (da Claude MCP)
-  if (!content) {
-    console.log("   Cerco JSON nel body della pagina (code block)...");
-    content = await extractContentFromBlocks(notion, pageId as string);
-    if (content) {
-      console.log("   Trovato nel body della pagina ✓");
-    }
-  }
-
-  if (!content) {
-    console.error(`
-❌  Contenuto Spremuta non trovato.
-
-   La pagina deve contenere una delle seguenti:
-   1. La property "Dati Spremuta" (rich_text) con il JSON generato da n8n
-   2. Un blocco di codice (code block) nel body con il JSON del contenuto
-
-   JSON atteso:
-   {
-     "intro": "...", "libro_90s": "...",
-     "idee": [{emoji, titolo, testo}, ...×5],
-     "azioni": [{numero, titolo, testo, ai_tip}, ...×5],
-     "ai_regge": "...", "ai_cambia": "...", "ai_insight": "...",
-     "citazione": "...", "citazione_fonte": "...",
-     "libri_correlati": [{titolo, autore, perche}, ...×3]
-   }
-`);
+  const aiRes = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "x-api-key": ANTHROPIC_KEY,
+      "anthropic-version": "2023-06-01",
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-6",
+      max_tokens: 2000,
+      system: "Sei Omar Bortolato, imprenditore italiano e AI practitioner. Scrivi in prima persona, tono diretto, ottimista e friendly. Restituisci SOLO JSON valido, nessun testo fuori.",
+      messages: [{ role: "user", content: userPrompt }],
+    }),
+  });
+  if (!aiRes.ok) {
+    console.error(`❌  Anthropic error ${aiRes.status}: ${await aiRes.text()}`);
     process.exit(1);
   }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const rawText: string = ((await aiRes.json()) as any).content[0].text;
 
-  // ── 4. Genera PDF ─────────────────────────────────────────────────────────
+  // ── 4. Parsa JSON ─────────────────────────────────────────────────────────
+  const cleaned = rawText.replace(/^```(?:json)?\s*/m, "").replace(/```\s*$/m, "").trim();
+  let content: SpremutaContent;
+  try {
+    content = JSON.parse(cleaned) as SpremutaContent;
+  } catch (e) {
+    console.error(`❌  JSON non valido dalla risposta Claude: ${e}`);
+    console.error(`   Raw (300 char): ${cleaned.substring(0, 300)}`);
+    process.exit(1);
+  }
+  console.log("✅  Contenuto generato");
+
+  // ── 5. Genera PDF ─────────────────────────────────────────────────────────
   const slug = makeSlug(title);
-  const outputPath = path.join(SPRE_DIR, `${slug}.pdf`);
+  const pdfPath = path.join(ROOT, "public", "spremute", `${slug}.pdf`);
+  const templatePath = path.join(ROOT, "templates", "spremute", "TEMPLATE.html");
 
-  console.log(`\n🛠️   Genero PDF: ${slug}.pdf`);
-  const template = fs.readFileSync(TEMPLATE_PATH, "utf-8");
-  const bookData: BookData = { title, author, category, amazonLink };
-  const html = fillTemplate(template, bookData, content);
+  console.log(`\n🛠️   Genero PDF...`);
+  const book: BookData = { title, author, category, amazonLink };
+  const html = fillTemplate(fs.readFileSync(templatePath, "utf-8"), book, content);
+  await generatePdf(html, pdfPath);
 
-  await generatePdf(html, outputPath);
-  const sizeKb = Math.round(fs.statSync(outputPath).size / 1024);
-  console.log(`✅  PDF generato: public/spremute/${slug}.pdf (${sizeKb} KB)`);
+  const sizeKb = Math.round(fs.statSync(pdfPath).size / 1024);
+  console.log(`✅  PDF: public/spremute/${slug}.pdf (${sizeKb} KB)`);
 
-  // ── 5. Aggiorna Notion ────────────────────────────────────────────────────
-  const pdfUrl = `${BASE_URL}/spremute/${slug}.pdf`;
-  await notion.pages.update({
-    page_id: pageId as string,
-    properties: { "Link PDF": { url: pdfUrl } },
-  });
-  console.log(`✅  Notion aggiornato: Link PDF = ${pdfUrl}`);
-
-  // ── 6. Git add, commit, push ──────────────────────────────────────────────
+  // ── 6. Git push ───────────────────────────────────────────────────────────
   console.log("\n🚀  Deploy...");
   execSync(`git add public/spremute/${slug}.pdf`, { stdio: "inherit", cwd: ROOT });
   execSync(`git commit -m "Add Spremuta: ${title}"`, { stdio: "inherit", cwd: ROOT });
   execSync("git push", { stdio: "inherit", cwd: ROOT });
-  console.log(`\n✅  Pushato. Spremuta live tra 1-2 minuti.`);
-  console.log(`   URL PDF: ${pdfUrl}`);
-  console.log(`   Pagina:  ${BASE_URL}/libri/${slug}\n`);
+  console.log("✅  Pushato");
+
+  // ── 7. Aggiorna Notion ────────────────────────────────────────────────────
+  const pdfUrl = `https://www.omarbortolato.it/spremute/${slug}.pdf`;
+  const notionUpdate = await fetch(`https://api.notion.com/v1/pages/${pageId}`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${NOTION_KEY}`,
+      "Content-Type": "application/json",
+      "Notion-Version": "2022-06-28",
+    },
+    body: JSON.stringify({ properties: { "Link PDF": { url: pdfUrl } } }),
+  });
+  if (!notionUpdate.ok) {
+    console.warn(`⚠️   Notion update failed (${notionUpdate.status}) — aggiorna Link PDF manualmente: ${pdfUrl}`);
+  } else {
+    console.log(`✅  Notion aggiornato: ${pdfUrl}`);
+  }
+
+  console.log(`\n🍊  Spremuta live tra 1-2 minuti: https://www.omarbortolato.it/libri/${slug}\n`);
 }
 
 main().catch((err) => {
-  console.error("❌  Errore:", err);
+  console.error(`\n❌  ${err instanceof Error ? err.message : err}`);
   process.exit(1);
 });
