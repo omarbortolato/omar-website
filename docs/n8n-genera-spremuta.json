@@ -1,0 +1,224 @@
+{
+  "name": "Genera contenuto Spremuta",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{ "field": "minutes", "minutesInterval": 15 }]
+        }
+      },
+      "id": "a1b2c3d4-0001-0001-0001-000000000001",
+      "name": "Schedule (ogni 15 min)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://api.notion.com/v1/databases/0daef582d259833da7bb014a34479f60/query",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "Bearer {{$credentials.notionApiKey}}" },
+            { "name": "Notion-Version", "value": "2022-06-28" },
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"filter\": {\n    \"and\": [\n      { \"property\": \"Genera Spremuta\", \"checkbox\": { \"equals\": true } },\n      { \"property\": \"Dati Spremuta\", \"rich_text\": { \"is_empty\": true } }\n    ]\n  }\n}",
+        "options": {}
+      },
+      "id": "a1b2c3d4-0002-0002-0002-000000000002",
+      "name": "Query Notion — libri pending",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.results.length }}",
+              "rightValue": 0,
+              "operator": { "type": "number", "operation": "gt" }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "a1b2c3d4-0003-0003-0003-000000000003",
+      "name": "Ha risultati?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "results",
+        "options": {}
+      },
+      "id": "a1b2c3d4-0004-0004-0004-000000000004",
+      "name": "Split libri",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [900, 220]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f1",
+              "name": "pageId",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "f2",
+              "name": "title",
+              "value": "={{ $json.properties.Titolo.title[0].plain_text }}",
+              "type": "string"
+            },
+            {
+              "id": "f3",
+              "name": "author",
+              "value": "={{ $json.properties.Autore.rich_text[0]?.plain_text ?? '' }}",
+              "type": "string"
+            },
+            {
+              "id": "f4",
+              "name": "category",
+              "value": "={{ $json.properties.Categoria.select?.name ?? '' }}",
+              "type": "string"
+            },
+            {
+              "id": "f5",
+              "name": "notes",
+              "value": "={{ $json.properties.Note?.rich_text?.map(r => r.plain_text).join('') ?? '' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a1b2c3d4-0005-0005-0005-000000000005",
+      "name": "Estrai dati libro",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1120, 220]
+    },
+    {
+      "parameters": {
+        "url": "https://api.anthropic.com/v1/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "x-api-key", "value": "={{ $credentials.anthropicApiKey }}" },
+            { "name": "anthropic-version", "value": "2023-06-01" },
+            { "name": "content-type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"claude-sonnet-4-6\",\n  \"max_tokens\": 2000,\n  \"system\": \"Sei Omar Bortolato, imprenditore italiano e AI practitioner. Scrivi in prima persona, tono diretto, ottimista e friendly, linguaggio semplice. Non sei un accademico, sei un praticante. Restituisci SOLO un oggetto JSON valido, nessun testo fuori dal JSON.\",\n  \"messages\": [{\n    \"role\": \"user\",\n    \"content\": \"Crea una Spremuta per il libro '{{ $json.title }}' di {{ $json.author }} (categoria: {{ $json.category }}).\\n\\nRestituisci questo JSON esatto (rispetta i limiti di lunghezza indicati):\\n{\\n  \\\"intro\\\": \\\"2 righe max — perché questa non è una sintesi ma una rielaborazione personale\\\",\\n  \\\"libro_90s\\\": \\\"max 100 parole — di cosa parla e chi dovrebbe leggerlo\\\",\\n  \\\"idee\\\": [\\n    {\\\"emoji\\\": \\\"...\\\", \\\"titolo\\\": \\\"titolo breve\\\", \\\"testo\\\": \\\"max 80 caratteri\\\"},\\n    {\\\"emoji\\\": \\\"...\\\", \\\"titolo\\\": \\\"titolo breve\\\", \\\"testo\\\": \\\"max 80 caratteri\\\"},\\n    {\\\"emoji\\\": \\\"...\\\", \\\"titolo\\\": \\\"titolo breve\\\", \\\"testo\\\": \\\"max 80 caratteri\\\"},\\n    {\\\"emoji\\\": \\\"...\\\", \\\"titolo\\\": \\\"titolo breve\\\", \\\"testo\\\": \\\"max 80 caratteri\\\"},\\n    {\\\"emoji\\\": \\\"...\\\", \\\"titolo\\\": \\\"titolo breve\\\", \\\"testo\\\": \\\"max 80 caratteri\\\"}\\n  ],\\n  \\\"azioni\\\": [\\n    {\\\"numero\\\": 1, \\\"titolo\\\": \\\"titolo azione\\\", \\\"testo\\\": \\\"max 80 caratteri\\\", \\\"ai_tip\\\": \\\"max 60 caratteri\\\"},\\n    {\\\"numero\\\": 2, \\\"titolo\\\": \\\"titolo azione\\\", \\\"testo\\\": \\\"max 80 caratteri\\\", \\\"ai_tip\\\": \\\"max 60 caratteri\\\"},\\n    {\\\"numero\\\": 3, \\\"titolo\\\": \\\"titolo azione\\\", \\\"testo\\\": \\\"max 80 caratteri\\\", \\\"ai_tip\\\": \\\"max 60 caratteri\\\"},\\n    {\\\"numero\\\": 4, \\\"titolo\\\": \\\"titolo azione\\\", \\\"testo\\\": \\\"max 80 caratteri\\\", \\\"ai_tip\\\": \\\"max 60 caratteri\\\"},\\n    {\\\"numero\\\": 5, \\\"titolo\\\": \\\"titolo azione\\\", \\\"testo\\\": \\\"max 80 caratteri\\\", \\\"ai_tip\\\": \\\"max 60 caratteri\\\"}\\n  ],\\n  \\\"ai_regge\\\": \\\"max 80 caratteri\\\",\\n  \\\"ai_cambia\\\": \\\"max 80 caratteri\\\",\\n  \\\"ai_insight\\\": \\\"max 120 caratteri\\\",\\n  \\\"citazione\\\": \\\"max 15 parole dalla letteratura generale sul tema del libro, NON dal libro stesso\\\",\\n  \\\"citazione_fonte\\\": \\\"Autore, Opera\\\",\\n  \\\"libri_correlati\\\": [\\n    {\\\"titolo\\\": \\\"...\\\", \\\"autore\\\": \\\"...\\\", \\\"perche\\\": \\\"max 60 caratteri\\\"},\\n    {\\\"titolo\\\": \\\"...\\\", \\\"autore\\\": \\\"...\\\", \\\"perche\\\": \\\"max 60 caratteri\\\"},\\n    {\\\"titolo\\\": \\\"...\\\", \\\"autore\\\": \\\"...\\\", \\\"perche\\\": \\\"max 60 caratteri\\\"}\\n  ]\\n}\"\n  }]\n}",
+        "options": {}
+      },
+      "id": "a1b2c3d4-0006-0006-0006-000000000006",
+      "name": "Anthropic — genera contenuto",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1340, 220]
+    },
+    {
+      "parameters": {
+        "language": "javaScript",
+        "jsCode": "// Recupera la risposta Anthropic\nconst anthropicJson = $input.first().json;\nconst rawText = anthropicJson.content[0].text;\n\n// Pulisce markdown code block se presente\nconst cleaned = rawText\n  .replace(/^```(?:json)?\\s*/m, '')\n  .replace(/```\\s*$/m, '')\n  .trim();\n\nlet parsed;\ntry {\n  parsed = JSON.parse(cleaned);\n} catch (e) {\n  throw new Error(`JSON parse fallito: ${e.message}\\nRaw (200 char): ${cleaned.substring(0, 200)}`);\n}\n\n// Recupera dati libro dal nodo precedente\nconst bookData = $('Estrai dati libro').first().json;\n\nreturn [{\n  json: {\n    pageId: bookData.pageId,\n    bookTitle: bookData.title,\n    datiSpremuta: JSON.stringify(parsed)\n  }\n}];"
+      },
+      "id": "a1b2c3d4-0007-0007-0007-000000000007",
+      "name": "Parse JSON risposta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1560, 220]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.notion.com/v1/pages/{{ $json.pageId }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "Bearer {{$credentials.notionApiKey}}" },
+            { "name": "Notion-Version", "value": "2022-06-28" },
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"properties\": {\n    \"Dati Spremuta\": {\n      \"rich_text\": [{\n        \"type\": \"text\",\n        \"text\": { \"content\": {{ JSON.stringify($json.datiSpremuta) }} }\n      }]\n    }\n  }\n}",
+        "options": {}
+      },
+      "id": "a1b2c3d4-0008-0008-0008-000000000008",
+      "name": "Aggiorna Notion — Dati Spremuta",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1780, 220],
+      "notes": "PATCH /v1/pages/{id} per aggiornare property (non append blocks — evita il bug 400 n8n 2.9.4)"
+    },
+    {
+      "parameters": {
+        "chatId": "TELEGRAM_CHAT_ID",
+        "text": "=🍊 Spremuta pronta per review!\n\n📖 *{{ $('Parse JSON risposta').first().json.bookTitle }}*\n\nContenuto generato e salvato su Notion.\nEsegui in locale:\n`npm run generate-pending`\n\nDopo: `git push` per deploy.",
+        "additionalFields": { "parse_mode": "Markdown" }
+      },
+      "id": "a1b2c3d4-0009-0009-0009-000000000009",
+      "name": "Telegram — notifica",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [2000, 220]
+    }
+  ],
+  "connections": {
+    "Schedule (ogni 15 min)": {
+      "main": [[{ "node": "Query Notion — libri pending", "type": "main", "index": 0 }]]
+    },
+    "Query Notion — libri pending": {
+      "main": [[{ "node": "Ha risultati?", "type": "main", "index": 0 }]]
+    },
+    "Ha risultati?": {
+      "main": [
+        [{ "node": "Split libri", "type": "main", "index": 0 }],
+        []
+      ]
+    },
+    "Split libri": {
+      "main": [[{ "node": "Estrai dati libro", "type": "main", "index": 0 }]]
+    },
+    "Estrai dati libro": {
+      "main": [[{ "node": "Anthropic — genera contenuto", "type": "main", "index": 0 }]]
+    },
+    "Anthropic — genera contenuto": {
+      "main": [[{ "node": "Parse JSON risposta", "type": "main", "index": 0 }]]
+    },
+    "Parse JSON risposta": {
+      "main": [[{ "node": "Aggiorna Notion — Dati Spremuta", "type": "main", "index": 0 }]]
+    },
+    "Aggiorna Notion — Dati Spremuta": {
+      "main": [[{ "node": "Telegram — notifica", "type": "main", "index": 0 }]]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "staticData": null,
+  "tags": [{ "name": "spremute" }],
+  "triggerCount": 1,
+  "updatedAt": "2026-05-08T00:00:00.000Z",
+  "versionId": "a1b2c3d4-ffff-ffff-ffff-ffffffffffff"
+}
