@@ -6,35 +6,49 @@ import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Book } from "@/lib/books";
 
+type Filter = { type: "all" } | { type: "spremuta" } | { type: "category"; value: string };
+
 export function BooksGrid({ books }: { books: Book[] }) {
   const categories = Array.from(
     new Set(books.map((b) => b.category).filter(Boolean))
   );
-  const [selected, setSelected] = useState("Tutti");
+  const [filter, setFilter] = useState<Filter>({ type: "all" });
 
-  const filtered =
-    selected === "Tutti" ? books : books.filter((b) => b.category === selected);
+  const filtered = books.filter((b) => {
+    if (filter.type === "all") return true;
+    if (filter.type === "spremuta") return !!b.pdfUrl;
+    return b.category === filter.value;
+  });
+
+  const isActive = (f: Filter) => JSON.stringify(filter) === JSON.stringify(f);
+
+  const pillClass = (active: boolean) =>
+    `rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
+      active
+        ? "border-primary-800 bg-primary-800 text-white"
+        : "border-gray-200 bg-white text-gray-600 hover:border-primary-800/40 hover:text-primary-800"
+    }`;
 
   return (
     <>
-      {/* Filtro categorie */}
-      {categories.length > 0 && (
-        <div className="mb-8 flex flex-wrap gap-2">
-          {["Tutti", ...categories].map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setSelected(cat)}
-              className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
-                selected === cat
-                  ? "border-primary-800 bg-primary-800 text-white"
-                  : "border-gray-200 bg-white text-gray-600 hover:border-primary-800/40 hover:text-primary-800"
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-      )}
+      {/* Filtri */}
+      <div className="mb-8 flex flex-wrap gap-2">
+        <button onClick={() => setFilter({ type: "all" })} className={pillClass(isActive({ type: "all" }))}>
+          Tutti
+        </button>
+        <button onClick={() => setFilter({ type: "spremuta" })} className={pillClass(isActive({ type: "spremuta" }))}>
+          🍊 Con Spremuta
+        </button>
+        {categories.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setFilter({ type: "category", value: cat })}
+            className={pillClass(isActive({ type: "category", value: cat }))}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
 
       {/* Grid */}
       {filtered.length === 0 ? (
@@ -61,11 +75,9 @@ function BookCard({ book }: { book: Book }) {
           </h2>
           <p className="mt-0.5 text-sm text-gray-500">{book.author}</p>
         </div>
-        {book.rating === "😍 TOP" && (
-          <span className="flex-shrink-0 rounded-full border border-accent-500/30 bg-accent-500/10 px-2.5 py-1 text-xs font-semibold text-accent-600">
-            😍 TOP
-          </span>
-        )}
+        <span className="flex-shrink-0 rounded-full border border-accent-500/30 bg-accent-500/10 px-2.5 py-1 text-xs font-semibold text-accent-600">
+          😍 TOP
+        </span>
       </div>
 
       {/* Meta */}
@@ -85,7 +97,7 @@ function BookCard({ book }: { book: Book }) {
         {book.pdfUrl ? (
           <Button asChild size="sm" variant="default">
             <Link href={`/libri/${book.slug}`} className="inline-flex items-center gap-1.5">
-              Scarica Spremuta
+              🍊 Scarica Spremuta
               <Download size={14} />
             </Link>
           </Button>

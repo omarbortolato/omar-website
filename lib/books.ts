@@ -19,6 +19,7 @@ export interface Book {
   year: number | null;
   rating: string | null; // "😍 TOP" | "🙂 buono" | "😣 scarso"
   pdfUrl: string | null;
+  amazonLink: string | null;
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -46,6 +47,7 @@ function parseBook(page: any): Book {
   const year: number | null = props?.["Anno lettura"]?.number ?? null;
   const rating: string | null = props?.Voto?.select?.name ?? null;
   const pdfUrl: string | null = props?.["Link PDF"]?.url ?? null;
+  const amazonLink: string | null = props?.["Amazon Link"]?.url ?? null;
 
   return {
     id: page.id,
@@ -56,6 +58,7 @@ function parseBook(page: any): Book {
     year,
     rating,
     pdfUrl,
+    amazonLink,
   };
 }
 
@@ -70,6 +73,10 @@ export async function getBooks(): Promise<Book[]> {
       method: "POST",
       headers: notionHeaders(),
       body: JSON.stringify({
+        filter: {
+          property: "Voto",
+          select: { equals: "😍 TOP" },
+        },
         sorts: [
           {
             property: "Anno lettura",
@@ -89,9 +96,17 @@ export async function getBooks(): Promise<Book[]> {
 
   const data = await res.json();
   console.log(`[books] Notion returned ${data.results?.length ?? 0} results`);
-  return (data.results ?? [])
+  const books: Book[] = (data.results ?? [])
     .map(parseBook)
     .filter((b: Book) => b.title);
+
+  // Con Spremuta prima, poi per anno desc
+  books.sort((a, b) => {
+    if (!!a.pdfUrl === !!b.pdfUrl) return 0;
+    return a.pdfUrl ? -1 : 1;
+  });
+
+  return books;
 }
 
 export async function getBook(slug: string): Promise<Book | null> {

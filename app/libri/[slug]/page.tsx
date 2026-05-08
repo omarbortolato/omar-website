@@ -115,12 +115,25 @@ export default async function SpremutaPage({
       <section className="container mx-auto max-w-3xl px-4 py-14 md:py-20">
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900 md:text-3xl">
-            Scarica la Spremuta gratis
+            🍊 Scarica la Spremuta gratis
           </h2>
           <p className="mt-2 text-gray-500">
             Inserisci la tua email e ti invio il PDF direttamente.
             Zero spam — solo risorse utili quando le pubblico.
           </p>
+          {book.amazonLink && (
+            <p className="mt-4 text-sm text-gray-500">
+              Vuoi comprare il libro?{" "}
+              <a
+                href={book.amazonLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-primary-800 hover:underline"
+              >
+                Trovalo su Amazon →
+              </a>
+            </p>
+          )}
         </div>
 
         <SubscribeForm

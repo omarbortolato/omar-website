@@ -21,12 +21,13 @@ export default async function LibriPage() {
         <div className="container mx-auto max-w-5xl px-4 py-16 md:py-24">
           <Badge variant="accent" className="mb-4 text-xs">Libri</Badge>
           <h1 className="text-4xl font-bold tracking-tight text-gray-900 md:text-5xl lg:text-6xl">
-            Non riassunti.{" "}
-            <span className="text-primary-800">Rielaborazioni.</span>
+            🍊 Spremute di libri.
           </h1>
           <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-            Ogni libro che leggo finisce in una Spremuta — quello che ho capito,
-            applicato e trasformato in azione. Scaricabile gratis con la tua email.
+            Prendo i libri migliori che ho letto, li spreme fino all&apos;ultima goccia
+            e ti do quello che conta davvero — non il riassunto, ma la rielaborazione.
+            Cosa ho capito, cosa ho applicato, cosa cambia se ci pensi nel 2026.
+            Gratis, con la tua email.
           </p>
         </div>
       </section>

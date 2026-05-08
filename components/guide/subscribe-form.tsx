@@ -17,6 +17,8 @@ export function SubscribeForm({ guide, overrideDownloadUrl }: SubscribeFormProps
   const [emailSent, setEmailSent] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
+  const isBook = guide.startsWith("spremuta-");
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!email.trim()) return;
@@ -28,7 +30,12 @@ export function SubscribeForm({ guide, overrideDownloadUrl }: SubscribeFormProps
       const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.trim(), email: email.trim(), guide }),
+        body: JSON.stringify({
+          name: name.trim(),
+          email: email.trim(),
+          guide,
+          downloadUrl: overrideDownloadUrl ?? undefined,
+        }),
       });
 
       const data = await res.json();
@@ -59,13 +66,17 @@ export function SubscribeForm({ guide, overrideDownloadUrl }: SubscribeFormProps
         </h3>
         <p className="mb-6 text-gray-600">
           {emailSent
-            ? "Ti abbiamo inviato un'email con il link di download. Puoi anche scaricare la guida direttamente qui sotto."
-            : "Scarica la guida qui sotto. Il tuo posto è riservato."}
+            ? isBook
+              ? "Ti abbiamo inviato un'email con il link. Puoi anche scaricarla direttamente qui sotto."
+              : "Ti abbiamo inviato un'email con il link di download. Puoi anche scaricare la guida direttamente qui sotto."
+            : isBook
+              ? "La tua Spremuta è pronta."
+              : "Scarica la guida qui sotto. Il tuo posto è riservato."}
         </p>
         {downloadUrl && (
           <Button asChild variant="default" size="lg" className="px-8">
             <a href={downloadUrl} download>
-              Scarica la guida
+              {isBook ? "🍊 Scarica la Spremuta" : "Scarica la guida"}
               <Download size={16} />
             </a>
           </Button>
@@ -79,7 +90,6 @@ export function SubscribeForm({ guide, overrideDownloadUrl }: SubscribeFormProps
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-      {/* Nome + Email affiancati su desktop, impilati su mobile */}
       <div className="flex flex-col sm:flex-row gap-3">
         <input
           type="text"
@@ -109,6 +119,11 @@ export function SubscribeForm({ guide, overrideDownloadUrl }: SubscribeFormProps
           <>
             <Loader2 size={16} className="animate-spin" />
             Invio...
+          </>
+        ) : isBook ? (
+          <>
+            🍊 Scarica la Spremuta gratis
+            <ArrowRight size={16} />
           </>
         ) : (
           <>
