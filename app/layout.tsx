@@ -39,6 +39,10 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  icons: {
+    icon: "/images/logo_omarbortolato.jpg",
+    apple: "/images/logo_omarbortolato.jpg",
+  },
 };
 
 export default function RootLayout({

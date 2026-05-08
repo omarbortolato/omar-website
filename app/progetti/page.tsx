@@ -83,6 +83,7 @@ const projects: Project[] = [
     tags: ["ChatGPT", "n8n", "WordPress", "Google Ads", "SEO Automation"],
     image: "/images/herbalife-screenshot.png",
     imageAlt: "Herbalife Multi-Country E-commerce",
+    href: "https://www.hl-distributor.com/",
   },
   {
     id: "phoenix-re",

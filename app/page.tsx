@@ -32,7 +32,7 @@ export const metadata: Metadata = {
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
 const credibilityItems = [
-  { icon: Briefcase, label: "AI Manager @ Aspiag ICS" },
+  { icon: Briefcase, label: "CAIO @ Aspiag ICS" },
   { icon: Building2, label: "Co-founder @ Azoa Seed" },
   { icon: Mic,       label: "Speaker AI Week Milano 2026" },
   { icon: Cpu,       label: "6+ progetti AI operativi" },
@@ -103,8 +103,8 @@ const projects: Project[] = [
     description:
       "6 siti automatizzati (IT, FR, DE, UK, US, ES). SEO automation, contenuti multilingua, Google Ads optimization.",
     tags:     ["ChatGPT", "n8n", "WordPress"],
-    href:     "/progetti#herbalife",
-    external: false,
+    href:     "https://www.hl-distributor.com/",
+    external: true,
   },
 ];
 

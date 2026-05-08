@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
@@ -24,11 +25,15 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 max-w-5xl items-center justify-between px-4">
         {/* Logo */}
-        <Link
-          href="/"
-          className="text-lg font-bold text-primary-800 hover:text-primary-700 transition-colors"
-        >
-          Omar Bortolato
+        <Link href="/" className="flex-shrink-0">
+          <Image
+            src="/images/logo_omarbortolato.jpg"
+            alt="Omar Bortolato"
+            height={36}
+            width={66}
+            className="h-9 w-auto object-contain"
+            priority
+          />
         </Link>
 
         {/* Desktop nav */}
