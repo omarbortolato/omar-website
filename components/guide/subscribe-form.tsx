@@ -6,9 +6,10 @@ import { Button } from "@/components/ui/button";
 
 interface SubscribeFormProps {
   guide: string;
+  overrideDownloadUrl?: string;
 }
 
-export function SubscribeForm({ guide }: SubscribeFormProps) {
+export function SubscribeForm({ guide, overrideDownloadUrl }: SubscribeFormProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -38,7 +39,7 @@ export function SubscribeForm({ guide }: SubscribeFormProps) {
         return;
       }
 
-      setDownloadUrl(data.downloadUrl ?? null);
+      setDownloadUrl(overrideDownloadUrl ?? data.downloadUrl ?? null);
       setEmailSent(data.emailSent === true);
       setStatus("success");
     } catch {

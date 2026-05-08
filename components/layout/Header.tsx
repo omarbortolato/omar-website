@@ -14,6 +14,7 @@ const navLinks = [
   { href: "/progetti", label: "Progetti" },
   { href: "/blog", label: "Blog" },
   { href: "/guide", label: "Guide" },
+  { href: "/libri", label: "Libri" },
   { href: "/collabora", label: "Collabora" },
 ];
 
