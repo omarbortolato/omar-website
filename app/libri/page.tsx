@@ -23,11 +23,16 @@ export default async function LibriPage() {
           <h1 className="text-4xl font-bold tracking-tight text-gray-900 md:text-5xl lg:text-6xl">
             🍊 Spremute di libri.
           </h1>
-          <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-            Prendo i libri migliori che ho letto, li spreme fino all&apos;ultima goccia
-            e ti do quello che conta davvero — non il riassunto, ma la rielaborazione.
-            Cosa ho capito, cosa ho applicato, cosa cambia se ci pensi nel 2026.
-            Gratis, con la tua email.
+          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
+            Mi piace leggere. Soprattutto la mattina presto, quando la casa dorme ancora
+            e ho il tempo di godermi un caffè in pace. Il problema è che il tempo è poco
+            e sprecarlo con un libro sbagliato fa davvero male.
+          </p>
+          <p className="mt-3 max-w-2xl text-lg leading-relaxed text-gray-600">
+            Qui metto solo quelli che mi hanno colpito davvero. Quando riesco, ci faccio
+            una Spremuta: non un riassunto, ma quello che ho portato a casa io — i concetti
+            che ho applicato, le connessioni con l&apos;AI, le cose che avrei voluto sapere prima.
+            Spero serva anche a te.
           </p>
         </div>
       </section>
