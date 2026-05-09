@@ -396,15 +396,6 @@ export default async function HomePage() {
           ))}
         </div>
 
-        <div className="mt-8">
-          <Link
-            href="/tools"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-primary-800 transition-colors hover:text-primary-700"
-          >
-            Vedi come li uso
-            <ArrowRight size={15} />
-          </Link>
-        </div>
       </section>
 
       {/* ── 6. SPEAKING & EVENTI ─────────────────────────────────────────────── */}
