@@ -81,7 +81,7 @@ function BookCard({ book }: { book: Book }) {
       </div>
 
       {/* Meta */}
-      <div className="mb-5 flex flex-wrap items-center gap-2">
+      <div className="mb-4 flex flex-wrap items-center gap-2">
         {book.category && (
           <span className="rounded-full border border-primary-800/15 bg-primary-800/5 px-2.5 py-0.5 text-xs font-medium text-primary-800">
             {book.category}
@@ -91,6 +91,13 @@ function BookCard({ book }: { book: Book }) {
           <span className="text-xs text-gray-400">Letto nel {book.year}</span>
         )}
       </div>
+
+      {/* Descrizione */}
+      {book.description && (
+        <p className="mb-5 text-sm leading-relaxed text-gray-500 line-clamp-3">
+          {book.description}
+        </p>
+      )}
 
       {/* CTA */}
       <div className="mt-auto">

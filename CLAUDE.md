@@ -207,6 +207,7 @@ Guides pipeline:
 
 ## Future Features
 - Guida gratuita scaricabile — "Come ho costruito questo sito con Claude Code" con email gate + PDF
+- **Giscus commenti su /libri/[slug]** — open source, GitHub Discussions, zero backend. Setup: abilitare Discussions sul repo GitHub, installare `@giscus/react`, aggiungere componente in fondo alla pagina libro. Richiede account GitHub per commentare.
 - Redesign globale: light mode default, dark mode toggle, amber accents, display font, scroll animations
 - Analytics (Plausible free tier o Vercel Analytics)
 - Notion auto-sync webhook (on-demand revalidation)

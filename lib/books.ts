@@ -20,6 +20,7 @@ export interface Book {
   rating: string | null; // "😍 TOP" | "🙂 buono" | "😣 scarso"
   pdfUrl: string | null;
   amazonLink: string | null;
+  description: string | null;
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -48,6 +49,7 @@ function parseBook(page: any): Book {
   const rating: string | null = props?.Voto?.select?.name ?? null;
   const pdfUrl: string | null = props?.["Link PDF"]?.url ?? null;
   const amazonLink: string | null = props?.["Amazon Link"]?.url ?? null;
+  const description: string | null = extractRichText(props?.Descrizione?.rich_text ?? []) || null;
 
   return {
     id: page.id,
@@ -59,6 +61,7 @@ function parseBook(page: any): Book {
     rating,
     pdfUrl,
     amazonLink,
+    description,
   };
 }
 
