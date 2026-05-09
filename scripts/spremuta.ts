@@ -110,7 +110,7 @@ async function main() {
   const aiRes = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: {
-      "x-api-key": ANTHROPIC_KEY,
+      "x-api-key": ANTHROPIC_KEY as string,
       "anthropic-version": "2023-06-01",
       "content-type": "application/json",
     },
