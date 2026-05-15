@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { OpenPanelComponent } from "@openpanel/nextjs";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -49,6 +50,12 @@ export default function RootLayout({
   return (
     <html lang="it" className={inter.variable}>
       <body className="min-h-screen bg-background font-sans antialiased">
+        <OpenPanelComponent
+          clientId="dfb0a23a-d099-4ddd-8b74-f5ec540dde6d"
+          trackScreenViews={true}
+          trackOutgoingLinks={true}
+          trackAttributes={true}
+        />
         <div className="flex min-h-screen flex-col">
           <Header />
           <main className="flex-1">{children}</main>
