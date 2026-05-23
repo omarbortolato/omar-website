@@ -2,8 +2,8 @@
 const nextConfig = {
   images: {
     remotePatterns: [
-      { protocol: "https", hostname: "drive.google.com" },
-      { protocol: "https", hostname: "lh3.googleusercontent.com" },
+      // Allow any HTTPS image source (blog covers can come from any host)
+      { protocol: "https", hostname: "**" },
     ],
   },
 };

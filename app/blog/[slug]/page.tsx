@@ -28,18 +28,17 @@ export async function generateMetadata(
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-const IMAGE_EXTENSIONS = /\.(jpg|jpeg|png|webp|gif)$/i;
+const LOCAL_IMAGE_EXTENSIONS = /\.(jpg|jpeg|png|webp|gif)$/i;
 
 function resolveCoverImage(value: string | null): string | null {
   if (!value || value.trim() === "") return null;
   const v = value.trim();
   if (v.startsWith("http")) {
-    // External URL: validate extension from the path portion
-    const pathname = new URL(v).pathname;
-    return IMAGE_EXTENSIONS.test(pathname) ? v : null;
+    // External URL: accept as-is (remotePatterns in next.config allows all https)
+    return v;
   }
   // Local filename: must have a valid image extension
-  if (!IMAGE_EXTENSIONS.test(v)) return null;
+  if (!LOCAL_IMAGE_EXTENSIONS.test(v)) return null;
   return `/post-images/${v}`;
 }
 
