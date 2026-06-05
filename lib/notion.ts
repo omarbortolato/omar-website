@@ -75,6 +75,29 @@ function richTextToHtml(rich: any[]): string {
     .join("");
 }
 
+function extractYouTubeId(url: string): string | null {
+  try {
+    const u = new URL(url);
+    if (u.hostname === "youtu.be") return u.pathname.slice(1).split("?")[0];
+    if (u.hostname.includes("youtube.com")) {
+      if (u.pathname === "/watch") return u.searchParams.get("v");
+      const embedMatch = u.pathname.match(/\/embed\/([^/?]+)/);
+      if (embedMatch) return embedMatch[1];
+    }
+  } catch {
+    // invalid URL
+  }
+  return null;
+}
+
+function renderVideoBlock(url: string): string {
+  const ytId = extractYouTubeId(url);
+  if (ytId) {
+    return `<div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;margin:2rem 0;"><iframe src="https://www.youtube.com/embed/${ytId}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" title="YouTube video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>`;
+  }
+  return `<p><a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a></p>`;
+}
+
 // Fetches page blocks and converts them to an HTML string
 async function getPageBlocks(pageId: string): Promise<string> {
   if (!NOTION_API_KEY) return "";
@@ -146,6 +169,22 @@ async function getPageBlocks(pageId: string): Promise<string> {
       case "code": {
         const text = extractRichText(block.code.rich_text);
         if (text) html.push(`<pre><code>${text}</code></pre>`);
+        break;
+      }
+      case "video": {
+        const url: string =
+          block.video?.external?.url ?? block.video?.file?.url ?? "";
+        if (url) html.push(renderVideoBlock(url));
+        break;
+      }
+      case "embed": {
+        const url: string = block.embed?.url ?? "";
+        if (url) html.push(renderVideoBlock(url));
+        break;
+      }
+      case "bookmark": {
+        const url: string = block.bookmark?.url ?? "";
+        if (url) html.push(renderVideoBlock(url));
         break;
       }
       default:
