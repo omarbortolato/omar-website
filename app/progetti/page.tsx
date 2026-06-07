@@ -45,6 +45,26 @@ const STATUS = {
 
 const projects: Project[] = [
   {
+    id: "aifriday",
+    status: { label: "Active", classes: STATUS.active },
+    title: "AI Friday",
+    subtitle: "Il metodo che trasforma i colleghi in praticanti AI — formazione pratica in azienda, senza resistenze.",
+    description: [
+      "AI Friday è il metodo che ho sviluppato per portare l'AI nelle aziende partendo dalle persone, non dalla tecnologia. Un programma di formazione pratica che trasforma i colleghi in AI practitioner — con sessioni settimanali, casi reali e zero overhead organizzativo.",
+      "Presentato all'AI Week di Milano 2026, AI Friday è la risposta concreta alla domanda che ogni manager mi fa: 'Come faccio ad adottare l'AI in azienda senza bloccarmi su tool, budget e resistenze interne?' La risposta: parti dalle persone, costruisci abitudine, misura i risultati.",
+    ],
+    metrics: [
+      { value: "AI Week", label: "presentato Milano 2026" },
+      { value: "Weekly", label: "sessioni pratiche in azienda" },
+      { value: "0 jargon", label: "linguaggio accessibile" },
+      { value: "People-first", label: "metodo umano-centrico" },
+    ],
+    tags: ["Formazione AI", "Change Management", "AI Adoption", "Workshop"],
+    image: "/images/aifriday-screenshot.png",
+    imageAlt: "AI Friday — Il metodo AI per le aziende",
+    href: "https://aifriday.it",
+  },
+  {
     id: "docbit",
     status: { label: "Active", classes: STATUS.active },
     title: "DocBit",

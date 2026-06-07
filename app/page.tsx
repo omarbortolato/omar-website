@@ -51,6 +51,19 @@ interface Project {
 
 const projects: Project[] = [
   {
+    id: "aifriday",
+    badge: {
+      label:   "Active",
+      classes: "bg-green-100 text-green-700 border border-green-200",
+    },
+    title:       "AI Friday",
+    description:
+      "Il metodo che trasforma i colleghi in praticanti AI. Formazione pratica in azienda senza resistenze, senza overhead, con risultati misurabili.",
+    tags:     ["Formazione AI", "Change Management", "AI Adoption"],
+    href:     "https://aifriday.it",
+    external: true,
+  },
+  {
     id: "docbit",
     badge: {
       label:   "Active",
