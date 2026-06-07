@@ -56,6 +56,7 @@ const projects: Project[] = [
       label:   "Active",
       classes: "bg-green-100 text-green-700 border border-green-200",
     },
+    logo:        "/images/aifriday-logo.png",
     title:       "AI Friday",
     description:
       "Il metodo che trasforma i colleghi in praticanti AI. Formazione pratica in azienda senza resistenze, senza overhead, con risultati misurabili.",
