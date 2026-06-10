@@ -268,6 +268,17 @@ export default function GuidaFable5Page() {
             ))}
           </div>
 
+          {/* Link versione interattiva */}
+          <div className="mt-6">
+            <Link
+              href="/guide/claude-fable-5-interactive"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-primary-800 transition-colors hover:text-primary-700"
+            >
+              Preferisci la versione interattiva con radar chart?
+              <ArrowRight size={14} />
+            </Link>
+          </div>
+
         </div>
       </section>
 
