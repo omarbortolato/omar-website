@@ -27,13 +27,4 @@ export const guides: Guide[] = [
     ctaText: "Leggi la guida",
     available: true,
   },
-  {
-    slug: "claude-fable-5-interactive",
-    title: "Claude Fable 5: guida interattiva",
-    description:
-      "Radar chart, confronto modelli in tempo reale, casi d'uso e decision tree. Seleziona un modello e vedi le capacità cambiare.",
-    type: "free",
-    ctaText: "Esplora",
-    available: true,
-  },
 ];
