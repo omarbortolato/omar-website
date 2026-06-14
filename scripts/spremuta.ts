@@ -127,31 +127,31 @@ async function main() {
           `Crea una Spremuta per il libro "${title}" di ${author} (categoria: ${category}).\n` +
           `Restituisci SOLO questo JSON valido, nessun testo fuori:\n` +
           `{\n` +
-          `  "intro": "2 righe — perché questa non è una sintesi",\n` +
-          `  "libro_90s": "max 100 parole — di cosa parla e chi dovrebbe leggerlo",\n` +
+          `  "intro": "2-3 righe — perché questa non è una sintesi ma una rielaborazione personale",\n` +
+          `  "libro_90s": "150-180 parole — riassunto approfondito: di cosa parla, struttura/temi principali, esempi concreti del libro, la tesi di fondo, e chi dovrebbe leggerlo",\n` +
           `  "idee": [\n` +
-          `    {"emoji": "...", "titolo": "...", "testo": "max 80 caratteri"},\n` +
-          `    {"emoji": "...", "titolo": "...", "testo": "max 80 caratteri"},\n` +
-          `    {"emoji": "...", "titolo": "...", "testo": "max 80 caratteri"},\n` +
-          `    {"emoji": "...", "titolo": "...", "testo": "max 80 caratteri"},\n` +
-          `    {"emoji": "...", "titolo": "...", "testo": "max 80 caratteri"}\n` +
+          `    {"emoji": "...", "titolo": "titolo breve", "testo": "200-280 caratteri, 2-3 frasi con argomentazione"},\n` +
+          `    {"emoji": "...", "titolo": "titolo breve", "testo": "200-280 caratteri, 2-3 frasi con argomentazione"},\n` +
+          `    {"emoji": "...", "titolo": "titolo breve", "testo": "200-280 caratteri, 2-3 frasi con argomentazione"},\n` +
+          `    {"emoji": "...", "titolo": "titolo breve", "testo": "200-280 caratteri, 2-3 frasi con argomentazione"},\n` +
+          `    {"emoji": "...", "titolo": "titolo breve", "testo": "200-280 caratteri, 2-3 frasi con argomentazione"}\n` +
           `  ],\n` +
           `  "azioni": [\n` +
-          `    {"numero": 1, "titolo": "...", "testo": "max 80 caratteri", "ai_tip": "max 60 caratteri"},\n` +
-          `    {"numero": 2, "titolo": "...", "testo": "max 80 caratteri", "ai_tip": "max 60 caratteri"},\n` +
-          `    {"numero": 3, "titolo": "...", "testo": "max 80 caratteri", "ai_tip": "max 60 caratteri"},\n` +
-          `    {"numero": 4, "titolo": "...", "testo": "max 80 caratteri", "ai_tip": "max 60 caratteri"},\n` +
-          `    {"numero": 5, "titolo": "...", "testo": "max 80 caratteri", "ai_tip": "max 60 caratteri"}\n` +
+          `    {"numero": 1, "titolo": "titolo azione", "testo": "180-220 caratteri, azione concreta e dettagliata", "ai_tip": "100-120 caratteri, suggerimento AI specifico"},\n` +
+          `    {"numero": 2, "titolo": "titolo azione", "testo": "180-220 caratteri, azione concreta e dettagliata", "ai_tip": "100-120 caratteri, suggerimento AI specifico"},\n` +
+          `    {"numero": 3, "titolo": "titolo azione", "testo": "180-220 caratteri, azione concreta e dettagliata", "ai_tip": "100-120 caratteri, suggerimento AI specifico"},\n` +
+          `    {"numero": 4, "titolo": "titolo azione", "testo": "180-220 caratteri, azione concreta e dettagliata", "ai_tip": "100-120 caratteri, suggerimento AI specifico"},\n` +
+          `    {"numero": 5, "titolo": "titolo azione", "testo": "180-220 caratteri, azione concreta e dettagliata", "ai_tip": "100-120 caratteri, suggerimento AI specifico"}\n` +
           `  ],\n` +
-          `  "ai_regge": "max 80 caratteri",\n` +
-          `  "ai_cambia": "max 80 caratteri",\n` +
-          `  "ai_insight": "max 120 caratteri",\n` +
-          `  "citazione": "max 15 parole dalla letteratura generale sul tema",\n` +
+          `  "ai_regge": "180-220 caratteri — cosa della tesi del libro regge ancora ed è anzi rafforzato nell'era AI",\n` +
+          `  "ai_cambia": "180-220 caratteri — cosa cambia radicalmente nell'era AI rispetto a quando è stato scritto il libro",\n` +
+          `  "ai_insight": "250-300 caratteri — l'insight più stuzzicante che collega il tema del libro all'AI",\n` +
+          `  "citazione": "max 15 parole, una citazione autentica e verificabile (dal libro o dall'autore)",\n` +
           `  "citazione_fonte": "Autore, Opera",\n` +
           `  "libri_correlati": [\n` +
-          `    {"titolo": "...", "autore": "...", "perche": "max 60 caratteri"},\n` +
-          `    {"titolo": "...", "autore": "...", "perche": "max 60 caratteri"},\n` +
-          `    {"titolo": "...", "autore": "...", "perche": "max 60 caratteri"}\n` +
+          `    {"titolo": "...", "autore": "...", "perche": "80-100 caratteri"},\n` +
+          `    {"titolo": "...", "autore": "...", "perche": "80-100 caratteri"},\n` +
+          `    {"titolo": "...", "autore": "...", "perche": "80-100 caratteri"}\n` +
           `  ]\n` +
           `}`,
       }],
