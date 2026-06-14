@@ -28,8 +28,9 @@ export async function POST(request: NextRequest) {
     let emailSent = false;
     const resendKey = process.env.RESEND_API_KEY;
     if (resendKey && resendKey.length > 0) {
+      const resend = new Resend(resendKey);
+
       try {
-        const resend = new Resend(resendKey);
         const { data, error } = await resend.emails.send({
           from: "Omar Bortolato <omar@omarbortolato.it>",
           to: [email],
@@ -46,6 +47,21 @@ export async function POST(request: NextRequest) {
         }
       } catch (emailError) {
         console.error("[subscribe] Email sending failed:", emailError);
+      }
+
+      // 3. Notifica a Omar per ogni nuovo iscritto
+      try {
+        const { error: notifyError } = await resend.emails.send({
+          from: "Omar Bortolato <omar@omarbortolato.it>",
+          to: ["omarbortolato@gmail.com"],
+          subject: isBook ? "🍊 Nuova Spremuta scaricata" : "📥 Nuovo iscritto guida",
+          html: buildNotificationEmail(email, name ?? "", guide ?? "", isBook),
+        });
+        if (notifyError) {
+          console.error("[subscribe] Notification email error:", JSON.stringify(notifyError));
+        }
+      } catch (notifyError) {
+        console.error("[subscribe] Notification email failed:", notifyError);
       }
     } else {
       console.warn("[subscribe] RESEND_API_KEY not configured — skipping email");
@@ -115,6 +131,22 @@ function buildBookEmail(name: string, downloadUrl: string, guide: string): strin
       <p style="color: #6B7280; font-size: 12px;">
         Omar Bortolato — omarbortolato.it<br/>
         AI pratica per chi vuole fare, non solo sapere.
+      </p>
+    </div>
+  `;
+}
+
+function buildNotificationEmail(email: string, name: string, guide: string, isBook: boolean): string {
+  const label = isBook ? "Spremuta" : "Guida";
+  return `
+    <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #111827;">
+      <h2 style="color: #1E3A8A;">📥 Nuovo iscritto</h2>
+      <p><strong>Email:</strong> ${email}</p>
+      ${name ? `<p><strong>Nome:</strong> ${name}</p>` : ""}
+      <p><strong>${label}:</strong> ${guide || "—"}</p>
+      <p style="margin-top: 24px;">
+        <a href="https://www.notion.so/quantum-wealth/c3a083f7da8340bd923d3e4312aafae2"
+           style="color: #1E3A8A;">Vedi su Notion →</a>
       </p>
     </div>
   `;
