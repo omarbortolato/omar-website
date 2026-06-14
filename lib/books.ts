@@ -21,6 +21,7 @@ export interface Book {
   pdfUrl: string | null;
   amazonLink: string | null;
   description: string | null;
+  coverImage: string | null;
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -50,6 +51,7 @@ function parseBook(page: any): Book {
   const pdfUrl: string | null = props?.["Link PDF"]?.url ?? null;
   const amazonLink: string | null = props?.["Amazon Link"]?.url ?? null;
   const description: string | null = extractRichText(props?.Descrizione?.rich_text ?? []) || null;
+  const coverImage: string | null = props?.["Cover Image"]?.url ?? null;
 
   return {
     id: page.id,
@@ -62,6 +64,7 @@ function parseBook(page: any): Book {
     pdfUrl,
     amazonLink,
     description,
+    coverImage,
   };
 }
 

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Lightbulb, Wrench, Target, Star, BookOpen } from "lucide-react";
@@ -64,32 +65,65 @@ export default async function SpremutaPage({
 
           <Badge variant="accent" className="mb-4 text-xs">Spremuta</Badge>
 
-          <h1 className="text-3xl font-bold text-gray-900 md:text-4xl lg:text-5xl leading-tight">
-            {book.title}
-          </h1>
-          <p className="mt-2 text-lg text-gray-500">{book.author}</p>
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
+            {book.coverImage && (
+              <div className="flex-shrink-0">
+                {book.amazonLink ? (
+                  <a
+                    href={book.amazonLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={`Trova "${book.title}" su Amazon`}
+                  >
+                    <Image
+                      src={book.coverImage}
+                      alt={`Copertina di ${book.title}`}
+                      width={140}
+                      height={210}
+                      className="h-[210px] w-[140px] rounded-lg border border-gray-100 object-cover shadow-md"
+                    />
+                  </a>
+                ) : (
+                  <Image
+                    src={book.coverImage}
+                    alt={`Copertina di ${book.title}`}
+                    width={140}
+                    height={210}
+                    className="h-[210px] w-[140px] rounded-lg border border-gray-100 object-cover shadow-md"
+                  />
+                )}
+              </div>
+            )}
 
-          <div className="mt-4 flex flex-wrap items-center gap-2">
-            {book.category && (
-              <span className="rounded-full border border-primary-800/15 bg-primary-800/5 px-3 py-1 text-sm font-medium text-primary-800">
-                {book.category}
-              </span>
-            )}
-            {book.year && (
-              <span className="text-sm text-gray-400">Letto nel {book.year}</span>
-            )}
-            {book.rating === "😍 TOP" && (
-              <span className="rounded-full border border-accent-500/30 bg-accent-500/10 px-3 py-1 text-sm font-semibold text-accent-600">
-                😍 TOP
-              </span>
-            )}
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 md:text-4xl lg:text-5xl leading-tight">
+                {book.title}
+              </h1>
+              <p className="mt-2 text-lg text-gray-500">{book.author}</p>
+
+              <div className="mt-4 flex flex-wrap items-center gap-2">
+                {book.category && (
+                  <span className="rounded-full border border-primary-800/15 bg-primary-800/5 px-3 py-1 text-sm font-medium text-primary-800">
+                    {book.category}
+                  </span>
+                )}
+                {book.year && (
+                  <span className="text-sm text-gray-400">Letto nel {book.year}</span>
+                )}
+                {book.rating === "😍 TOP" && (
+                  <span className="rounded-full border border-accent-500/30 bg-accent-500/10 px-3 py-1 text-sm font-semibold text-accent-600">
+                    😍 TOP
+                  </span>
+                )}
+              </div>
+
+              {book.description && (
+                <p className="mt-6 text-base leading-relaxed text-gray-600 max-w-2xl">
+                  {book.description}
+                </p>
+              )}
+            </div>
           </div>
-
-          {book.description && (
-            <p className="mt-6 text-base leading-relaxed text-gray-600 max-w-2xl">
-              {book.description}
-            </p>
-          )}
         </div>
       </section>
 

@@ -130,7 +130,10 @@ export function fillTemplate(
 
 export async function generatePdf(html: string, outputPath: string): Promise<void> {
   fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-  const browser = await puppeteer.launch({ headless: true });
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  });
   try {
     const page = await browser.newPage();
     await page.setContent(html, { waitUntil: "networkidle0" });

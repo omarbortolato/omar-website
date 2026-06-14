@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -64,16 +65,46 @@ export function BooksGrid({ books }: { books: Book[] }) {
   );
 }
 
+function BookCover({ book }: { book: Book }) {
+  if (!book.coverImage) return null;
+
+  const img = (
+    <Image
+      src={book.coverImage}
+      alt={`Copertina di ${book.title}`}
+      width={80}
+      height={120}
+      className="h-[120px] w-[80px] flex-shrink-0 rounded-lg border border-gray-100 object-cover shadow-sm"
+    />
+  );
+
+  if (!book.amazonLink) return img;
+
+  return (
+    <a
+      href={book.amazonLink}
+      target="_blank"
+      rel="noopener noreferrer"
+      title={`Trova "${book.title}" su Amazon`}
+    >
+      {img}
+    </a>
+  );
+}
+
 function BookCard({ book }: { book: Book }) {
   return (
     <div className="flex flex-col rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
       {/* Header */}
       <div className="mb-4 flex items-start justify-between gap-3">
-        <div className="flex-1">
-          <h2 className="text-lg font-bold leading-snug text-gray-900">
-            {book.title}
-          </h2>
-          <p className="mt-0.5 text-sm text-gray-500">{book.author}</p>
+        <div className="flex flex-1 gap-3">
+          <BookCover book={book} />
+          <div className="flex-1">
+            <h2 className="text-lg font-bold leading-snug text-gray-900">
+              {book.title}
+            </h2>
+            <p className="mt-0.5 text-sm text-gray-500">{book.author}</p>
+          </div>
         </div>
         <span className="flex-shrink-0 rounded-full border border-accent-500/30 bg-accent-500/10 px-2.5 py-1 text-xs font-semibold text-accent-600">
           😍 TOP
