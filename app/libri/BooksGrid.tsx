@@ -40,31 +40,37 @@ export function BooksGrid({ books }: { books: Book[] }) {
   return (
     <>
       {/* Filtri */}
-      <div className="mb-8 flex flex-wrap gap-2">
-        <button onClick={() => setFilter({ type: "all" })} className={pillClass(isActive({ type: "all" }))}>
-          Tutti
-        </button>
-        <button onClick={() => setFilter({ type: "spremuta" })} className={pillClass(isActive({ type: "spremuta" }))}>
-          🍊 Con Spremuta
-        </button>
-        {RATINGS.map((rating) => (
-          <button
-            key={rating}
-            onClick={() => setFilter({ type: "rating", value: rating })}
-            className={pillClass(isActive({ type: "rating", value: rating }))}
-          >
-            {rating}
+      <div className="mb-8 space-y-3">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">Voto</span>
+          <button onClick={() => setFilter({ type: "all" })} className={pillClass(isActive({ type: "all" }))}>
+            Tutti
           </button>
-        ))}
-        {categories.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setFilter({ type: "category", value: cat })}
-            className={pillClass(isActive({ type: "category", value: cat }))}
-          >
-            {cat}
+          <button onClick={() => setFilter({ type: "spremuta" })} className={pillClass(isActive({ type: "spremuta" }))}>
+            🍊 Con Spremuta
           </button>
-        ))}
+          {RATINGS.map((rating) => (
+            <button
+              key={rating}
+              onClick={() => setFilter({ type: "rating", value: rating })}
+              className={pillClass(isActive({ type: "rating", value: rating }))}
+            >
+              {rating}
+            </button>
+          ))}
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">Genere</span>
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setFilter({ type: "category", value: cat })}
+              className={pillClass(isActive({ type: "category", value: cat }))}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Grid */}
