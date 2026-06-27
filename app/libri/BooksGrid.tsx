@@ -7,17 +7,24 @@ import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Book } from "@/lib/books";
 
-type Filter = { type: "all" } | { type: "spremuta" } | { type: "category"; value: string };
+type Filter =
+  | { type: "all" }
+  | { type: "spremuta" }
+  | { type: "category"; value: string }
+  | { type: "rating"; value: string };
+
+const RATINGS = ["😍 TOP", "🙂 buono"];
 
 export function BooksGrid({ books }: { books: Book[] }) {
   const categories = Array.from(
     new Set(books.map((b) => b.category).filter(Boolean))
   );
-  const [filter, setFilter] = useState<Filter>({ type: "all" });
+  const [filter, setFilter] = useState<Filter>({ type: "rating", value: "😍 TOP" });
 
   const filtered = books.filter((b) => {
     if (filter.type === "all") return true;
     if (filter.type === "spremuta") return !!b.pdfUrl;
+    if (filter.type === "rating") return b.rating === filter.value;
     return b.category === filter.value;
   });
 
@@ -40,6 +47,15 @@ export function BooksGrid({ books }: { books: Book[] }) {
         <button onClick={() => setFilter({ type: "spremuta" })} className={pillClass(isActive({ type: "spremuta" }))}>
           🍊 Con Spremuta
         </button>
+        {RATINGS.map((rating) => (
+          <button
+            key={rating}
+            onClick={() => setFilter({ type: "rating", value: rating })}
+            className={pillClass(isActive({ type: "rating", value: rating }))}
+          >
+            {rating}
+          </button>
+        ))}
         {categories.map((cat) => (
           <button
             key={cat}
@@ -106,9 +122,11 @@ function BookCard({ book }: { book: Book }) {
             <p className="mt-0.5 text-sm text-gray-500">{book.author}</p>
           </div>
         </div>
-        <span className="flex-shrink-0 rounded-full border border-accent-500/30 bg-accent-500/10 px-2.5 py-1 text-xs font-semibold text-accent-600">
-          😍 TOP
-        </span>
+        {book.rating && (
+          <span className="flex-shrink-0 rounded-full border border-accent-500/30 bg-accent-500/10 px-2.5 py-1 text-xs font-semibold text-accent-600">
+            {book.rating}
+          </span>
+        )}
       </div>
 
       {/* Meta */}

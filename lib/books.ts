@@ -80,8 +80,10 @@ export async function getBooks(): Promise<Book[]> {
       headers: notionHeaders(),
       body: JSON.stringify({
         filter: {
-          property: "Voto",
-          select: { equals: "😍 TOP" },
+          or: [
+            { property: "Voto", select: { equals: "😍 TOP" } },
+            { property: "Voto", select: { equals: "🙂 buono" } },
+          ],
         },
         sorts: [
           {
