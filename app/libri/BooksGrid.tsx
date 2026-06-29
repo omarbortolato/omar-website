@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Download } from "lucide-react";
@@ -14,12 +14,39 @@ type Filter =
   | { type: "rating"; value: string };
 
 const RATINGS = ["😍 TOP", "🙂 buono"];
+const DEFAULT_FILTER: Filter = { type: "rating", value: "😍 TOP" };
+
+// Serializza/deserializza il filtro in un singolo query param "filtro" per
+// far sì che il back/forward del browser e il refresh mantengano la selezione.
+function filterToParam(f: Filter): string {
+  if (f.type === "all") return "tutti";
+  if (f.type === "spremuta") return "spremuta";
+  if (f.type === "rating") return `voto:${f.value}`;
+  return `categoria:${f.value}`;
+}
+
+function paramToFilter(param: string | null): Filter {
+  if (!param) return DEFAULT_FILTER;
+  if (param === "tutti") return { type: "all" };
+  if (param === "spremuta") return { type: "spremuta" };
+  if (param.startsWith("voto:")) return { type: "rating", value: param.slice(5) };
+  if (param.startsWith("categoria:")) return { type: "category", value: param.slice(10) };
+  return DEFAULT_FILTER;
+}
 
 export function BooksGrid({ books }: { books: Book[] }) {
   const categories = Array.from(
     new Set(books.map((b) => b.category).filter(Boolean))
   );
-  const [filter, setFilter] = useState<Filter>({ type: "rating", value: "😍 TOP" });
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const filter = paramToFilter(searchParams.get("filtro"));
+
+  const setFilter = (f: Filter) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("filtro", filterToParam(f));
+    router.push(`/libri?${params.toString()}`, { scroll: false });
+  };
 
   const filtered = books.filter((b) => {
     if (filter.type === "all") return true;
