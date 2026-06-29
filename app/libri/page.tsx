@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Badge } from "@/components/ui/badge";
 import { getBooks } from "@/lib/books";
 import { BooksGrid } from "./BooksGrid";
@@ -42,7 +43,9 @@ export default async function LibriPage() {
         {books.length === 0 ? (
           <p className="text-gray-500">Nessun libro trovato. Torna presto.</p>
         ) : (
-          <BooksGrid books={books} />
+          <Suspense>
+            <BooksGrid books={books} />
+          </Suspense>
         )}
       </section>
     </>

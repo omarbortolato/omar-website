@@ -106,7 +106,7 @@ export function BooksGrid({ books }: { books: Book[] }) {
       ) : (
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
           {filtered.map((book) => (
-            <BookCard key={book.id} book={book} />
+            <BookCard key={book.id} book={book} filterParam={filterToParam(filter)} />
           ))}
         </div>
       )}
@@ -141,7 +141,7 @@ function BookCover({ book }: { book: Book }) {
   );
 }
 
-function BookCard({ book }: { book: Book }) {
+function BookCard({ book, filterParam }: { book: Book; filterParam: string }) {
   return (
     <div className="flex flex-col rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
       {/* Header */}
@@ -185,7 +185,7 @@ function BookCard({ book }: { book: Book }) {
       <div className="mt-auto">
         {book.pdfUrl ? (
           <Button asChild size="sm" variant="default">
-            <Link href={`/libri/${book.slug}`} className="inline-flex items-center gap-1.5">
+            <Link href={`/libri/${book.slug}?filtro=${encodeURIComponent(filterParam)}`} className="inline-flex items-center gap-1.5">
               🍊 Scarica Spremuta
               <Download size={14} />
             </Link>

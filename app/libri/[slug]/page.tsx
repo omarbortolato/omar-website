@@ -43,11 +43,17 @@ const SECTIONS = [
 
 export default async function SpremutaPage({
   params,
+  searchParams,
 }: {
   params: { slug: string };
+  searchParams: { filtro?: string };
 }) {
   const book = await getBook(params.slug);
   if (!book) notFound();
+
+  const backHref = searchParams.filtro
+    ? `/libri?filtro=${encodeURIComponent(searchParams.filtro)}`
+    : "/libri";
 
   return (
     <>
@@ -56,7 +62,7 @@ export default async function SpremutaPage({
         <div className="container mx-auto max-w-3xl px-4 py-12 md:py-20">
           {/* Breadcrumb */}
           <Link
-            href="/libri"
+            href={backHref}
             className="mb-8 inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-primary-800 transition-colors"
           >
             <ArrowLeft size={14} />
