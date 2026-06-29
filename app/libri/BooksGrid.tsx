@@ -1,9 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Download } from "lucide-react";
+import { Download, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Book } from "@/lib/books";
 
@@ -41,6 +42,7 @@ export function BooksGrid({ books }: { books: Book[] }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const filter = paramToFilter(searchParams.get("filtro"));
+  const [search, setSearch] = useState("");
 
   const setFilter = (f: Filter) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -48,12 +50,22 @@ export function BooksGrid({ books }: { books: Book[] }) {
     router.push(`/libri?${params.toString()}`, { scroll: false });
   };
 
-  const filtered = books.filter((b) => {
-    if (filter.type === "all") return true;
-    if (filter.type === "spremuta") return !!b.pdfUrl;
-    if (filter.type === "rating") return b.rating === filter.value;
-    return b.category === filter.value;
-  });
+  const query = search.trim().toLowerCase();
+
+  // Con una ricerca attiva si cerca in tutti i libri, ignorando i filtri voto/genere
+  // (l'utente vuole trovare un titolo specifico, non restringere ulteriormente).
+  const filtered = query
+    ? books.filter(
+        (b) =>
+          b.title.toLowerCase().includes(query) ||
+          b.author.toLowerCase().includes(query)
+      )
+    : books.filter((b) => {
+        if (filter.type === "all") return true;
+        if (filter.type === "spremuta") return !!b.pdfUrl;
+        if (filter.type === "rating") return b.rating === filter.value;
+        return b.category === filter.value;
+      });
 
   const isActive = (f: Filter) => JSON.stringify(filter) === JSON.stringify(f);
 
@@ -66,8 +78,29 @@ export function BooksGrid({ books }: { books: Book[] }) {
 
   return (
     <>
+      {/* Ricerca */}
+      <div className="relative mb-6 max-w-sm">
+        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Cerca per titolo o autore..."
+          className="w-full rounded-full border border-gray-200 bg-white py-2 pl-9 pr-9 text-sm text-gray-700 placeholder:text-gray-400 focus:border-primary-800/40 focus:outline-none"
+        />
+        {search && (
+          <button
+            onClick={() => setSearch("")}
+            aria-label="Cancella ricerca"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+          >
+            <X size={16} />
+          </button>
+        )}
+      </div>
+
       {/* Filtri */}
-      <div className="mb-8 space-y-3">
+      <div className={`mb-8 space-y-3 ${query ? "pointer-events-none opacity-40" : ""}`}>
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">Voto</span>
           <button onClick={() => setFilter({ type: "all" })} className={pillClass(isActive({ type: "all" }))}>
@@ -102,7 +135,7 @@ export function BooksGrid({ books }: { books: Book[] }) {
 
       {/* Grid */}
       {filtered.length === 0 ? (
-        <p className="text-gray-500">Nessun libro in questa categoria.</p>
+        <p className="text-gray-500">Nessun libro trovato.</p>
       ) : (
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
           {filtered.map((book) => (
