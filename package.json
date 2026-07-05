@@ -9,7 +9,8 @@
     "lint": "next lint",
     "generate-pending": "npx tsx scripts/generate-all-pending.ts",
     "generate-all-top": "npx tsx scripts/generate-all-top.ts",
-    "spremuta": "npx tsx scripts/spremuta.ts"
+    "spremuta": "npx tsx scripts/spremuta.ts",
+    "auto-genera": "npx tsx scripts/auto-genera-spremuta.ts"
   },
   "dependencies": {
     "@openpanel/nextjs": "^1.5.1",
