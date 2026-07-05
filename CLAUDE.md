@@ -216,6 +216,43 @@ Guides pipeline:
 - Course platform integration
 - Ecommerce demos
 
+## Sezione /libri — Gestione Libri e Spremute
+
+### Database Notion Libri
+- ID: `0daef582d259833da7bb014a34479f60`
+- Campi usati dal sito: `Titolo` (title), `Autore` (rich_text), `Categoria` (select), `Anno lettura` (number), `Voto` (select: "😍 TOP" | "🙂 buono"), `Link PDF` (url), `Amazon Link` (url), `Cover Image` (url), `Descrizione` (rich_text), `Genera Spremuta` (checkbox)
+- Il sito mostra solo libri con Voto = "😍 TOP" o "🙂 buono"
+- Paginazione: getBooks() recupera TUTTI i libri con loop su has_more (non fermarsi a 100)
+- Revalidate: 300s sia per fetch Notion che per la pagina
+
+### Cover Image
+- Campo Notion `Cover Image`: URL stringa, può essere path locale (`/covers/slug.jpg`) o URL esterno
+- File locali: `public/covers/{slug}.jpg` — devono essere commitati su GitHub per apparire su Vercel
+- Strategia ricerca automatica (script auto-genera): 1° Amazon CDN via ASIN, 2° Open Library per ISBN, 3° Open Library per titolo+autore
+- Se non trovata automaticamente: Omar carica manualmente il file in `public/covers/` su GitHub e poi aggiorna il campo Notion a `/covers/{slug}.jpg`
+- L'image URL `https://m.media-amazon.com/images/I/XXXXX.jpg` dai link affiliazione Amazon è sempre scaricabile direttamente
+- **Non usare Open Library come fonte primaria per libri tradotti** (spesso trova l'edizione in lingua originale)
+
+### Descrizione
+- Campo Notion `Descrizione` (rich_text): 2-3 frasi oggettive sul libro, NON in prima persona
+- Appare sia nella card lista `/libri` che nella pagina dettaglio `/libri/[slug]`
+- Generata automaticamente dallo script `auto-genera-spremuta.ts` insieme al PDF
+- Se mancante su libro già pubblicato: scrivere testo in file .txt, poi PATCH Notion via Python (NON passare il testo come argv per preservare gli accenti)
+
+### Pipeline Spremuta automatica (cron ogni 5 min)
+- Trigger: `Genera Spremuta = true` AND `Link PDF = vuoto` su Notion
+- Script: `scripts/auto-genera-spremuta.ts` — avviato da `scripts/run-auto-genera.sh`
+- Flusso: legge Notion → Amazon link (costruisce URL ricerca se mancante) → cover (Amazon CDN → Open Library) → Claude Sonnet API → genera PDF con Puppeteer → git commit+push → aggiorna Notion (Link PDF, Cover Image, Amazon Link, Descrizione) → deseleziona checkbox
+- Log: `/var/log/auto-genera-spremuta.log`
+- Chiavi richieste in `.env.local`: `NOTION_API_KEY`, `ANTHROPIC_API_KEY`
+- Costo: zero quando idle (solo query Notion gratuita), Claude Sonnet ~€0.015 per libro generato
+- PDF salvati in `public/spremute/{slug}.pdf`, cover in `public/covers/{slug}.jpg`
+
+### Slug libri
+Stessa funzione `makeSlug` usata in `lib/books.ts` → `generateSlug`:
+- lowercase, rimuove diacritici, rimuove caratteri non alfanumerici (apostrofi inclusi), sostituisce spazi con `-`
+- Esempio: "L'ottava regola" → "lottava-regola"
+
 ## Common Commands
 ```bash
 # Development

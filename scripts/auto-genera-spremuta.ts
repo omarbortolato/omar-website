@@ -123,6 +123,24 @@ function buildAmazonSearchUrl(title: string, author: string): string {
   return `https://www.amazon.it/s?k=${q}&tag=${AMAZON_TAG}`;
 }
 
+// Estrae image ID dalla URL Amazon affiliate/prodotto e restituisce cover CDN
+async function findAmazonCover(amazonUrl: string): Promise<string | null> {
+  try {
+    // Risolvi short URL (amzn.to) → URL prodotto Amazon
+    const res = await fetch(amazonUrl, { method: "HEAD", redirect: "follow" });
+    const finalUrl = res.url;
+    // Prova a estrarre ASIN dall'URL (formato /dp/XXXXXXXXXX)
+    const asin = finalUrl.match(/\/dp\/([A-Z0-9]{10})/)?.[1] ??
+                 finalUrl.match(/\/([A-Z0-9]{10})(?:[/?]|$)/)?.[1];
+    if (!asin) return null;
+    // URL cover Amazon CDN standard per ASIN
+    const coverUrl = `https://images-na.ssl-images-amazon.com/images/P/${asin}.jpg`;
+    const check = await fetch(coverUrl, { method: "HEAD" });
+    if (check.ok) return coverUrl;
+  } catch { /* ignora */ }
+  return null;
+}
+
 // ─── Open Library cover ───────────────────────────────────────────────────────
 
 async function findOpenLibraryCover(
@@ -203,6 +221,7 @@ Una Spremuta non è un riassunto — è una rielaborazione personale: quello che
 Genera un JSON con questa struttura esatta (nessun campo opzionale):
 
 {
+  "descrizione": "2-3 frasi oggettive sul libro: di cosa parla, la tesi centrale, perché vale la pena leggerlo. NON in prima persona — è la descrizione che appare sulla scheda libro nel sito.",
   "intro": "2-3 frasi su come Omar ha incontrato questo libro e perché vale il tempo del lettore. Personale e diretto.",
   "libro_90s": "Il libro spiegato in 90 secondi: di cosa parla, qual è la tesi centrale, perché è importante. 3-5 frasi.",
   "idee": [
@@ -284,7 +303,8 @@ async function updateNotion(
   pageId: string,
   pdfPath: string,
   coverUrl: string | null,
-  amazonUrl: string | null
+  amazonUrl: string | null,
+  descrizione: string | null
 ): Promise<void> {
   const props: Record<string, unknown> = {
     "Link PDF": { url: pdfPath },
@@ -292,6 +312,11 @@ async function updateNotion(
   };
   if (coverUrl) props["Cover Image"] = { url: coverUrl };
   if (amazonUrl) props["Amazon Link"] = { url: amazonUrl };
+  if (descrizione) {
+    props["Descrizione"] = {
+      rich_text: [{ type: "text", text: { content: descrizione } }],
+    };
+  }
 
   const res = await fetch(`https://api.notion.com/v1/pages/${pageId}`, {
     method: "PATCH",
@@ -364,14 +389,26 @@ async function main() {
       let coverUrl = book.coverImage;
       let newCoverPath: string | null = null;
       if (!coverUrl) {
-        console.log(`  Cover: cercando su Open Library...`);
-        const olUrl = await findOpenLibraryCover(book.title, book.author, book.isbn);
-        if (olUrl) {
-          newCoverPath = await downloadCover(olUrl, slug);
-          coverUrl = newCoverPath;
-          console.log(`  Cover: trovata → ${coverUrl}`);
-        } else {
-          console.log(`  Cover: non trovata su Open Library`);
+        // Prima prova da Amazon (via ASIN), poi Open Library
+        if (amazonUrl) {
+          console.log(`  Cover: cercando su Amazon CDN...`);
+          const amzCoverUrl = await findAmazonCover(amazonUrl);
+          if (amzCoverUrl) {
+            newCoverPath = await downloadCover(amzCoverUrl, slug);
+            coverUrl = newCoverPath;
+            console.log(`  Cover: trovata su Amazon → ${coverUrl}`);
+          }
+        }
+        if (!coverUrl) {
+          console.log(`  Cover: cercando su Open Library...`);
+          const olUrl = await findOpenLibraryCover(book.title, book.author, book.isbn);
+          if (olUrl) {
+            newCoverPath = await downloadCover(olUrl, slug);
+            coverUrl = newCoverPath;
+            console.log(`  Cover: trovata su Open Library → ${coverUrl}`);
+          } else {
+            console.log(`  Cover: non trovata`);
+          }
         }
       }
 
@@ -397,7 +434,8 @@ async function main() {
 
       // 6. Aggiorna Notion
       const pdfNotionUrl = `/spremute/${slug}.pdf`;
-      await updateNotion(book.id, pdfNotionUrl, coverUrl, book.amazonLink ? null : amazonUrl);
+      const descrizione = (content as unknown as { descrizione?: string }).descrizione ?? null;
+      await updateNotion(book.id, pdfNotionUrl, coverUrl, book.amazonLink ? null : amazonUrl, descrizione);
       console.log(`  Notion: aggiornato`);
 
     } catch (e) {
