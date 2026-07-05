@@ -141,16 +141,22 @@ async function findOpenLibraryCover(
     } catch { /* ignora */ }
   }
 
-  // 2. Prova per titolo via Search API
-  try {
-    const q = encodeURIComponent(title);
-    const res = await fetch(`https://openlibrary.org/search.json?title=${q}&limit=10`);
-    if (res.ok) {
+  // 2. Prova per titolo via Search API (prima in italiano, poi solo per autore)
+  const authorLastName = author.split(" ").pop() ?? author;
+  const searches = [
+    `https://openlibrary.org/search.json?title=${encodeURIComponent(title)}&limit=10`,
+    `https://openlibrary.org/search.json?author=${encodeURIComponent(authorLastName)}&limit=20`,
+  ];
+
+  for (const searchUrl of searches) {
+    try {
+      const res = await fetch(searchUrl);
+      if (!res.ok) continue;
       const data = await res.json() as { docs: { title: string; author_name?: string[]; cover_i?: number; isbn?: string[] }[] };
-      const authorLower = author.toLowerCase();
+      const authorLower = authorLastName.toLowerCase();
       const match = data.docs.find((d) => {
         const authors = (d.author_name ?? []).join(" ").toLowerCase();
-        return authors.includes(authorLower.split(" ").pop() ?? authorLower);
+        return authors.includes(authorLower) && d.cover_i;
       });
       if (match?.cover_i) {
         return `https://covers.openlibrary.org/b/id/${match.cover_i}-L.jpg`;
@@ -160,8 +166,8 @@ async function findOpenLibraryCover(
         const check = await fetch(isbnCover, { method: "HEAD" });
         if (check.ok) return isbnCover;
       }
-    }
-  } catch { /* ignora */ }
+    } catch { /* ignora */ }
+  }
 
   return null;
 }
