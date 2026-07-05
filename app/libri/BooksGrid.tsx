@@ -15,7 +15,7 @@ type Filter =
   | { type: "rating"; value: string };
 
 const RATINGS = ["😍 TOP", "🙂 buono"];
-const DEFAULT_FILTER: Filter = { type: "rating", value: "😍 TOP" };
+const DEFAULT_FILTER: Filter = { type: "all" };
 
 // Serializza/deserializza il filtro in un singolo query param "filtro" per
 // far sì che il back/forward del browser e il refresh mantengano la selezione.

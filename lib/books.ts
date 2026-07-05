@@ -73,38 +73,46 @@ function parseBook(page: any): Book {
 export async function getBooks(): Promise<Book[]> {
   if (!NOTION_API_KEY) return [];
 
-  const res = await fetch(
-    `https://api.notion.com/v1/databases/${BOOKS_DB_ID}/query`,
-    {
-      method: "POST",
-      headers: notionHeaders(),
-      body: JSON.stringify({
-        filter: {
-          or: [
-            { property: "Voto", select: { equals: "😍 TOP" } },
-            { property: "Voto", select: { equals: "🙂 buono" } },
-          ],
-        },
-        sorts: [
-          {
-            property: "Anno lettura",
-            direction: "descending",
-          },
+  const allResults: unknown[] = [];
+  let cursor: string | null = null;
+
+  do {
+    const body: Record<string, unknown> = {
+      filter: {
+        or: [
+          { property: "Voto", select: { equals: "😍 TOP" } },
+          { property: "Voto", select: { equals: "🙂 buono" } },
         ],
-      }),
-      next: { revalidate: 3600 },
+      },
+      sorts: [{ property: "Anno lettura", direction: "descending" }],
+      page_size: 100,
+    };
+    if (cursor) body.start_cursor = cursor;
+
+    const res = await fetch(
+      `https://api.notion.com/v1/databases/${BOOKS_DB_ID}/query`,
+      {
+        method: "POST",
+        headers: notionHeaders(),
+        body: JSON.stringify(body),
+        next: { revalidate: 300 },
+      }
+    );
+
+    if (!res.ok) {
+      const errBody = await res.json().catch(() => ({}));
+      console.error("[books] Notion query failed:", res.status, JSON.stringify(errBody));
+      break;
     }
-  );
 
-  if (!res.ok) {
-    const errBody = await res.json().catch(() => ({}));
-    console.error("[books] Notion query failed:", res.status, JSON.stringify(errBody));
-    return [];
-  }
+    const data = await res.json();
+    allResults.push(...(data.results ?? []));
+    cursor = data.has_more ? data.next_cursor : null;
+  } while (cursor);
 
-  const data = await res.json();
-  console.log(`[books] Notion returned ${data.results?.length ?? 0} results`);
-  const books: Book[] = (data.results ?? [])
+  console.log(`[books] Notion returned ${allResults.length} results (paginated)`);
+
+  const books: Book[] = allResults
     .map(parseBook)
     .filter((b: Book) => b.title);
 
