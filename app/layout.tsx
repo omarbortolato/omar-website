@@ -11,30 +11,38 @@ const inter = Inter({
   display: "swap",
 });
 
+const SITE_TITLE = "Omar Bortolato — Chief AI Officer & AI Practitioner";
+const SITE_DESCRIPTION =
+  "AI pratica per chi vuole fare, non solo sapere. Progetti reali, guide scaricabili e sistemi costruiti in prima persona, spiegati senza hype.";
+
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.omarbortolato.it"),
   title: {
-    default: "Omar Bortolato — Developer & Designer",
+    default: SITE_TITLE,
     template: "%s | Omar Bortolato",
   },
-  description:
-    "Personal website of Omar Bortolato — developer, designer, and creator.",
-  keywords: ["developer", "designer", "portfolio", "next.js", "react"],
+  description: SITE_DESCRIPTION,
+  keywords: [
+    "AI applicata",
+    "agenti AI",
+    "automazione",
+    "Chief AI Officer",
+    "Omar Bortolato",
+  ],
   authors: [{ name: "Omar Bortolato" }],
   creator: "Omar Bortolato",
   openGraph: {
     type: "website",
     locale: "it_IT",
-    url: "https://omarbortolato.dev",
-    title: "Omar Bortolato — Developer & Designer",
-    description:
-      "Personal website of Omar Bortolato — developer, designer, and creator.",
+    url: "https://www.omarbortolato.it",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
     siteName: "Omar Bortolato",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Omar Bortolato — Developer & Designer",
-    description:
-      "Personal website of Omar Bortolato — developer, designer, and creator.",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
   },
   robots: {
     index: true,

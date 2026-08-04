@@ -24,7 +24,7 @@ import { getBlogPosts } from "@/lib/notion";
 // ─── Metadata ────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "Omar Bortolato — AI Practitioner & Manager",
+  title: "Omar Bortolato — Chief AI Officer & AI Practitioner",
   description:
     "Manager, imprenditore, practitioner. Trasformo l'AI da teoria a risultati concreti — senza paroloni, solo applicazioni reali.",
 };
@@ -192,7 +192,7 @@ export default async function HomePage() {
                             rounded-2xl overflow-hidden shadow-2xl">
               <Image
                 src="/images/omar-hero.png"
-                alt="Omar Bortolato — AI Practitioner"
+                alt="Omar Bortolato — Chief AI Officer"
                 fill
                 className="object-cover object-top"
                 sizes="(max-width: 768px) 300px, (max-width: 1024px) 340px, 390px"
@@ -254,7 +254,7 @@ export default async function HomePage() {
               Omar Bortolato
             </h2>
             <p className="mt-1 mb-5 font-medium text-primary-800">
-              AI Manager &amp; Practitioner
+              Chief AI Officer &amp; AI Practitioner
             </p>
             <p className="leading-relaxed text-gray-600 mb-6">
               <DynamicAge /> anni, Padova. Padre, manager, imprenditore seriale.

@@ -382,5 +382,5 @@ Esempio: `"un'idea"` → `"unidea"` (apostrofo rimosso, non trattino)
 ## Contact & Context
 Owner: Omar Bortolato
 Location: Padova, Italy
-Background: AI Manager @ Aspiag ICS, Entrepreneur, Speaker AI Week Milano 2026
+Background: Chief AI Officer @ Aspiag ICS, Entrepreneur, Speaker AI Week Milano 2026
 Mission: Make AI accessible and practical for everyone

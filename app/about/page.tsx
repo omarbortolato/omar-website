@@ -14,7 +14,7 @@ import { Badge } from "@/components/ui/badge";
 // ─── Metadata ────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: "Chi sono — Omar Bortolato | AI Practitioner & Manager",
+  title: "Chi sono — Omar Bortolato | Chief AI Officer",
   description:
     "18 anni nell'IT, imprenditore seriale, CAIO. Scopri la mia storia e come l'AI ha trasformato il mio modo di lavorare e fare business.",
 };
@@ -89,7 +89,7 @@ export default function AboutPage() {
                             rounded-2xl overflow-hidden shadow-2xl">
               <Image
                 src="/images/omar-speaking2.jpg"
-                alt="Omar Bortolato — speaker e AI Practitioner"
+                alt="Omar Bortolato — speaker e Chief AI Officer"
                 fill
                 className="object-cover object-center"
                 sizes="(max-width: 768px) 280px, (max-width: 1024px) 320px, 360px"
@@ -119,7 +119,7 @@ export default function AboutPage() {
             </p>
             <p>
               Per 18 anni ho lavorato nell&apos;IT: prima nella consulenza come Project Manager, poi
-              come BI Manager e infine AI Manager in una grande azienda della GDO. Ma la verità è
+              come BI Manager e oggi come Chief AI Officer in una grande azienda della GDO. Ma la verità è
               che la mia formazione più importante è sempre avvenuta fuori dall&apos;ufficio — nelle
               mie side gigs, nei miei business, nei miei esperimenti.
             </p>

@@ -90,8 +90,8 @@ export default function PrivacyPage() {
 
           <h3>Quando prenoti una call</h3>
           <p>
-            La prenotazione avviene tramite Cal.com, che agisce come fornitore autonomo e raccoglie i
-            dati necessari all&apos;appuntamento secondo la propria informativa.
+            La prenotazione avviene tramite Cal.com, che raccoglie per mio conto i dati necessari a
+            fissare l&apos;appuntamento: nome, email e orario scelto.
           </p>
 
           <h2>Cosa non faccio</h2>
@@ -111,8 +111,13 @@ export default function PrivacyPage() {
             <li><strong>Vercel</strong>, per l&apos;hosting del sito.</li>
             <li><strong>Notion</strong>, dove sono archiviati gli iscritti alle guide.</li>
             <li><strong>Resend</strong>, per l&apos;invio delle email.</li>
-            <li><strong>Cal.com</strong>, per le prenotazioni, come fornitore autonomo.</li>
+            <li><strong>Cal.com</strong>, per le prenotazioni delle call.</li>
           </ul>
+          <p>
+            Con ciascuno di loro il trattamento è regolato dalle condizioni contrattuali che
+            accetto usando il servizio, che includono le clausole sul trattamento dei dati per conto
+            del titolare previste dall&apos;articolo 28 del Regolamento.
+          </p>
           <p>
             Alcuni di questi fornitori hanno sede negli Stati Uniti. Il trasferimento avviene sulla
             base delle garanzie previste dal capo V del Regolamento, in particolare le clausole
