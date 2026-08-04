@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowRight, Calendar, Tag } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, Calendar, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CoverImage } from "@/components/ui/cover-image";
+import { AiDisclosure } from "@/components/ui/ai-disclosure";
 import { getBlogPost, getBlogPosts } from "@/lib/notion";
+import { guidePromoForPost } from "@/lib/guides";
 
 // ─── Static params ────────────────────────────────────────────────────────────
 
@@ -61,6 +63,7 @@ export default async function BlogPostPage(
 
   const hasContent = post.content && post.content.trim().length > 0;
   const coverSrc = resolveCoverImage(post.coverImage ?? null);
+  const guidePromo = guidePromoForPost(post.slug);
 
   return (
     <>
@@ -143,8 +146,34 @@ export default async function BlogPostPage(
             </div>
           )}
 
+          {/* Guida collegata all'articolo, se ce n'è una */}
+          {guidePromo && (
+            <div className="mt-14 rounded-2xl border border-primary-800/15 bg-primary-800/5 p-6 md:p-8">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-green-200 bg-green-50 px-2.5 py-0.5 text-xs font-semibold text-green-700">
+                <BookOpen size={10} />
+                Guida gratuita
+              </span>
+              <h2 className="mt-4 text-xl font-bold leading-snug text-gray-900 md:text-2xl">
+                {guidePromo.heading}
+              </h2>
+              <p className="mt-3 leading-relaxed text-gray-600">{guidePromo.body}</p>
+              <Button asChild variant="default" size="lg" className="mt-6">
+                <Link href={`/guide/${guidePromo.slug}`}>
+                  {guidePromo.cta}
+                  <ArrowRight size={16} />
+                </Link>
+              </Button>
+              <p className="mt-3 text-xs text-gray-400">{guidePromo.micro}</p>
+            </div>
+          )}
+
+          {/* Informativa AI — art. 50 par. 4 AI Act */}
+          <div className="mt-10">
+            <AiDisclosure variant="card" />
+          </div>
+
           {/* Back link */}
-          <div className="mt-16 pt-8 border-t border-gray-100">
+          <div className="mt-12 pt-8 border-t border-gray-100">
             <Link
               href="/blog"
               className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 transition-colors hover:text-primary-800"

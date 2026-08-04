@@ -7,10 +7,19 @@ const DEFAULT_PDF_URL = "https://www.omarbortolato.it/downloads/guida-claude-cod
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, name, guide, downloadUrl: clientDownloadUrl } = await request.json() as {
+    const {
+      email,
+      name,
+      guide,
+      source,
+      marketingConsent,
+      downloadUrl: clientDownloadUrl,
+    } = await request.json() as {
       email?: string;
       name?: string;
       guide?: string;
+      source?: string;
+      marketingConsent?: boolean;
       downloadUrl?: string;
     };
 
@@ -22,7 +31,13 @@ export async function POST(request: NextRequest) {
     const finalDownloadUrl = clientDownloadUrl ?? DEFAULT_PDF_URL;
 
     // 1. Salva su Notion
-    await saveToNotion(email, name ?? "", guide ?? "come-ho-costruito-questo-sito");
+    await saveToNotion({
+      email,
+      name: name ?? "",
+      guide: guide ?? "come-ho-costruito-questo-sito",
+      source: source ?? "sito",
+      marketingConsent: marketingConsent === true,
+    });
 
     // 2. Invia email con Resend
     let emailSent = false;
@@ -55,7 +70,14 @@ export async function POST(request: NextRequest) {
           from: "Omar Bortolato <omar@omarbortolato.it>",
           to: ["omarbortolato@gmail.com"],
           subject: isBook ? "🍊 Nuova Spremuta scaricata" : "📥 Nuovo iscritto guida",
-          html: buildNotificationEmail(email, name ?? "", guide ?? "", isBook),
+          html: buildNotificationEmail(
+            email,
+            name ?? "",
+            guide ?? "",
+            isBook,
+            source ?? "sito",
+            marketingConsent === true
+          ),
         });
         if (notifyError) {
           console.error("[subscribe] Notification email error:", JSON.stringify(notifyError));
@@ -136,7 +158,14 @@ function buildBookEmail(name: string, downloadUrl: string, guide: string): strin
   `;
 }
 
-function buildNotificationEmail(email: string, name: string, guide: string, isBook: boolean): string {
+function buildNotificationEmail(
+  email: string,
+  name: string,
+  guide: string,
+  isBook: boolean,
+  source: string,
+  marketingConsent: boolean
+): string {
   const label = isBook ? "Spremuta" : "Guida";
   return `
     <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #111827;">
@@ -144,6 +173,8 @@ function buildNotificationEmail(email: string, name: string, guide: string, isBo
       <p><strong>Email:</strong> ${email}</p>
       ${name ? `<p><strong>Nome:</strong> ${name}</p>` : ""}
       <p><strong>${label}:</strong> ${guide || "—"}</p>
+      <p><strong>Provenienza:</strong> ${source}</p>
+      <p><strong>Consenso aggiornamenti:</strong> ${marketingConsent ? "sì" : "no"}</p>
       <p style="margin-top: 24px;">
         <a href="https://www.notion.so/quantum-wealth/c3a083f7da8340bd923d3e4312aafae2"
            style="color: #1E3A8A;">Vedi su Notion →</a>
@@ -154,12 +185,33 @@ function buildNotificationEmail(email: string, name: string, guide: string, isBo
 
 // ─── Notion save ──────────────────────────────────────────────────────────────
 
-async function saveToNotion(email: string, name: string, guide: string): Promise<void> {
+/**
+ * Salva l'iscritto su Notion.
+ *
+ * Oltre a email e nome registra ciò che serve per agganciare in futuro una sequenza
+ * email senza dover rifare nulla:
+ *   · Tag provenienza — da quale pagina è arrivata l'iscrizione
+ *   · Consenso marketing — spunta separata e facoltativa, mai preselezionata
+ *   · Data consenso — quando è stato dato: senza data il consenso non è dimostrabile
+ *   · Sequenza / Stato sequenza — restano vuoti finché una sequenza non esiste
+ *
+ * Il consenso è distinto dalla consegna del file: chi non lo dà riceve comunque
+ * il download e non entra in nessuna sequenza.
+ */
+async function saveToNotion(sub: {
+  email: string;
+  name: string;
+  guide: string;
+  source: string;
+  marketingConsent: boolean;
+}): Promise<void> {
   const notionKey = process.env.NOTION_API_KEY;
   if (!notionKey) {
     console.warn("[subscribe] NOTION_API_KEY not configured — skipping Notion save");
     return;
   }
+
+  const today = new Date().toISOString().split("T")[0];
 
   try {
     const res = await fetch("https://api.notion.com/v1/pages", {
@@ -173,19 +225,31 @@ async function saveToNotion(email: string, name: string, guide: string): Promise
         parent: { database_id: SUBSCRIBERS_DB_ID },
         properties: {
           Email: {
-            title: [{ text: { content: email } }],
+            title: [{ text: { content: sub.email } }],
           },
           Nome: {
-            rich_text: [{ text: { content: name } }],
+            rich_text: [{ text: { content: sub.name } }],
           },
           Guida: {
-            select: { name: guide },
+            select: { name: sub.guide },
           },
           Data: {
-            date: { start: new Date().toISOString().split("T")[0] },
+            date: { start: today },
           },
           Source: {
             select: { name: "website" },
+          },
+          "Tag provenienza": {
+            multi_select: [{ name: sub.source }],
+          },
+          "Consenso marketing": {
+            checkbox: sub.marketingConsent,
+          },
+          ...(sub.marketingConsent
+            ? { "Data consenso": { date: { start: today } } }
+            : {}),
+          "Stato sequenza": {
+            select: { name: sub.marketingConsent ? "da agganciare" : "nessuna" },
           },
         },
       }),

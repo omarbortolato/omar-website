@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 434" width="640" height="434" font-family="Inter, system-ui, sans-serif">
+  <title>Agente o capacità</title>
+  <rect width="640" height="434" fill="#FFFFFF"/>
+  <g class="fig-head">
+    <text x="0" y="11" font-size="8" font-weight="700" letter-spacing="1.1" fill="#B45309">GOVERNARE UNO SWARM DI AGENTI · FIG. 6</text>
+    <text x="0" y="28" font-size="14.5" font-weight="700" fill="#111827">Agente o capacità</text>
+  </g>
+  <g transform="translate(0,38)">
+
+  <!-- colonne -->
+  <rect x="0" y="0" width="308" height="228" rx="10" fill="#EFF4FF" stroke="#1E3A8A" stroke-width="1.2"/>
+  <rect x="332" y="0" width="308" height="228" rx="10" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1.2"/>
+
+  <text x="20" y="30" font-size="8.5" font-weight="700" letter-spacing="0.9" fill="#1E3A8A">RAGIONA</text>
+  <text x="20" y="52" font-size="15" font-weight="700" fill="#1E3A8A">Agente</text>
+  <text x="352" y="30" font-size="8.5" font-weight="700" letter-spacing="0.9" fill="#6B7280">ESEGUE</text>
+  <text x="352" y="52" font-size="15" font-weight="700" fill="#111827">Capacità</text>
+
+  <!-- righe di confronto -->
+  <g font-size="10.5">
+    <line x1="20" y1="66" x2="288" y2="66" stroke="#BFD3FE"/>
+    <line x1="352" y1="66" x2="620" y2="66" stroke="#E5E7EB"/>
+
+    <text x="20" y="86" fill="#111827" font-weight="600">Persona</text>
+    <text x="200" y="86" fill="#1E3A8A" font-weight="700" text-anchor="end">sì</text>
+    <text x="352" y="86" fill="#111827" font-weight="600">Persona</text>
+    <text x="532" y="86" fill="#9CA3AF" text-anchor="end">no</text>
+
+    <text x="20" y="112" fill="#111827" font-weight="600">Ambiente proprio</text>
+    <text x="200" y="112" fill="#1E3A8A" font-weight="700" text-anchor="end">sì</text>
+    <text x="352" y="112" fill="#111827" font-weight="600">Ambiente proprio</text>
+    <text x="532" y="112" fill="#9CA3AF" text-anchor="end">no</text>
+
+    <text x="20" y="138" fill="#111827" font-weight="600">Budget proprio</text>
+    <text x="200" y="138" fill="#1E3A8A" font-weight="700" text-anchor="end">sì</text>
+    <text x="352" y="138" fill="#111827" font-weight="600">Budget proprio</text>
+    <text x="532" y="138" fill="#9CA3AF" text-anchor="end">no</text>
+
+    <text x="20" y="164" fill="#111827" font-weight="600">Posizione nel DAG</text>
+    <text x="200" y="164" fill="#1E3A8A" font-weight="700" text-anchor="end">sì</text>
+    <text x="352" y="164" fill="#111827" font-weight="600">Posizione nel DAG</text>
+    <text x="532" y="164" fill="#9CA3AF" text-anchor="end">no</text>
+
+    <text x="20" y="190" fill="#111827" font-weight="600">Processo che parte</text>
+    <text x="200" y="190" fill="#1E3A8A" font-weight="700" text-anchor="end">sì</text>
+    <text x="352" y="190" fill="#111827" font-weight="600">Chiamata per nome</text>
+    <text x="532" y="190" fill="#111827" font-weight="700" text-anchor="end">sì</text>
+
+    <text x="20" y="214" font-size="10" fill="#6B7280" font-style="italic">Struttura giusta per un ruolo.</text>
+    <text x="352" y="214" font-size="10" fill="#6B7280" font-style="italic">Struttura giusta per una funzione.</text>
+  </g>
+
+  <!-- regola di rete -->
+  <rect x="0" y="248" width="640" height="86" rx="10" fill="#FFFBEB" stroke="#FDE68A"/>
+  <text x="20" y="272" font-family="Geist Mono, monospace" font-size="11.5" font-weight="600" fill="#B45309">può stare nel control-plane ⟺ per uscire serve al massimo il varco LLM</text>
+  <text x="20" y="296" font-size="10.5" fill="#4B5563">Il control-plane è in gabbia di rete. Una capacità che genera testo passando dal varco può essere ospitata lì.</text>
+  <text x="20" y="313" font-size="10.5" fill="#4B5563">Una che chiama un servizio esterno, manda una email o vuole un browser non può, e resta a catalogo marcata</text>
+  <text x="20" y="330" font-size="10.5" fill="#4B5563">non invocabile col motivo: «non c'è» e «non può esserci qui» sono risposte diverse.</text>
+
+  <text x="0" y="368" font-size="10" font-weight="600" fill="#111827">Il criterio non è la complessità del compito. È se serve un'identità con un budget, o basta una funzione invocabile.</text>
+  <text x="0" y="386" font-size="10" fill="#6B7280">Dare a tutto un'identità moltiplica le entità da governare; darne a niente rimette la governance dentro il codice.</text>
+
+  </g>
+</svg>

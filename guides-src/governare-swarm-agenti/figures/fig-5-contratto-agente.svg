@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 378" width="640" height="378" font-family="Inter, system-ui, sans-serif">
+  <title>Il contratto dell'agente</title>
+  <rect width="640" height="378" fill="#FFFFFF"/>
+  <g class="fig-head">
+    <text x="0" y="11" font-size="8" font-weight="700" letter-spacing="1.1" fill="#B45309">GOVERNARE UNO SWARM DI AGENTI · FIG. 5</text>
+    <text x="0" y="28" font-size="14.5" font-weight="700" fill="#111827">Il contratto dell'agente</text>
+  </g>
+  <g transform="translate(0,38)">
+
+  <!-- cartella -->
+  <path d="M0 20 L0 8 L44 8 L52 20 L200 20" fill="none" stroke="#9CA3AF" stroke-width="1.2"/>
+  <text x="8" y="38" font-family="Geist Mono, monospace" font-size="11.5" font-weight="500" fill="#111827">board/&lt;nome&gt;/</text>
+  <line x1="0" y1="48" x2="640" y2="48" stroke="#E5E7EB"/>
+
+  <!-- main.py — obbligatorio -->
+  <rect x="0" y="62" width="308" height="112" rx="10" fill="#EFF4FF" stroke="#1E3A8A" stroke-width="1.4"/>
+  <rect x="16" y="76" width="80" height="17" rx="4" fill="#1E3A8A"/>
+  <text x="26" y="88" font-size="8.5" font-weight="700" letter-spacing="0.8" fill="#fff">OBBLIGATORIO</text>
+  <text x="16" y="112" font-family="Geist Mono, monospace" font-size="13" font-weight="600" fill="#1E3A8A">main.py</text>
+  <text x="16" y="132" font-size="10.5" fill="#4B5563">L'entrypoint che il control-plane esegue.</text>
+  <text x="16" y="148" font-size="10.5" fill="#4B5563">I tag di governance stanno nel suo header,</text>
+  <text x="16" y="164" font-size="10.5" fill="#111827" font-weight="600">e solo lì.</text>
+
+  <!-- se manca -->
+  <rect x="324" y="62" width="316" height="112" rx="10" fill="#FEF2F2" stroke="#FECACA"/>
+  <text x="340" y="84" font-size="8.5" font-weight="700" letter-spacing="0.8" fill="#B91C1C">SE MANCA</text>
+  <text x="340" y="106" font-size="10.5" fill="#4B5563">Quarantena. C'è la persona ma non il codice:</text>
+  <text x="340" y="122" font-size="10.5" fill="#4B5563">non c'è niente da eseguire.</text>
+  <text x="340" y="146" font-size="10.5" fill="#4B5563">Senza tag topologico nell'header, stessa sorte:</text>
+  <text x="340" y="162" font-size="10.5" fill="#4B5563">la posizione nel grafo sarebbe indefinita.</text>
+
+  <!-- tre facoltativi -->
+  <g>
+    <rect x="0" y="190" width="204" height="112" rx="10" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1.2"/>
+    <text x="16" y="212" font-size="8.5" font-weight="700" letter-spacing="0.8" fill="#9CA3AF">FACOLTATIVO</text>
+    <text x="16" y="234" font-family="Geist Mono, monospace" font-size="12" font-weight="600" fill="#111827">agent.json</text>
+    <text x="16" y="254" font-size="10" fill="#6B7280">Descrizione, dominio,</text>
+    <text x="16" y="269" font-size="10" fill="#6B7280">classe di modello, owner.</text>
+    <text x="16" y="290" font-size="10" fill="#B45309" font-weight="600">Se manca, viene dedotto.</text>
+
+    <rect x="218" y="190" width="204" height="112" rx="10" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1.2"/>
+    <text x="234" y="212" font-size="8.5" font-weight="700" letter-spacing="0.8" fill="#9CA3AF">FACOLTATIVO</text>
+    <text x="234" y="234" font-family="Geist Mono, monospace" font-size="12" font-weight="600" fill="#111827">AGENT.md</text>
+    <text x="234" y="254" font-size="10" fill="#6B7280">La persona. L'unico posto</text>
+    <text x="234" y="269" font-size="10" fill="#6B7280">in cui si scrive.</text>
+    <text x="234" y="290" font-size="10" fill="#B45309" font-weight="600">Il codice la importa.</text>
+
+    <rect x="436" y="190" width="204" height="112" rx="10" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1.2"/>
+    <text x="452" y="212" font-size="8.5" font-weight="700" letter-spacing="0.8" fill="#9CA3AF">FACOLTATIVO</text>
+    <text x="452" y="234" font-family="Geist Mono, monospace" font-size="11" font-weight="600" fill="#111827">requirements.txt</text>
+    <text x="452" y="254" font-size="10" fill="#6B7280">Dipendenze proprie, nel</text>
+    <text x="452" y="269" font-size="10" fill="#6B7280">venv di quell'agente</text>
+    <text x="452" y="290" font-size="10" fill="#B45309" font-weight="600">e di nessun altro.</text>
+  </g>
+
+  <line x1="0" y1="316" x2="640" y2="316" stroke="#E5E7EB"/>
+  <text x="0" y="334" font-size="10" font-weight="600" fill="#111827">Un file obbligatorio, tre facoltativi. Chi prototipa scrive una cartella; chi governa legge sempre la stessa struttura.</text>
+
+  </g>
+</svg>

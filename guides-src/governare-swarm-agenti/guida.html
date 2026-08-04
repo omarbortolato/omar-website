@@ -1,0 +1,1345 @@
+<!-- Governare uno swarm di agenti — sorgente della guida.
+     Impaginazione a pagine fisse: ogni <section class="page"> è una pagina A4.
+     Testatine e numeri di pagina vengono iniettati da build.mjs.
+     Le figure vengono inlinate da build.mjs a partire da figures/*.svg. -->
+
+<!-- ═══════════════ 1. COPERTINA ═══════════════ -->
+<section class="page cover" data-nohead>
+  <div class="pb">
+    <div class="cover-badge">Guida gratuita</div>
+    <div class="cover-title">Governare uno<br>swarm di <span>agenti</span></div>
+    <div class="cover-sub">Le decisioni architetturali che contano prima del codice</div>
+  </div>
+  <div class="cover-foot">
+    <div class="cover-author">Omar Bortolato</div>
+    <div class="cover-role">Chief AI Officer · Imprenditore · Speaker</div>
+    <div class="cover-site">omarbortolato.it</div>
+    <div class="cover-payoff">AI pratica per chi vuole fare, non solo sapere.</div>
+  </div>
+</section>
+
+<!-- ═══════════════ 2. COME LEGGERE ═══════════════ -->
+<section class="page">
+  <div class="pb">
+    <div class="eyebrow">Prima di iniziare</div>
+    <h2>Come leggere questa guida</h2>
+
+    <p class="lead after-h2">Questa non è una guida a un prodotto. È la descrizione di un modo di
+    strutturare un sistema di agenti, e delle ragioni per cui è fatto così.</p>
+
+    <p>Un agente è un programma che riceve una richiesta, ragiona con un modello linguistico e
+    restituisce una risposta, eventualmente usando strumenti per farlo. Farne girare uno è semplice.
+    Il problema di cui parla questa guida comincia quando ne hai dieci, ognuno con il proprio
+    ambiente, il proprio budget e la possibilità di chiamare gli altri.</p>
+
+    <p>Ogni sezione risponde a tre domande, in quest'ordine. Qual è il problema strutturale. Quale
+    decisione lo risolve, e per quale meccanismo. Cosa costa quella decisione, e in quali casi non
+    conviene. Le trovi riassunte in fondo a ogni capitolo, in un blocco di tre righe.</p>
+
+    <p>La terza domanda non è un adempimento. Una guida che presenta solo i vantaggi di una scelta
+    è materiale promozionale, e ti lascia senza gli strumenti per decidere diversamente. Il capitolo
+    9 è dedicato interamente a cosa si paga adottando questo modello, e riporta per intero
+    l'argomento pubblico di chi sostiene che i sistemi multi-agente andrebbero evitati.</p>
+
+    <h3>A chi serve</h3>
+    <p>A chi costruisce automazioni con agenti e ha superato la fase del prompt singolo. Manager
+    tecnici, imprenditori con competenze informatiche, project manager, professionisti che
+    progettano sistemi. Serve sapere cos'è un'API. Non serve saper programmare.</p>
+
+    <h3>Cosa non troverai</h3>
+    <p>Codice da copiare, tutorial di installazione, confronti fra framework. L'architettura
+    descritta è implementata in Python, ma le decisioni di cui parlo non dipendono dal linguaggio
+    né dalla libreria di orchestrazione che usi. Il capitolo 10 le riformula come domande a cui
+    rispondere sul tuo stack, qualunque esso sia.</p>
+
+    <p>Troverai invece riferimenti a principi consolidati in altri campi dell'informatica, alcuni
+    con cinquant'anni di storia. Non è erudizione: quasi tutti i problemi di un sistema di agenti
+    sono problemi di sistemi distribuiti travestiti, e sono già stati risolti almeno una volta.</p>
+
+    <div class="box box--soft">
+      <div class="lbl">Sui riferimenti volatili</div>
+      <p>Nomi di modelli, prezzi, limiti di piattaforma e versioni cambiano ogni pochi mesi.
+      Dove un riferimento del genere è indispensabile, sta dentro un riquadro tratteggiato marcato
+      come aggiornabile. Il resto del testo punta a principi che non scadono.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ 3. INDICE ═══════════════ -->
+<section class="page">
+  <div class="pb">
+    <div class="eyebrow">Indice</div>
+    <h2>Cosa c'è dentro</h2>
+
+    <div class="toc">
+      <div class="toc-row"><div class="toc-n">1</div><div class="toc-t"><b>Il salto da uno a dieci</b><span>Perché orchestrare dieci agenti è un problema di natura diversa. La tassonomia dei pattern di orchestrazione.</span></div><div class="toc-p">4</div></div>
+      <div class="toc-row"><div class="toc-n">2</div><div class="toc-t"><b>Il control-plane</b><span>Le quattro responsabilità che non sono delegabili, e perché stanno tutte nello stesso punto.</span></div><div class="toc-p">8</div></div>
+      <div class="toc-row"><div class="toc-n">3</div><div class="toc-t"><b>Il contratto minimo</b><span>Perché un agente è una cartella e non una riga in un registro.</span></div><div class="toc-p">11</div></div>
+      <div class="toc-row"><div class="toc-n">4</div><div class="toc-t"><b>La topologia</b><span>I rank, la regola di delega, il DAG come proprietà dell'ordinamento e non come controllo.</span></div><div class="toc-p">15</div></div>
+      <div class="toc-row"><div class="toc-n">5</div><div class="toc-t"><b>Il gating</b><span>Le regole valgono nel punto di passaggio obbligato, non in un documento che nessuno legge.</span></div><div class="toc-p">21</div></div>
+      <div class="toc-row"><div class="toc-n">6</div><div class="toc-t"><b>Il ciclo di una richiesta</b><span>I controlli in sequenza, il ragionamento dietro l'ordine, e perché un chiarimento non è un errore.</span></div><div class="toc-p">25</div></div>
+      <div class="toc-row"><div class="toc-n">7</div><div class="toc-t"><b>Agenti e capacità</b><span>Quando un'unità di lavoro merita un'identità, e quando basta una funzione invocabile.</span></div><div class="toc-p">28</div></div>
+      <div class="toc-row"><div class="toc-n">8</div><div class="toc-t"><b>La spesa come vincolo di governance</b><span>I livelli di cache, cosa saltano, e la regola che nessuno di essi può violare.</span></div><div class="toc-p">31</div></div>
+      <div class="toc-row"><div class="toc-n">9</div><div class="toc-t"><b>Limiti e trade-off dell'architettura</b><span>Cosa si paga adottando questo modello, e l'argomento di chi sostiene di non adottarlo.</span></div><div class="toc-p">34</div></div>
+      <div class="toc-row"><div class="toc-n">10</div><div class="toc-t"><b>Le decisioni che devi prendere tu</b><span>Dieci scelte architetturali con i criteri per decidere, applicabili a stack diversi.</span></div><div class="toc-p">37</div></div>
+      <div class="toc-row"><div class="toc-n">11</div><div class="toc-t"><b>Fonti e letture</b><span>Bibliografia ragionata, con data di consultazione.</span></div><div class="toc-p">39</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ CAPITOLO 1 ═══════════════ -->
+<section class="page" data-chap="Il salto da uno a dieci">
+  <div class="pb">
+    <div class="eyebrow">Capitolo 1</div>
+    <h2>Il salto da uno a dieci</h2>
+
+    <p class="lead after-h2">Far girare un agente è facile: un processo, un prompt, una risposta.
+    Quello che non è facile è farne girare dieci senza che il sistema diventi impossibile da capire.</p>
+
+    <p>La differenza non è di scala, è di natura. Un agente solo è un programma: ha un ingresso, una
+    logica e un'uscita, e quando sbaglia lo vedi. Dieci agenti che possono chiamarsi fra loro sono
+    un sistema distribuito, e i sistemi distribuiti falliscono in modi che non assomigliano a un
+    bug. Falliscono lentamente, in silenzio, e spesso il primo segnale è una fattura.</p>
+
+    <p>Vale la pena essere precisi sui modi in cui succede, perché sono quattro e sono diversi fra
+    loro. Ognuno richiede una difesa diversa, e confonderli porta a costruire la difesa sbagliata.</p>
+
+    <h3>Il ciclo</h3>
+    <p>Un agente ne chiama un altro, che a un certo punto richiama il primo. Nessuno dei due sta
+    facendo qualcosa di sbagliato: ciascuno delega a chi sembra più competente su quella parte del
+    problema. Il ciclo emerge dalla composizione di decisioni locali ragionevoli, e non è visibile
+    guardando il codice di nessuno dei due.</p>
+
+    <p>La versione costosa di questo problema non è il ciclo infinito, che almeno si nota. È il
+    ciclo che gira quattro volte prima di risolversi, su una richiesta che ne arriva mille al
+    giorno. Nessun allarme scatta, il sistema funziona, e il costo è quadruplicato in modo
+    permanente.</p>
+
+    <h3>Il fan-out</h3>
+    <p>Un agente decide che il compito si divide in cinque parti e ne delega cinque. Ognuno dei
+    cinque fa lo stesso. Al terzo livello sono centoventicinque processi, e nessuno ha mai preso la
+    decisione di avviarne centoventicinque. La ramificazione è il comportamento normale di ogni
+    singolo nodo: è la sua composizione ad essere esplosiva.</p>
+
+    <p>Anthropic ha misurato l'ordine di grandezza in un resoconto pubblico sul proprio sistema
+    multi-agente di ricerca: gli agenti consumano circa quattro volte i token di una conversazione,
+    e i sistemi multi-agente circa quindici volte.<sup class="ref">2</sup> Il numero esatto conta
+    poco e invecchierà. Conta che il moltiplicatore sia una proprietà dell'architettura, non
+    dell'implementazione.</p>
+  </div>
+</section>
+
+<section class="page" data-chap="Il salto da uno a dieci">
+  <div class="pb">
+    <h3>La degradazione del contesto</h3>
+    <p>Ogni passaggio di consegne fra agenti comporta un riassunto. Chi delega non trasferisce tutto
+    quello che sa, trasferisce quello che ritiene rilevante. È una compressione con perdita, e la
+    perdita si accumula lungo la catena.</p>
+
+    <p>C'è anche un effetto più sottile, e misurato: le prestazioni dei modelli linguistici
+    degradano quando l'informazione rilevante si trova in mezzo a un contesto lungo, invece che
+    all'inizio o alla fine.<sup class="ref">5</sup> Un agente che riceve un contesto accumulato da
+    tre passaggi precedenti non è nella stessa condizione di uno che riceve la domanda originale.</p>
+
+    <h3>La propagazione dell'errore</h3>
+    <p>Un errore commesso al primo livello non viene corretto ai livelli successivi: viene assunto
+    come dato. Chi sta sotto non ha modo di sapere che la premessa è sbagliata, perché gli arriva
+    come richiesta, non come ipotesi. Il sistema produce con grande efficienza una risposta
+    coerente a una domanda sbagliata.</p>
+
+    <p>Su questo esiste ora un lavoro sistematico. Un gruppo di ricerca di Berkeley ha analizzato
+    oltre milleseicento tracce di esecuzione raccolte su sette framework multi-agente diversi, e ne
+    ha ricavato una tassonomia di quattordici modi di fallire, raggruppati in tre categorie:
+    problemi di progettazione del sistema, disallineamento fra agenti, e verifica del
+    compito.<sup class="ref">3</sup></p>
+
+    <p>La conclusione che conta, per chi progetta, è questa: molti fallimenti non dipendono dalla
+    qualità del modello ma dalla struttura del sistema. Cambiare modello non li risolve. È una
+    buona notizia, perché la struttura è l'unica cosa su cui hai davvero controllo.</p>
+
+    <div class="box">
+      <div class="lbl">Il punto di questo capitolo</div>
+      <p>Nessuno dei quattro problemi si risolve scrivendo agenti migliori. Sono tutti proprietà
+      delle relazioni fra agenti, non degli agenti. Le decisioni che li affrontano vanno prese
+      sulla struttura, e vanno prese prima, perché dopo si tratta di riscrivere.</p>
+    </div>
+  </div>
+</section>
+
+<section class="page" data-chap="Il salto da uno a dieci">
+  <div class="pb">
+    <h3>Cinque modi di orchestrare</h3>
+    <p>Prima di guardare una soluzione conviene sapere quali forme esistono. Ogni pattern risolve
+    un problema diverso lasciandone aperto un altro.</p>
+
+    <p>Il <strong>supervisor</strong> mette un agente al centro: riceve la richiesta, decide chi
+    deve lavorare, raccoglie i risultati. La terminazione è garantita perché il controllo torna
+    sempre allo stesso posto, e il centro diventa il collo di bottiglia.</p>
+
+    <p>Il <strong>gerarchico</strong> generalizza il supervisor su più livelli: supervisori di
+    supervisori.<sup class="ref">6</sup> Scala in ampiezza, e allunga la catena lungo cui un errore
+    può propagarsi senza essere notato.</p>
+
+    <p>La <strong>rete</strong> lascia che ogni agente chiami ogni altro. È la forma più flessibile
+    e l'unica senza garanzia di terminazione: la struttura ammette i cicli, quindi devi rilevarli
+    mentre accadono.</p>
+
+    <p>L'<strong>handoff</strong> passa il controllo in avanti, senza ritorno: ogni agente completa
+    la sua parte e consegna al successivo. È facile da tracciare, ma nessuno ha la visione
+    d'insieme, e un errore introdotto presto viaggia con il testimone fino in fondo.</p>
+
+    <p>La <strong>blackboard</strong> elimina la chiamata diretta: gli agenti scrivono e leggono da
+    uno stato condiviso, e ognuno interviene quando riconosce una situazione su cui sa agire. Viene
+    dall'intelligenza artificiale degli anni Ottanta<sup class="ref">7</sup> e risolve bene il
+    problema del contesto condiviso, spostando la difficoltà sul controllo di chi agisce quando.</p>
+
+    <figure>
+      <div data-svg="fig-8-pattern-orchestrazione.svg"></div>
+      <figcaption><strong>Cinque modi di orchestrare.</strong> Cambia cosa garantiscono per
+      costruzione, e quindi cosa resta a carico tuo.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="page" data-chap="Il salto da uno a dieci">
+  <div class="pb">
+    <h3>Dove si colloca l'architettura descritta</h3>
+    <p>L'architettura di cui parla questa guida è gerarchica, con un vincolo in più: i livelli sono
+    ordinati, e la delega può solo scendere. Non è una variante di dettaglio. È la scelta che
+    trasforma l'assenza di cicli da controllo da eseguire a proprietà da non dover verificare, e
+    il capitolo 4 è dedicato interamente a questo.</p>
+
+    <p>Il prezzo è dichiarato fin d'ora: si rinuncia alla flessibilità della rete. Due agenti dello
+    stesso livello non possono collaborare direttamente, e ogni collaborazione trasversale richiede
+    una struttura esplicita. Se il tuo problema ha bisogno di negoziazione fra pari, questa non è
+    l'architettura giusta, e non c'è modo di aggirarlo senza smontare la garanzia.</p>
+
+    <p>Vale la pena dire anche cosa questa scelta non risolve. L'ordinamento garantisce che il
+    sistema termini e che nessuno chiami chi non deve. Non dice niente sulla qualità del passaggio
+    di consegne, e quindi non affronta la degradazione del contesto né la propagazione dell'errore.
+    Quelli restano problemi aperti, e il capitolo 9 li riprende.</p>
+
+    <div class="box box--warn">
+      <div class="lbl">Prima di aggiungere agenti</div>
+      <p>La raccomandazione più utile della documentazione tecnica di Anthropic sul tema è di
+      aggiungere complessità solo quando migliora il risultato in modo dimostrabile, e di ricordare
+      che ottimizzare una singola chiamata con recupero di informazioni ed esempi in contesto è
+      spesso sufficiente.<sup class="ref">1</sup> Un sistema di dieci agenti che risolve un problema
+      da un agente è un sistema peggiore, non più avanzato.</p>
+    </div>
+
+    <div class="pdc">
+      <div class="pdc-row"><div class="pdc-k">Il problema</div><div class="pdc-v">Da un certo numero di agenti in poi, il comportamento del sistema smette di essere deducibile dal codice dei singoli agenti: cicli, fan-out, degradazione del contesto ed errori che si propagano nascono dalle relazioni, non dai componenti.</div></div>
+      <div class="pdc-row"><div class="pdc-k">La decisione</div><div class="pdc-v">Scegliere consapevolmente un pattern di orchestrazione, sapendo cosa garantisce per costruzione e cosa lascia da verificare a runtime, invece di lasciare che la topologia emerga da chi chiama chi.</div></div>
+      <div class="pdc-row"><div class="pdc-k">Cosa costa</div><div class="pdc-v">Ogni pattern rinuncia a qualcosa. Scegliere in anticipo significa rinunciare in anticipo, quando ancora non sai con certezza di cosa avrai bisogno.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ CAPITOLO 2 ═══════════════ -->
+<section class="page" data-chap="Il control-plane">
+  <div class="pb">
+    <div class="eyebrow">Capitolo 2</div>
+    <h2>Il control-plane</h2>
+
+    <p class="lead after-h2">Un control-plane è il componente che decide, e che non esegue. Nei
+    sistemi di rete è il piano che stabilisce le rotte, distinto dal piano che fa passare i
+    pacchetti. Qui è il punto da cui si entra, e l'unico posto in cui le regole possono essere
+    davvero applicate.</p>
+
+    <p>La formulazione precisa arriva dalla sicurezza informatica e ha cinquant'anni. Saltzer e
+    Schroeder, nel 1975, la chiamano <em>complete mediation</em>: ogni accesso a ogni oggetto deve
+    essere verificato per autorità.<sup class="ref">10</sup> Una regola che vale solo su alcuni
+    percorsi di accesso non è una regola, è una convenzione.</p>
+
+    <p>Da qui discende la struttura. Se esistono due modi di far partire un agente, le regole
+    valgono su uno solo dei due, e il secondo diventa la scorciatoia che qualcuno userà quando ha
+    fretta. Il control-plane non è un punto di ingresso privilegiato: è l'unico.</p>
+
+    <h3>Le quattro responsabilità</h3>
+    <p>Il control-plane possiede quattro cose che nessun agente deve possedere da sé. Non è una
+    lista arbitraria: sono le quattro cose che, se lasciate al singolo agente, funzionano finché
+    qualcuno non se le dimentica.</p>
+
+    <p><strong>Il ciclo di vita del processo.</strong> Chi avvia un agente, con quale ambiente, con
+    quale timeout, e chi lo termina. Se ogni agente gestisce il proprio avvio, ogni agente ha una
+    versione leggermente diversa di cosa significhi partire, e nessuno sa quale sia quella giusta.</p>
+
+    <p><strong>Il gating.</strong> La verifica di conformità all'ingresso, con l'esito e il motivo.
+    È il capitolo 5. Qui basti dire che un controllo che l'agente fa su se stesso non è un
+    controllo: è una dichiarazione.</p>
+
+    <p><strong>Il protocollo delle risposte non semplici.</strong> Un agente può rispondere, ma può
+    anche chiedere un chiarimento o emettere la risposta a pezzi. Sono forme diverse, e chi le
+    riceve deve poterle distinguere senza interpretare il testo. Se la distinzione sta dentro
+    l'agente, ogni agente la implementa a modo suo.</p>
+  </div>
+</section>
+
+<section class="page" data-chap="Il control-plane">
+  <div class="pb">
+    <p><strong>Il limite di profondità della ricorsione.</strong> Quanto in là può arrivare una
+    catena di deleghe. Questo è il caso in cui la ragione per non delegare al singolo agente è più
+    evidente: un agente che si dimentica di contare è un agente che non ferma niente, e il costo
+    ricade su tutti.</p>
+
+    <h3>Perché non sono delegabili</h3>
+    <p>C'è un argomento comune alle quattro. Sono tutte responsabilità il cui fallimento non si
+    manifesta dove è stato causato. Un agente che dimentica il limite di profondità non produce un
+    errore: produce lavoro. Un agente che gestisce male il proprio ciclo di vita non si accorge di
+    niente, e il problema lo scopre chi legge i log del sistema tre giorni dopo.</p>
+
+    <p>Questa è la differenza fra una regola di sviluppo e un vincolo architetturale. La prima
+    dipende dalla disciplina di chi scrive, e la disciplina è una risorsa che si esaurisce sotto
+    pressione. Il secondo vale anche quando nessuno ci sta pensando.</p>
+
+    <h3>Il parallelo con l'admission control</h3>
+    <p>Il modello non è nuovo. Kubernetes, il sistema di orchestrazione di container più diffuso,
+    ha un meccanismo chiamato admission controller: ogni richiesta di creare o modificare una
+    risorsa passa da una catena di controlli prima di essere accettata.<sup class="ref">11</sup>
+    Alcuni modificano la richiesta per portarla allo standard, altri la accettano o la rifiutano.
+    Se un controllo rifiuta, l'intera richiesta viene rifiutata.</p>
+
+    <p>Le due proprietà interessanti sono che i controlli stanno fuori dall'oggetto controllato, e
+    che non esistono percorsi che li aggirano. È esattamente la struttura del gating descritto nel
+    capitolo 5, applicata a un dominio diverso vent'anni prima.</p>
+
+    <p>Lo stesso vale per la policy-as-code: scrivere le regole di autorizzazione come codice
+    valutabile e versionato, separato dall'applicazione che le subisce.<sup class="ref">12</sup>
+    La ragione per cui questi sistemi esistono è che le regole scritte in un documento di
+    convenzioni non vengono applicate, vengono ricordate. E ricordate male.</p>
+
+    <h3>Cosa non deve possedere nessun agente</h3>
+    <p>Il complemento della lista precedente è altrettanto importante. Tre cose non devono mai
+    stare dentro il codice di un agente, e sono tutte cose che tecnicamente potrebbero starci.</p>
+  </div>
+</section>
+
+<section class="page" data-chap="Il control-plane">
+  <div class="pb">
+    <p><strong>Le credenziali dei provider.</strong> Una chiave nel sorgente di un agente è una
+    chiave che finisce nella cronologia del repository, che viaggia in ogni copia, e che nessuno
+    sa più dove sia quando va ruotata. Il principio è vecchio quanto il resto: la configurazione,
+    e in particolare i segreti, sta nell'ambiente e non nel codice.<sup class="ref">14</sup></p>
+
+    <p><strong>L'accesso diretto al provider.</strong> Anche senza chiave nel sorgente, un agente
+    che chiama direttamente la libreria di un fornitore di modelli aggira il varco attraverso cui
+    passa la contabilità. Non è un problema di sicurezza, è un problema di governance: quello che
+    non passa dal varco non è misurato, e quello che non è misurato non è limitabile.</p>
+
+    <p><strong>La decisione su chi può chiamarlo.</strong> Un agente non è la sede giusta per
+    decidere chi ha il diritto di invocarlo, per la stessa ragione per cui una porta non decide chi
+    ha la chiave. Questa decisione appartiene alla topologia, ed è il capitolo 4.</p>
+
+    <div class="box box--warn">
+      <div class="lbl">Attenzione al punto debole</div>
+      <p>Un control-plane concentra tutto in un punto, e quindi concentra anche il rischio. Se cade,
+      non gira niente. Se ha un difetto nella logica di autorizzazione, il difetto vale per tutto il
+      sistema contemporaneamente. È il rovescio esatto della proprietà che lo rende utile, e va
+      messo in conto: la concentrazione paga in coerenza e si paga in fragilità.</p>
+    </div>
+
+    <div class="pdc">
+      <div class="pdc-row"><div class="pdc-k">Il problema</div><div class="pdc-v">Le regole che valgono solo su alcuni percorsi di accesso non sono regole. Le responsabilità il cui fallimento è silenzioso non possono essere lasciate a chi ha interesse a non esercitarle.</div></div>
+      <div class="pdc-row"><div class="pdc-k">La decisione</div><div class="pdc-v">Un unico punto di ingresso che possiede ciclo di vita, gating, protocollo e limite di profondità. Nessun agente possiede credenziali, accesso diretto al provider o giudizio su chi può chiamarlo.</div></div>
+      <div class="pdc-row"><div class="pdc-k">Cosa costa</div><div class="pdc-v">Un punto di fallimento unico e un collo di bottiglia sotto carico. In una fase di esplorazione rallenta, perché ogni prova passa comunque dal controllo.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ CAPITOLO 3 ═══════════════ -->
+<section class="page" data-chap="Il contratto minimo">
+  <div class="pb">
+    <div class="eyebrow">Capitolo 3</div>
+    <h2>Il contratto minimo</h2>
+
+    <p class="lead after-h2">Un agente è una cartella. Non esiste un registro da aggiornare a mano:
+    il control-plane scopre gli agenti leggendo il disco.</p>
+
+    <p>La frase che giustifica la scelta è breve: un registro che diverge dal disco è un registro
+    che mente, e prima o poi qualcuno ci costruisce sopra una decisione. Vale la pena aprirla,
+    perché è uno dei punti in cui la pratica dei sistemi di agenti può imparare qualcosa di già
+    stabilito altrove.</p>
+
+    <h3>Stato dichiarato e stato osservato</h3>
+    <p>Un registro è una dichiarazione: qualcuno ha scritto che esistono sette agenti con queste
+    caratteristiche. Il disco è un'osservazione: queste sono le cartelle che ci sono adesso. Finché
+    coincidono, la differenza è filosofica. Divergono al primo momento in cui qualcuno aggiunge una
+    cartella e dimentica di aggiornare il registro, e da quel momento il sistema ha due verità.</p>
+
+    <p>È il problema che in ambito infrastrutturale si chiama deriva della configurazione, e la
+    risposta consolidata è il ciclo di riconciliazione: un processo che confronta continuamente lo
+    stato desiderato con lo stato osservato e agisce fino a farli coincidere.<sup class="ref">13</sup>
+    In Kubernetes ogni oggetto porta con sé entrambi, la specifica e lo stato, ed è il controller a
+    ridurre la distanza.</p>
+
+    <p>La scoperta da disco è la versione minima dello stesso principio: se lo stato è sempre
+    derivato dalla realtà, la distanza è zero per costruzione e non serve nessun ciclo. Si rinuncia
+    a qualcosa, e lo vediamo alla fine del capitolo.</p>
+
+    <p>C'è un criterio generale sotto, e vale ben oltre gli agenti. Ogni volta che una lista deve
+    essere tenuta allineata a mano con qualcosa che esiste già, quella lista è un debito. La
+    domanda giusta non è come ricordarsi di aggiornarla, ma se sia possibile derivarla.</p>
+  </div>
+</section>
+
+<section class="page" data-chap="Il contratto minimo">
+  <div class="pb">
+    <h3>Cosa contiene la cartella</h3>
+    <p>Un file è obbligatorio, tre sono facoltativi. La proporzione è deliberata: chi prototipa deve
+    poter scrivere una cartella e vederla funzionare, non compilare un modulo.</p>
+
+    <figure>
+      <div data-svg="fig-5-contratto-agente.svg"></div>
+      <figcaption><strong>Il contratto dell'agente.</strong> Un solo file obbligatorio. Tutto il
+      resto viene dedotto, e la deduzione è dichiarata invece che silenziosa.</figcaption>
+    </figure>
+
+    <h3>La persona sta scritta in un posto solo</h3>
+    <p>La persona di un agente è la descrizione del ruolo che assume quando ragiona: chi è, cosa sa,
+    come risponde. È il testo che finisce nell'istruzione di sistema del modello. In questa
+    architettura sta in un file dedicato, e il codice la importa invece di ripeterla.</p>
+
+    <p>La ragione è la regola più antica della progettazione modulare: ogni modulo nasconde una
+    decisione, e le decisioni che possono cambiare vanno isolate in un posto solo.<sup class="ref">17</sup>
+    Parnas la formulò nel 1972 per i moduli software, e vale identica qui. Se la persona compare in
+    due posti, prima o poi cambia in uno solo, e il sistema ha due comportamenti diversi a seconda
+    del percorso.</p>
+
+    <p>Il caso concreto è il più banale possibile: qualcuno affina il tono di un agente nel file
+    della persona, e non si accorge che una versione più vecchia è incollata dentro il codice.
+    L'agente risponde con il tono vecchio. Nessun errore, nessun log, nessun modo di accorgersene
+    se non leggendo.</p>
+  </div>
+</section>
+
+<section class="page" data-chap="Il contratto minimo">
+  <div class="pb">
+    <h3>I tag stanno solo nell'header</h3>
+    <p>I tag di governance sono le etichette che dichiarano la posizione dell'agente nella
+    topologia e le sue capacità di protocollo. Si leggono solo nel blocco di commenti iniziale del
+    file di ingresso. Citarli più in basso, in una docstring o in un commento, non attiva niente.</p>
+
+    <p>È una restrizione che a prima vista sembra pignoleria e invece è la parte più importante del
+    contratto. Un sistema che si configura leggendo il proprio codice non deve poter essere
+    configurato per sbaglio. Se bastasse nominare un tag ovunque nel file, un esempio dentro un
+    commento, una riga di documentazione o un test che descrive un caso diventerebbero
+    configurazione attiva.</p>
+
+    <p>La stessa logica vale al contrario: siccome il posto è uno solo ed è in cima, chiunque apra
+    il file vede la governance dell'agente nelle prime righe, senza cercarla.</p>
+
+    <div class="box">
+      <div class="lbl">Il criterio generale</div>
+      <p>Quando una dichiarazione ha effetti sul comportamento del sistema, il posto in cui si
+      scrive deve essere unico e riconoscibile a colpo d'occhio. Ogni posto in più è un posto in cui
+      può finire per caso.</p>
+    </div>
+
+    <h3>Cosa arriva dall'import</h3>
+    <p>L'ultima parte del contratto è quella che non si scrive. Cache, memoria condivisa, guardrail,
+    telemetria e formato della risposta arrivano dall'importazione del kernel comune: non sono
+    codice che l'autore dell'agente deve produrre.</p>
+
+    <p>La frase che spiega la scelta merita di essere isolata: se risparmiare token fosse qualcosa
+    da ricordarsi, prima o poi non ce lo ricorderemmo. Vale per tutte e cinque le cose in elenco.
+    Una funzionalità trasversale che dipende dalla diligenza di chi scrive il singolo componente è
+    una funzionalità che hai a metà, e non sai quale metà.</p>
+  </div>
+</section>
+
+<section class="page" data-chap="Il contratto minimo">
+  <div class="pb">
+    <p>C'è un effetto collaterale utile. Siccome l'agente minimo conforme è corto, il costo di
+    scriverne uno nuovo è basso, e quindi il contratto non viene percepito come un ostacolo. Un
+    contratto che costa poco viene rispettato; uno che costa molto viene aggirato, e a quel punto
+    non descrive più niente.</p>
+
+    <h3>Cosa costa la scoperta da disco</h3>
+    <p>Tre cose, e vanno dette. La prima: il disco diventa l'interfaccia. Spostare una cartella,
+    rinominarla o lasciarne una a metà ha effetti immediati sul sistema, senza nessun passaggio
+    intenzionale. Un registro, con tutti i suoi difetti, richiede un gesto esplicito per cambiare
+    la realtà.</p>
+
+    <p>La seconda: non c'è storia. Un registro versionato dice chi ha aggiunto cosa e quando. Il
+    disco dice solo com'è adesso, e per sapere com'era ieri devi guardare altrove.</p>
+
+    <p>La terza: la scoperta costa a ogni lettura, e su un numero grande di agenti diventa un costo
+    da gestire con una cache, che reintroduce esattamente il problema della divergenza che si voleva
+    evitare. È il punto in cui la scelta va rivista, non prima.</p>
+
+    <div class="pdc">
+      <div class="pdc-row"><div class="pdc-k">Il problema</div><div class="pdc-v">Uno stato dichiarato a mano diverge dalla realtà al primo momento di distrazione, e da lì il sistema ha due verità. Le informazioni duplicate cambiano in un posto solo.</div></div>
+      <div class="pdc-row"><div class="pdc-k">La decisione</div><div class="pdc-v">Derivare lo stato dall'osservazione invece che dalla dichiarazione. Un contratto minimo con un solo file obbligatorio, la persona in un posto solo, i tag in una posizione unica e riconoscibile.</div></div>
+      <div class="pdc-row"><div class="pdc-k">Cosa costa</div><div class="pdc-v">Il filesystem diventa un'interfaccia, con la fragilità che comporta. Si perde la storia dei cambiamenti. Su molti agenti la scoperta va messa in cache, e la cache riporta il problema di partenza.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ CAPITOLO 4 ═══════════════ -->
+<section class="page" data-chap="La topologia">
+  <div class="pb">
+    <div class="eyebrow">Capitolo 4</div>
+    <h2>La topologia</h2>
+
+    <p class="lead after-h2">Ogni agente dichiara dove sta nel grafo di delega. Il tag non è
+    un'etichetta descrittiva: è la sua posizione, e determina chi può chiamarlo.</p>
+
+    <p>Questo è il capitolo centrale, e la ragione è che la decisione che descrive è l'unica del
+    documento che produce una garanzia invece di una difesa. Le altre riducono la probabilità che
+    qualcosa vada storto. Questa rende una classe di problemi non rappresentabile.</p>
+
+    <h3>Quattro livelli</h3>
+    <p>Il grafo ha quattro posizioni, e ognuna dice due cose: cosa fa l'agente, e chi può
+    raggiungerlo.</p>
+
+    <p><strong>Rank 0, entrata.</strong> Da dove entra una richiesta nel sistema. Non è mai il
+    bersaglio di un altro agente: è il punto in cui il lavoro comincia, non uno a cui si delega.</p>
+
+    <p><strong>Rank 1, coordinatore.</strong> Orchestra il proprio dominio. È raggiungibile solo su
+    chiamata esplicita, mai per instradamento automatico. Qui stanno i ruoli di responsabilità
+    verticale, quelli che nell'organigramma di un'azienda chiameresti capi funzione.</p>
+
+    <p><strong>Rank 2, ponte.</strong> Attraversa i domini. È raggiungibile solo da un dominio
+    diverso dal proprio: esiste per far comunicare due verticali senza che i loro responsabili si
+    parlino direttamente.</p>
+
+    <p><strong>Rank 3, foglia.</strong> Risponde e basta. Una foglia che delega non è una foglia:
+    è il livello in cui il lavoro si esaurisce, e la sua definizione coincide con questa proprietà.</p>
+
+    <div class="formula">
+      <div class="f">delega ammessa ⟺ rank(chiamante) &lt; rank(bersaglio)</div>
+      <p>Una sola disuguaglianza. Tutto il resto di questo capitolo è la spiegazione di cosa
+      discende da qui, e di quanto sia diverso da una regola che si controlla.</p>
+    </div>
+  </div>
+</section>
+
+<section class="page" data-chap="La topologia">
+  <div class="pb">
+    <h3>Perché non ci possono essere cicli</h3>
+    <p>La relazione "minore di" sui numeri è un ordine stretto. Ha due proprietà che qui contano:
+    è irriflessiva, cioè nessun elemento è minore di se stesso, ed è transitiva, cioè se il primo
+    è minore del secondo e il secondo del terzo, allora il primo è minore del terzo.</p>
+
+    <p>Da queste due proprietà segue tutto. Immagina un cammino di deleghe che parta da un agente
+    e ci ritorni. Ogni passo del cammino aumenta il rank, per la regola. Per transitività, il rank
+    di partenza sarebbe minore del rank di arrivo. Ma partenza e arrivo sono lo stesso agente,
+    quindi servirebbe che il suo rank fosse minore di se stesso. Che è escluso dall'irriflessività.</p>
+
+    <p>Il cammino non esiste. Non è raro, non è improbabile, non è intercettato: non è
+    rappresentabile nel sistema di regole. Il grafo di delega è un grafo aciclico diretto, un DAG,
+    per costruzione e non per verifica.</p>
+
+    <p>Un DAG è precisamente un grafo su cui esiste un ordinamento topologico: una disposizione
+    lineare dei nodi in cui ogni arco punta sempre in avanti.<sup class="ref">8</sup> Qui
+    l'ordinamento topologico non va calcolato, perché è dato: sono i rank. Il grafo non viene
+    ordinato dopo essere stato costruito, viene costruito dentro un ordine.</p>
+
+    <figure>
+      <div data-svg="fig-1-grafo-delega.svg"></div>
+      <figcaption><strong>Il grafo di delega, quattro livelli.</strong> Le frecce ammesse scendono
+      sempre. Le due vietate mostrano i due modi tipici di sbagliare: chiamare un pari e risalire.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="page" data-chap="La topologia">
+  <div class="pb">
+    <h3>Perché il rilevamento a runtime non basta</h3>
+    <p>L'alternativa naturale è lasciare che i cicli siano possibili e accorgersene mentre accadono:
+    si tiene traccia della catena di chiamate e si interrompe quando un nome si ripete, oppure si
+    conta la profondità e ci si ferma a una soglia. È la soluzione che quasi tutti adottano, ed è
+    ragionevole. Ha tre debolezze, e vanno capite prima di scegliere.</p>
+
+    <p><strong>Interviene dopo.</strong> Nel momento in cui il rilevamento scatta, il giro è già
+    avvenuto almeno una volta. Il lavoro è stato fatto, i token sono stati spesi, e in un sistema
+    che gestisce molte richieste il costo di ciò che viene interrotto è comunque sostenuto.</p>
+
+    <p><strong>Richiede stato condiviso e corretto.</strong> Per sapere che si sta ripetendo un
+    nome bisogna sapere chi è già stato chiamato, e questa informazione deve viaggiare con la
+    richiesta o vivere in un posto che tutti leggono. È un pezzo di infrastruttura in più, che può
+    perdersi, disallinearsi o essere aggirato da chi chiama fuori dal percorso previsto.</p>
+
+    <p><strong>Confonde due problemi.</strong> Un limite di profondità ferma sia il ciclo sia la
+    catena lunga ma legittima, e non sa distinguerli. Se lo alzi per non tagliare il lavoro buono,
+    lasci correre più a lungo quello cattivo. Non esiste una soglia giusta perché la soglia sta
+    misurando la cosa sbagliata.</p>
+
+    <p>Il parallelo esatto viene dai sistemi operativi. Il deadlock, la situazione in cui più
+    processi si bloccano a vicenda aspettando risorse, ha quattro condizioni necessarie, e una di
+    queste è l'attesa circolare.<sup class="ref">9</sup> Si può rilevare il deadlock quando è
+    accaduto, oppure si può imporre un ordine totale sulle risorse e pretendere che vengano
+    acquisite in quell'ordine: a quel punto l'attesa circolare è impossibile e il deadlock non
+    accade.<sup class="ref">15</sup> È la stessa mossa, su un problema diverso, e ha sessant'anni.</p>
+  </div>
+</section>
+
+<section class="page" data-chap="La topologia">
+  <div class="pb">
+    <figure>
+      <div data-svg="fig-9-cicli.svg"></div>
+      <figcaption><strong>Cicli rilevati contro cicli impossibili.</strong> La differenza non è di
+      severità del controllo: è che nel secondo caso non c'è niente da controllare.</figcaption>
+    </figure>
+
+    <h3>La regola dei pari</h3>
+    <p>Dalla disuguaglianza discende una conseguenza che sorprende chi la incontra la prima volta.
+    Due coordinatori hanno lo stesso rank, quindi la disuguaglianza è falsa in entrambe le
+    direzioni, quindi non possono chiamarsi fra loro. Non perché sia vietato in una tabella: perché
+    la formula non lo ammette.</p>
+
+    <p>L'equivalente organizzativo è immediato, e vale la pena guardarlo perché rende evidente che
+    non è una limitazione tecnica. Il responsabile amministrativo non comanda il responsabile
+    tecnico. Entrambi dirigono chi sta sotto di loro. Quando devono coordinarsi, o sale la
+    decisione a chi sta sopra, oppure si crea una figura trasversale che appartiene a nessuno dei
+    due domini.</p>
+
+    <p>Il rank 2, il ponte, è esattamente quella figura trasversale. Esiste perché la collaborazione
+    fra pari è un bisogno reale, e la risposta è darle una struttura invece di permettere una
+    chiamata diretta.</p>
+  </div>
+</section>
+
+<section class="page" data-chap="La topologia">
+  <div class="pb">
+    <h3>La funzione che decide</h3>
+    <p>L'ordine sui rank è il fondamento, ma non è l'intera regola. Sopra di esso stanno alcuni
+    vincoli di governance, e l'ordine in cui vengono valutati è significativo.</p>
+
+    <p>Prima si escludono i casi degeneri: un agente non chiama se stesso, e un agente marcato come
+    privato non è raggiungibile per instradamento automatico da nessuno. Poi si esclude l'entrata
+    come bersaglio, perché il punto di ingresso non è un destinatario. Solo a questo punto si
+    applica l'ordine topologico, ed è qui che i cicli muoiono.</p>
+
+    <p>Superato l'ordine, restano tre casi. Il ponte è raggiungibile solo se il chiamante appartiene
+    a un dominio diverso dal suo. Il coordinatore non è mai raggiungibile per instradamento
+    automatico, solo su chiamata esplicita. La foglia è raggiungibile.</p>
+
+    <p>C'è un dettaglio che vale l'intero capitolo: l'aciclicità non è affidata alle regole di
+    dominio. Le regole di dominio sono simmetriche, cioè se A e B stanno in domini diversi la
+    condizione vale in entrambe le direzioni, e una condizione simmetrica non può escludere un
+    ciclo di lunghezza due. La garanzia viene solo dall'ordine sui rank, e le regole di dominio
+    stanno sopra di esso senza mai sostituirlo.</p>
+
+    <p>Un'ultima cosa. Una richiesta che arriva dall'esterno, da una persona e non da un agente, si
+    comporta come se avesse rank meno uno: sta prima di tutti e può raggiungere qualsiasi posizione
+    che le altre regole non escludano. È coerente, perché una persona non è un nodo del grafo e non
+    può quindi essere il punto di ritorno di un ciclo.</p>
+
+    <figure>
+      <div data-svg="fig-2-matrice-clearance.svg"></div>
+      <figcaption><strong>Chi può chiamare chi.</strong> La matrice non è disegnata a mano: è
+      calcolata con la stessa funzione che il sistema applica a runtime. Non descrive il grafo, è
+      il grafo.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="page" data-chap="La topologia">
+  <div class="pb">
+    <h3>Documentazione che non può mentire</h3>
+    <p>Vale la pena fermarsi su quest'ultimo punto, perché è una tecnica riutilizzabile ovunque.
+    La matrice che hai appena visto non è una tabella scritta da qualcuno che ha guardato il codice.
+    È generata invocando la stessa funzione che il sistema usa per decidere, su tutte le coppie
+    possibili.</p>
+
+    <p>La conseguenza è che la documentazione non può divergere dal comportamento. Se qualcuno
+    cambia la regola e dimentica di aggiornare il documento, il documento cambia da solo. Se il
+    documento dice una cosa e il sistema ne fa un'altra, è un bug del generatore, non una
+    dimenticanza.</p>
+
+    <p>È lo stesso principio del capitolo precedente applicato alla documentazione invece che
+    all'inventario: quello che può essere derivato non va dichiarato.</p>
+
+    <div class="box box--warn">
+      <div class="lbl">Il costo vero della gerarchia</div>
+      <p>Un ordinamento rigido rende alcune cose impossibili, e alcune di quelle cose ti serviranno.
+      Due specialisti che dovrebbero confrontarsi devono passare da chi sta sopra, con un giro in
+      più e una perdita di contesto. Promuovere una foglia a coordinatore è una decisione
+      deliberata, non un aggiustamento. Se il tuo dominio richiede negoziazione continua fra pari,
+      stai combattendo contro l'architettura invece di usarla.</p>
+    </div>
+
+    <div class="pdc">
+      <div class="pdc-row"><div class="pdc-k">Il problema</div><div class="pdc-v">In un grafo di delega libero i cicli sono possibili, e ogni difesa contro di essi interviene dopo che il costo è già stato sostenuto, richiede stato condiviso e non sa distinguere un ciclo da una catena lunga legittima.</div></div>
+      <div class="pdc-row"><div class="pdc-k">La decisione</div><div class="pdc-v">Assegnare a ogni agente una posizione in un ordine stretto e ammettere la delega solo verso posizioni successive. L'aciclicità diventa una proprietà dell'ordinamento, non un controllo da eseguire.</div></div>
+      <div class="pdc-row"><div class="pdc-k">Cosa costa</div><div class="pdc-v">I pari non collaborano direttamente e serve una figura ponte. La gerarchia va decisa presto e cambiarla è un riassetto. Non c'è modo di fare un'eccezione senza perdere la garanzia, perché la garanzia è l'assenza di eccezioni.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ CAPITOLO 5 ═══════════════ -->
+<section class="page" data-chap="Il gating">
+  <div class="pb">
+    <div class="eyebrow">Capitolo 5</div>
+    <h2>Il gating</h2>
+
+    <p class="lead after-h2">Chi prototipa non deve conoscere il contratto in anticipo. Sperimenta,
+    e all'ingresso il sistema normalizza ciò che è normalizzabile e trattiene il resto, col motivo.</p>
+
+    <p>Il gating è il controllo di conformità che un agente attraversa prima di poter girare. La
+    tesi del capitolo è che le regole di sviluppo scritte in un documento non vengono applicate:
+    vengono ricordate, e ricordate male. L'unico posto in cui una regola vale davvero è il punto di
+    passaggio obbligato.</p>
+
+    <p>La proprietà che rende il gating diverso da una linea guida è che non esiste la via di mezzo.
+    Un agente è conforme e gira, oppure è trattenuto e non gira. Non esiste lo stato "gira ma chissà
+    cosa fa", che è precisamente lo stato in cui si trova la maggior parte dei sistemi costruiti in
+    fretta.</p>
+
+    <h3>Tre esiti, e nessun quarto</h3>
+    <p>Il primo esito è la conformazione. Qualcosa manca ed è deducibile da quello che c'è: viene
+    dedotto, l'agente gira, e la deduzione è scritta. Non è indulgenza, è il riconoscimento che
+    obbligare a compilare campi che il sistema può ricavare da solo produce campi compilati male.</p>
+
+    <p>Il secondo è l'attesa. L'agente è conforme ma manca un presupposto per eseguirlo, tipicamente
+    l'ambiente delle dipendenze. Non è una violazione, è un lavoro non ancora fatto, e merita una
+    risposta diversa da un rifiuto.</p>
+
+    <p>Il terzo è la quarantena. Qualcosa non torna e non è deducibile: l'agente viene trattenuto,
+    e il motivo viene scritto accanto. La parte importante è la seconda: un rifiuto senza motivo
+    costringe chi lo riceve a indovinare, e chi indovina finisce per cambiare cose a caso.</p>
+  </div>
+</section>
+
+<section class="page" data-chap="Il gating">
+  <div class="pb">
+    <figure>
+      <div data-svg="fig-4-tabella-gating.svg"></div>
+      <figcaption><strong>Conformato, in attesa, quarantena.</strong> Ogni riga è una decisione
+      presa una volta e applicata sempre, non un giudizio caso per caso.</figcaption>
+    </figure>
+
+    <h3>Il default è il più prudente</h3>
+    <p>Quando manca la posizione topologica e va dedotta, il valore assegnato è quello di foglia.
+    È la posizione più conservativa: una foglia non delega, quindi non può innescare ramificazioni
+    inattese. Promuoverla a coordinatore resta una decisione da prendere esplicitamente.</p>
+
+    <p>Anche questo è un principio con un nome e una data. Saltzer e Schroeder lo chiamano
+    <em>fail-safe defaults</em>: le decisioni di accesso devono basarsi sul permesso, non
+    sull'esclusione, e in caso di dubbio il sistema deve negare.<sup class="ref">10</sup></p>
+  </div>
+</section>
+
+<section class="page" data-chap="Il gating">
+  <div class="pb">
+    <p>La conseguenza pratica è che un agente scritto in fretta e senza attenzione fa poco, invece
+    di fare molto in modo imprevedibile. È il comportamento che vuoi in un sistema dove il costo di
+    un errore non è locale.</p>
+
+    <h3>Il fallimento silenzioso è la categoria peggiore</h3>
+    <p>Una delle righe della tabella merita di essere spiegata, perché rappresenta un'intera classe
+    di problemi. Due tag di protocollo sono incompatibili fra loro: quello che fa emettere la
+    risposta a pezzi e quello che permette all'agente di interrompersi e chiedere un chiarimento.</p>
+
+    <p>Presi insieme, il chiarimento finirebbe dentro il flusso di testo come una frase qualsiasi,
+    e nessuno lo intercetterebbe come richiesta. Il sistema non darebbe errore. Continuerebbe a
+    funzionare, restituendo a chi ha chiesto una domanda travestita da risposta.</p>
+
+    <p>Questa è la ragione per cui la combinazione va in quarantena invece di essere accettata con
+    un avvertimento. Un guasto rumoroso costa un'ora di lavoro. Un guasto silenzioso costa la
+    fiducia in tutti gli output del sistema, perché una volta che sai che può succedere non sai più
+    quali risposte guardare.</p>
+  </div>
+</section>
+
+<section class="page" data-chap="Il gating">
+  <div class="pb">
+    <h3>Normalizzare senza sovrascrivere</h3>
+    <p>Il componente che porta ciò che esiste allo standard ha un vincolo preciso: non sovrascrive
+    niente. Aggiunge quello che manca, non corregge quello che c'è. La distinzione è quella fra un
+    sistema che aiuta e un sistema che decide al posto tuo, e la seconda è insopportabile per chi
+    lavora.</p>
+
+    <h3>Deduzione senza modello</h3>
+    <p>Quando il dominio di un agente non è dichiarato, viene classificato leggendo il testo che lo
+    descrive. La cosa interessante è come: con un conteggio di parole chiave, non con un modello
+    linguistico.</p>
+
+    <p>La scelta è deliberata e la ragione è la ispezionabilità. Un classificatore lessicale non
+    sbaglia mai a caso: se instrada male, si vede quale parola l'ha fatto, e si corregge. Un modello
+    che classifica bene il novantacinque per cento delle volte introduce un cinque per cento di
+    errori non spiegabili, dentro un componente che deve essere prevedibile per definizione.</p>
+
+    <p>C'è anche una regola sul dubbio: in caso di parità fra due domini, il risultato è il dominio
+    generico di ripiego. Preferire "non so" a una scelta arbitraria è la stessa logica del default
+    prudente, applicata alla classificazione.</p>
+
+    <p>Il criterio generale è utile ben oltre questo caso. Un modello linguistico serve dove il
+    compito richiede comprensione e dove un errore occasionale è tollerabile. Nel percorso che
+    decide se un componente può girare, nessuna delle due condizioni è soddisfatta.</p>
+
+    <div class="pdc">
+      <div class="pdc-row"><div class="pdc-k">Il problema</div><div class="pdc-v">Le regole scritte in un documento non vengono applicate. I sistemi accumulano componenti che girano senza che nessuno sappia in che stato siano, e i guasti silenziosi rendono inaffidabile tutto l'output.</div></div>
+      <div class="pdc-row"><div class="pdc-k">La decisione</div><div class="pdc-v">Un controllo obbligatorio all'ingresso con tre esiti e nessun quarto, che deduce ciò che è deducibile, trattiene il resto col motivo scritto, e in caso di dubbio assegna sempre meno capacità.</div></div>
+      <div class="pdc-row"><div class="pdc-k">Cosa costa</div><div class="pdc-v">Rallenta la prototipazione: ogni prova passa dal controllo anche quando sai già che il codice è provvisorio. Le regole del gating diventano esse stesse un'interfaccia, e cambiarle rompe agenti che prima passavano.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ CAPITOLO 6 ═══════════════ -->
+<section class="page" data-chap="Il ciclo di una richiesta">
+  <div class="pb">
+    <div class="eyebrow">Capitolo 6</div>
+    <h2>Il ciclo di una richiesta</h2>
+
+    <p class="lead after-h2">Sei controlli in sequenza. L'ordine non è casuale, e ognuno esiste per
+    una ragione che si può dire in una frase.</p>
+
+    <p>Questo capitolo è il più concreto della guida, perché descrive cosa succede davvero fra il
+    momento in cui arriva una richiesta e il momento in cui torna una risposta. Vale la pena
+    leggerlo con una domanda in testa: per ciascun controllo, cosa succederebbe se non ci fosse.</p>
+
+    <figure>
+      <div data-svg="fig-3-ciclo-richiesta.svg"></div>
+      <figcaption><strong>Cosa succede a una richiesta.</strong> I controlli economici stanno prima
+      di quelli costosi, e l'autorizzazione sta prima della cache.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="page" data-chap="Il ciclo di una richiesta">
+  <div class="pb">
+    <h3>Il criterio dell'ordine</h3>
+    <p>Due principi governano la sequenza. Il primo è economico: i controlli che costano poco
+    stanno prima di quelli che costano molto. Leggere un record dal disco costa meno che avviare un
+    processo, quindi si legge prima. È ovvio, e va detto perché l'ovvio si dimentica quando si
+    aggiungono controlli nel tempo, ognuno nel punto in cui è venuto in mente.</p>
+
+    <p>Il secondo non è economico ed è più importante: l'autorizzazione sta prima della cache. Se
+    la cache venisse consultata per prima, un chiamante senza diritto riceverebbe una risposta già
+    pronta. Sarebbe gratis, sarebbe veloce, e sarebbe una violazione. La stessa regola vale nel
+    caching HTTP, dove una cache condivisa non può servire risposte a richieste autenticate se non
+    quando è esplicitamente consentito.<sup class="ref">16</sup></p>
+
+    <h3>I sei controlli</h3>
+    <p><strong>Esiste ed è conforme.</strong> Il record dell'agente viene letto dal disco, non da
+    una cache che potrebbe essere disallineata. È il capitolo 3 applicato: la fonte di verità è
+    l'osservazione. Se l'agente non esiste, la risposta lo dice; se è in quarantena, la risposta
+    include il motivo, così chi la riceve sa cosa sistemare.</p>
+
+    <p><strong>La profondità è nei limiti.</strong> Il kernel comune limita già la ricorsione, ma
+    quello è codice che gira dentro l'agente, e ciò che gira dentro può essere aggirato da chi
+    scrive l'agente. Il controllo sul confine di processo non può essere dimenticato, perché non
+    appartiene a nessuno che possa dimenticarlo.</p>
+
+    <p>È il pattern che in sicurezza si chiama difesa in profondità: lo stesso controllo in due
+    punti indipendenti, dove il secondo non presuppone la correttezza del primo. Nella pratica il
+    limite è tre, e la cifra conta meno del fatto che sia dichiarata in un posto solo.</p>
+
+    <p><strong>Il chiamante ha la clearance.</strong> La regola del capitolo 4 viene applicata di
+    nuovo qui, e non solo dentro il meccanismo che instrada le richieste. La ragione è concreta: un
+    agente potrebbe chiamare l'endpoint direttamente e saltare l'instradamento. Se la regola
+    vivesse solo nel router, esisterebbe un percorso che la aggira, e un percorso che la aggira è
+    tutto quello che serve.</p>
+  </div>
+</section>
+
+<section class="page" data-chap="Il ciclo di una richiesta">
+  <div class="pb">
+    <p><strong>La risposta esiste già.</strong> Qui interviene la cache di primo livello, e qui si
+    vede perché sta al quarto posto e non al primo. A questo punto sappiamo che l'agente esiste, che
+    la catena è nei limiti e che il chiamante ha diritto di chiedere. Solo allora una risposta già
+    calcolata è servibile.</p>
+
+    <p><strong>Esecuzione nel suo ambiente.</strong> L'agente parte come sottoprocesso con un
+    ambiente controllato: nessuna credenziale del fornitore di modelli, un timeout finito, i dati in
+    ingresso passati sullo standard input. Le tre cose insieme definiscono il perimetro di ciò che
+    quel processo può fare, e il perimetro è deciso da chi lo avvia, non da chi lo ha scritto.</p>
+
+    <p><strong>Traduzione dell'esito.</strong> Il risultato è un successo, un chiarimento o un
+    errore, e va tradotto in una forma che chi ha chiamato possa interpretare senza leggere il
+    testo.</p>
+
+    <h3>Perché un chiarimento non è un errore</h3>
+    <p>Questo è il punto del capitolo che ha le conseguenze meno intuitive. Un agente che si
+    interrompe per chiedere un dato mancante ha prodotto una risposta valida: la risposta corretta a
+    una domanda incompleta è una domanda.</p>
+
+    <p>Se quella risposta venisse marcata come guasto del server, qualsiasi client scritto
+    ragionevolmente farebbe la cosa che si fa con i guasti temporanei: riproverebbe. E riprovando
+    otterrebbe la stessa richiesta di chiarimento, che riproverebbe ancora. Il sistema entrerebbe
+    in un ciclo di tentativi su una situazione che non è un guasto e non si risolve da sola.</p>
+
+    <p>La lezione generale è che i codici di stato non descrivono come è andata a chi ha scritto il
+    codice: prescrivono cosa deve fare chi li riceve. Sceglierli in base al sentimento invece che
+    all'azione che innescano è uno dei modi più comuni di costruire cicli involontari.</p>
+
+    <div class="box">
+      <div class="lbl">La domanda da farsi su ogni controllo</div>
+      <p>Se questo controllo non ci fosse, quale comportamento diventerebbe possibile, e me ne
+      accorgerei? Se la risposta alla seconda parte è no, il controllo non è opzionale a prescindere
+      da quanto sia improbabile il caso.</p>
+    </div>
+
+    <div class="pdc">
+      <div class="pdc-row"><div class="pdc-k">Il problema</div><div class="pdc-v">I controlli aggiunti nel tempo si dispongono nell'ordine in cui sono venuti in mente. Un'autorizzazione valutata dopo una cache non è un'autorizzazione, e un codice di stato scelto male innesca cicli di tentativi.</div></div>
+      <div class="pdc-row"><div class="pdc-k">La decisione</div><div class="pdc-v">Una sequenza dichiarata: prima i controlli economici, l'autorizzazione sempre prima della cache, il limite di profondità ripetuto sul confine di processo, e una traduzione dell'esito che distingue il chiarimento dal guasto.</div></div>
+      <div class="pdc-row"><div class="pdc-k">Cosa costa</div><div class="pdc-v">Ogni richiesta paga tutti i controlli, anche quelle che non ne avrebbero bisogno. La sequenza è rigida: inserire un controllo nuovo obbliga a ragionare su tutta la catena invece che sul punto in cui serve.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ CAPITOLO 7 ═══════════════ -->
+<section class="page" data-chap="Agenti e capacità">
+  <div class="pb">
+    <div class="eyebrow">Capitolo 7</div>
+    <h2>Agenti e capacità</h2>
+
+    <p class="lead after-h2">Un agente ha una persona, un ambiente, un budget, una posizione nel
+    grafo e un processo che parte. È la struttura giusta per qualcosa che ragiona, ed è
+    sovradimensionata per qualcosa che esegue.</p>
+
+    <p>La domanda di questo capitolo è di granularità: quando un'unità di lavoro merita un'entità
+    autonoma con identità propria, e quando basta una funzione che si chiama per nome. È la stessa
+    domanda che si pone chi decide quanto grande debba essere un servizio in un'architettura a
+    servizi, e la risposta ha la stessa forma.</p>
+
+    <h3>Il criterio</h3>
+    <p>Scrivere un pezzo di testo o generare un documento sono capacità, non ruoli. Non hanno un
+    punto di vista, non prendono decisioni che vale la pena attribuire a qualcuno, non hanno bisogno
+    di un budget separato perché non decidono quanto lavorare.</p>
+
+    <p>Una capacità è quindi un'unità invocabile leggera ospitata dal control-plane: niente persona,
+    niente ambiente dedicato, niente posizione nel grafo. Si chiama per nome, con dei parametri, e
+    risponde.</p>
+
+    <figure>
+      <div data-svg="fig-6-agente-vs-capacita.svg"></div>
+      <figcaption><strong>Agente o capacità.</strong> Il criterio non è la complessità del compito,
+      ma se serve un'identità con un budget o basta una funzione invocabile.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="page" data-chap="Agenti e capacità">
+  <div class="pb">
+    <h3>Il costo di sbagliare in entrambe le direzioni</h3>
+    <p>Dare un'identità a tutto moltiplica le entità da governare. Ogni agente ha una posizione da
+    decidere, un budget da assegnare, un ambiente da mantenere. Dieci agenti che avrebbero potuto
+    essere tre agenti e sette funzioni sono dieci volte il lavoro di governance per lo stesso
+    risultato. È l'antipattern che nella letteratura sui servizi viene chiamato dei nanoservizi:
+    frammentazione che produce costo di coordinamento senza produrre autonomia.</p>
+
+    <p>Sbagliare nella direzione opposta costa in modo diverso. Se una cosa che decide viene
+    implementata come funzione, la sua logica finisce dentro chi la chiama, e con essa il suo
+    budget, il suo comportamento in caso di errore e la sua posizione nel grafo. La governance non
+    scompare: rientra nel codice, che è precisamente il posto da cui il capitolo 2 la voleva
+    togliere.</p>
+
+    <p>Il criterio utile è quello di Parnas, applicato a un livello diverso da quello per cui fu
+    scritto: ogni modulo dovrebbe nascondere una decisione che può cambiare.<sup class="ref">17</sup>
+    Se l'unità di lavoro incapsula una decisione che può cambiare indipendentemente dalle altre,
+    merita un confine proprio. Se esegue e basta, il confine è costo puro.</p>
+
+    <h3>Il vincolo di rete decide dove può stare</h3>
+    <p>C'è un secondo criterio, indipendente dal primo, e riguarda dove una capacità può essere
+    ospitata. Il control-plane sta in una rete isolata, senza accesso a internet, con una sola via
+    di uscita: il varco verso i modelli linguistici.</p>
+
+    <p>Da qui la regola: può stare lì dentro solo ciò che, per fare il proprio lavoro, non ha
+    bisogno di uscire da nessun'altra parte. Una capacità che genera testo passando dal varco può
+    essere ospitata. Una che deve chiamare un servizio esterno, mandare una email o avviare un
+    browser non può, e non è un limite da aggirare: è l'isolamento che funziona come previsto.</p>
+  </div>
+</section>
+
+<section class="page" data-chap="Agenti e capacità">
+  <div class="pb">
+    <p>Il dettaglio che rende la scelta buona invece che solo restrittiva è come vengono trattate
+    le capacità che non possono stare lì. Restano a catalogo, marcate come non invocabili, col
+    motivo. Perché «non c'è» e «non può esserci qui» sono risposte diverse, e chi le riceve deve
+    poterle distinguere: la prima è un lavoro da fare, la seconda è una decisione già presa.</p>
+
+    <h3>Perché limitare l'agire è un principio, non una precauzione</h3>
+    <p>La classifica OWASP dei rischi per le applicazioni basate su modelli linguistici dedica una
+    voce a quella che chiama agency eccessiva, e la scompone in tre cause: funzionalità eccessive,
+    cioè strumenti raggiungibili oltre l'ambito del compito; permessi eccessivi, cioè strumenti che
+    operano con privilegi più ampi del necessario; e autonomia eccessiva, cioè azioni ad alto
+    impatto che procedono senza una persona nel circuito.<sup class="ref">18</sup></p>
+
+    <p>Le prime due sono esattamente ciò che il vincolo di rete affronta. Un componente che non può
+    raggiungere la rete esterna non ha funzionalità oltre il proprio ambito, non perché gli sia
+    stato detto di non usarle, ma perché non ci sono.</p>
+
+    <p>È la forma più antica di questo principio: il minimo privilegio, che prescrive che ogni
+    programma operi con l'insieme minimo di privilegi necessari a completare il proprio
+    lavoro.<sup class="ref">10</sup> La versione moderna, nei sistemi a capacità, aggiunge una
+    sfumatura utile: il privilegio non è un attributo di chi agisce, è un oggetto che si possiede o
+    non si possiede.<sup class="ref">19</sup> Se non ti è stata data la capacità di uscire in rete,
+    non esiste una configurazione sbagliata che te la restituisca.</p>
+
+    <div class="pdc">
+      <div class="pdc-row"><div class="pdc-k">Il problema</div><div class="pdc-v">Trattare ogni unità di lavoro come un agente moltiplica le entità da governare senza produrre autonomia. Trattarle tutte come funzioni rimette la governance dentro il codice di chi le chiama.</div></div>
+      <div class="pdc-row"><div class="pdc-k">La decisione</div><div class="pdc-v">Identità e budget solo a ciò che decide. Tutto il resto è una funzione invocabile per nome. Dove può essere ospitata lo decide un vincolo di rete esplicito, e ciò che non può stare dentro resta a catalogo col motivo.</div></div>
+      <div class="pdc-row"><div class="pdc-k">Cosa costa</div><div class="pdc-v">Il confine fra ruolo e funzione non è netto, e alcune unità cambiano natura nel tempo. Promuovere una capacità ad agente è un lavoro di riscrittura, non un cambio di etichetta.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ CAPITOLO 8 ═══════════════ -->
+<section class="page" data-chap="La spesa come vincolo di governance">
+  <div class="pb">
+    <div class="eyebrow">Capitolo 8</div>
+    <h2>La spesa come vincolo di governance</h2>
+
+    <p class="lead after-h2">Due livelli di cache tolgono lavoro al sistema. Nessuno dei due toglie
+    mai un permesso.</p>
+
+    <p>La distinzione del titolo è l'unica cosa che conta di questo capitolo. Una guardia di spesa
+    che blocca un agente non è una misura di costo: è una decisione di governance. Qualcuno ha
+    stabilito che quell'agente, in questo momento, non deve lavorare. Il fatto che una risposta
+    costerebbe zero non cambia la decisione, la aggira.</p>
+
+    <h3>Due livelli, due cose diverse</h3>
+    <p>Il primo livello sta nel control-plane e intercetta la richiesta prima che qualsiasi cosa
+    parta. Se la stessa domanda è già stata posta allo stesso agente nello stesso punto di
+    conversazione, la risposta esiste: nessun processo si avvia, nessun ragionamento viene rifatto.</p>
+
+    <p>Il secondo livello sta nel kernel comune e interviene molto più in basso, sulla singola
+    chiamata al modello. Si attiva alla sola importazione, quindi vale per l'intero processo e anche
+    per chi poi chiama il varco a mano. È il capitolo 3 applicato ai costi: una funzionalità
+    trasversale che dipendesse dalla diligenza di chi scrive l'agente sarebbe una funzionalità che
+    hai a metà.</p>
+
+    <figure>
+      <div data-svg="fig-7-livelli-cache.svg"></div>
+      <figcaption><strong>I due livelli di cache.</strong> Intercettano in punti diversi del
+      percorso, e la guardia di spesa non è attraversata da nessuno dei due.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="page" data-chap="La spesa come vincolo di governance">
+  <div class="pb">
+    <h3>Cosa entra nella chiave, e perché</h3>
+    <p>Una cache è tanto corretta quanto lo è la sua chiave. Se due situazioni diverse producono la
+    stessa chiave, la cache restituisce la risposta sbagliata, e lo fa con l'aria di funzionare.</p>
+
+    <p>Nel primo livello la storia della conversazione entra nella chiave. Senza, in una chat con
+    memoria la stessa domanda posta in due momenti diversi tornerebbe con la risposta del contesto
+    sbagliato. È un errore invisibile a chi guarda i log e ovvio a chi legge la conversazione, cioè
+    la combinazione peggiore.</p>
+
+    <p>Il problema è vecchio e ha una formalizzazione precisa nel caching del web. La chiave
+    primaria di una cache HTTP è composta almeno dal metodo e dall'indirizzo della risorsa; quando
+    la risposta dipende anche da altro, il server lo dichiara, e la cache non può riusare una
+    risposta memorizzata se quei campi non corrispondono.<sup class="ref">16</sup> La storia della
+    conversazione è esattamente uno di quei campi: fa parte di ciò che ha determinato la risposta,
+    quindi fa parte della chiave.</p>
+
+    <p>Nel secondo livello, invece, l'identità di chi chiama non entra nella chiave. È una scelta
+    deliberata con una conseguenza dichiarata: il primo che paga un prompt lo paga per tutti. Ha
+    senso perché a quel livello la risposta dipende dal prompt e non da chi lo ha formulato, e
+    perché il beneficio della condivisione è precisamente lo scopo del livello.</p>
+
+  </div>
+</section>
+
+<section class="page" data-chap="La spesa come vincolo di governance">
+  <div class="pb">
+    <h3>Cosa non va mai in cache</h3>
+    <p>Quattro categorie restano fuori, e ognuna per una ragione diversa. Una richiesta di
+    chiarimento non è una risposta ma una domanda: servirla dalla cache significherebbe richiedere
+    un chiarimento già dato. Una risposta emessa a pezzi è una sequenza nel tempo, non un valore. Se
+    l'agente ha modificato uno stato, la stessa domanda la seconda volta ha un effetto diverso, e
+    servire la risposta memorizzata cancella quell'effetto. E infine l'agente può sempre dichiarare
+    che una risposta non è ripetibile: chi conosce il proprio dominio ha l'ultima parola.</p>
+
+    <p>C'è un quinto caso che vale la pena isolare, perché è il più facile da sbagliare: quando un
+    agente cambia, le risposte memorizzate prima del cambiamento non sono più sue. La soluzione
+    adottata qui non è mettere la versione nella chiave, ma invalidare tutto ciò che riguarda quel
+    agente a ogni suo rilascio. La differenza pratica è che nel primo caso le risposte vecchie
+    restano a occupare spazio per sempre, nel secondo spariscono.</p>
+
+    <div class="formula">
+      <div class="f">nessuna cache attraversa la guardia di spesa</div>
+      <p>Un risultato dalla cache costa zero, ma un agente bloccato resta bloccato. Servire una
+      risposta memorizzata a chi è stato fermato significherebbe che il blocco vale solo per le
+      domande nuove, cioè che non vale.</p>
+    </div>
+
+    <div class="pdc">
+      <div class="pdc-row"><div class="pdc-k">Il problema</div><div class="pdc-v">Una chiave di cache incompleta restituisce risposte sbagliate senza dare errore. E una cache messa nel punto sbagliato del percorso trasforma un limite di governance in un limite aggirabile.</div></div>
+      <div class="pdc-row"><div class="pdc-k">La decisione</div><div class="pdc-v">Due livelli con chiavi diverse e dichiarate, la storia della conversazione dentro la chiave dove la conversazione conta, l'invalidazione a ogni rilascio, e nessun livello posizionato prima dei controlli di autorizzazione e di spesa.</div></div>
+      <div class="pdc-row"><div class="pdc-k">Cosa costa</div><div class="pdc-v">Una chiave che include la storia ha meno riscontri utili di una che non la include: si rinuncia a risparmio in cambio di correttezza. E la condivisione fra chiamanti nel livello basso rende meno preciso attribuire il costo a chi lo ha generato.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ CAPITOLO 9 ═══════════════ -->
+<section class="page" data-chap="Limiti e trade-off">
+  <div class="pb">
+    <div class="eyebrow">Capitolo 9</div>
+    <h2>Limiti e trade-off dell'architettura</h2>
+
+    <p class="lead after-h2">Questo capitolo esiste perché un documento che presenta solo i
+    vantaggi di una scelta non ti mette in condizione di prenderne una diversa.</p>
+
+    <h3>La gerarchia è rigida, e la rigidità è il punto</h3>
+    <p>Tutto ciò che rende affidabile l'ordinamento sui rank è la stessa cosa che lo rende scomodo.
+    Non esistono eccezioni, perché un'eccezione riaprirebbe la possibilità di un ciclo e con essa
+    la necessità di controllarli, cioè annullerebbe il vantaggio.</p>
+
+    <p>In pratica significa tre cose. Due agenti dello stesso livello che dovrebbero confrontarsi
+    non possono farlo: devono passare da chi sta sopra o attraverso un ponte, con un giro in più e
+    una perdita di contesto a ogni passaggio. Cambiare la posizione di un agente non è una modifica
+    locale, perché tocca tutte le relazioni che lo riguardano. E la gerarchia va decisa presto,
+    quando ancora non sai come si distribuirà davvero il lavoro.</p>
+
+    <h3>Il gating rallenta chi esplora</h3>
+    <p>Un controllo obbligatorio all'ingresso è prezioso quando il sistema è in esercizio e
+    fastidioso quando stai provando. Nella fase in cui vuoi capire se un'idea funziona, sapere che
+    ogni tentativo passa comunque dalla verifica cambia il ritmo del lavoro, e il rischio concreto è
+    che qualcuno costruisca un percorso alternativo per andare più veloce.</p>
+
+    <p>La mitigazione è il principio del capitolo 5, la deduzione automatica di ciò che manca, e
+    riduce il problema senza eliminarlo. Se il tuo lavoro è prevalentemente esplorativo, il conto
+    che paghi è più alto del beneficio che ricevi.</p>
+
+    <h3>Cosa la topologia non risolve</h3>
+    <p>Va detto chiaramente. L'ordinamento garantisce che il sistema termini e che nessuno chiami
+    chi non deve. Non dice niente sulla qualità di ciò che viene passato lungo la catena.</p>
+
+    <p>La degradazione del contesto e la propagazione dell'errore, due dei quattro problemi del
+    capitolo 1, restano interamente aperti. Un sistema perfettamente aciclico può produrre, con
+    ordine impeccabile, una risposta sbagliata costruita su una premessa sbagliata.</p>
+  </div>
+</section>
+
+<section class="page" data-chap="Limiti e trade-off">
+  <div class="pb">
+    <h3>L'argomento contrario, per intero</h3>
+    <p>Esiste una posizione pubblica e argomentata secondo cui i sistemi multi-agente vanno
+    evitati. Viene da chi costruisce agenti di programmazione in produzione, e merita di essere
+    riportata senza addolcirla, perché attacca la premessa stessa di questa guida.</p>
+
+    <p>La tesi si regge su due principi. Il primo: bisogna condividere il contesto, e condividere
+    le tracce complete di esecuzione degli agenti, non i singoli messaggi. Il secondo: le azioni
+    portano con sé decisioni implicite, e decisioni implicite in conflitto producono risultati
+    sbagliati.<sup class="ref">4</sup></p>
+
+    <p>L'esempio che accompagna l'argomento è concreto. Due sotto-agenti lavorano in parallelo a
+    parti diverse dello stesso compito. Ciascuno, per procedere, assume qualcosa che l'altro non
+    può vedere: uno costruisce nello stile A, l'altro nello stile B. Nessuno dei due sbaglia il
+    proprio pezzo. Il risultato combinato è incoerente, e chi ha delegato deve riconciliare due
+    output costruiti su premesse diverse, cosa che spesso costa più che rifare.</p>
+
+    <p>La raccomandazione conseguente è di usare per default un agente singolo, lineare, e di
+    affrontare il problema del contesto che cresce con un modello che comprime la conversazione in
+    decisioni e dettagli chiave, invece che con la ramificazione.</p>
+
+    <h3>Perché regge, e dove</h3>
+    <p>L'argomento è corretto, e non nel senso diplomatico. Il fallimento che descrive è reale, è
+    frequente, ed è esattamente il tipo di fallimento che la ricerca di Berkeley classifica sotto
+    disallineamento fra agenti.<sup class="ref">3</sup> Chi dice che nessun ordinamento topologico
+    lo previene ha ragione: l'ordinamento riguarda chi può chiamare chi, non cosa si sanno l'un
+    l'altro.</p>
+
+    <p>Anche la documentazione di Anthropic sul proprio sistema multi-agente, che è un sistema
+    multi-agente e quindi non è una fonte ostile, dichiara lo stesso limite: i domini che
+    richiedono contesto condiviso fra tutti i partecipanti, o che hanno molte dipendenze fra i
+    sotto-compiti, oggi non sono adatti a essere divisi fra agenti.<sup class="ref">2</sup></p>
+  </div>
+</section>
+
+<section class="page" data-chap="Limiti e trade-off">
+  <div class="pb">
+    <h3>Dove la divisione conviene comunque</h3>
+    <p>La distinzione utile non è fra un agente e molti, ma fra compiti in cui i sotto-problemi sono
+    indipendenti e compiti in cui non lo sono. Cercare informazioni da fonti diverse si divide bene,
+    perché ogni ricerca è autonoma e i risultati si sommano. Scrivere codice su una base condivisa
+    si divide male, perché ogni scelta vincola le successive.</p>
+
+    <p>Una regola pratica che tiene conto dell'argomento contrario senza rinunciare del tutto alla
+    divisione: mantenere singolo ciò che scrive, e dividere ciò che legge. Più agenti che
+    raccolgono, analizzano e propongono, e un solo punto in cui le decisioni vengono prese e
+    applicate. Chi legge in parallelo non genera decisioni in conflitto, perché non ne prende.</p>
+
+    <h3>Quando un'architettura più piatta è preferibile</h3>
+    <p>Tre casi, senza sfumature. Se hai meno di cinque agenti e nessuno ne chiama un altro, tutto
+    questo apparato è sovrastruttura: ti serve un elenco e un modo di avviarli. Se il tuo dominio
+    richiede negoziazione continua fra pari, l'ordinamento ti costringerà a fingere gerarchie che
+    non esistono, e le gerarchie finte producono ponti che diventano colli di bottiglia. Se stai
+    ancora capendo quali agenti ti servono, congelare la topologia significa congelare un'ipotesi.</p>
+
+    <div class="box box--warn">
+      <div class="lbl">Il rischio del punto unico</div>
+      <p>Vale la pena ripeterlo qui, perché è il costo strutturale più grande di tutta
+      l'architettura. Un control-plane concentra coerenza e concentra fragilità nello stesso punto.
+      Se cade, non gira niente. Se la logica di autorizzazione ha un difetto, il difetto vale per
+      tutto il sistema contemporaneamente. È una scelta che si fa a occhi aperti, non un dettaglio
+      implementativo.</p>
+    </div>
+
+    <div class="pdc">
+      <div class="pdc-row"><div class="pdc-k">Il problema</div><div class="pdc-v">Ogni garanzia strutturale si paga in flessibilità, e le garanzie di questa architettura riguardano la terminazione e l'autorizzazione, non la coerenza di ciò che gli agenti si passano.</div></div>
+      <div class="pdc-row"><div class="pdc-k">La decisione</div><div class="pdc-v">Accettare la rigidità dove il beneficio è una proprietà dimostrabile, e riconoscere che il problema del contesto condiviso resta aperto: dividere ciò che legge, tenere singolo ciò che scrive.</div></div>
+      <div class="pdc-row"><div class="pdc-k">Cosa costa</div><div class="pdc-v">Prototipazione più lenta, pari che non collaborano, una topologia decisa prima di sapere se è quella giusta, e un punto unico che concentra il rischio insieme al controllo.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ CAPITOLO 10 ═══════════════ -->
+<section class="page" data-chap="Le decisioni che devi prendere tu">
+  <div class="pb">
+    <div class="eyebrow">Capitolo 10</div>
+    <h2>Le decisioni che devi prendere tu</h2>
+
+    <p class="lead after-h2">Otto scelte, con il criterio per decidere e il segnale che ti dice se
+    hai deciso male. Nessuna dipende dal linguaggio o dalla libreria che usi.</p>
+
+    <div class="dec">
+      <div class="dec-h"><div class="dec-n">1</div><div class="dec-q">L'assenza di cicli è una proprietà o un controllo?</div></div>
+      <dl>
+        <dt>Criterio</dt><dd>Se puoi ordinare i tuoi agenti in livelli e ammettere la delega in una sola direzione, l'aciclicità diventa gratuita. Se non puoi, ti serve un rilevamento a runtime, e allora ti serve anche lo stato condiviso per farlo funzionare.</dd>
+        <dt>Hai deciso male se</dt><dd>ti trovi ad alzare il limite di profondità per non tagliare lavoro legittimo.</dd>
+      </dl>
+    </div>
+
+    <div class="dec">
+      <div class="dec-h"><div class="dec-n">2</div><div class="dec-q">Esiste più di un modo di avviare un agente?</div></div>
+      <dl>
+        <dt>Criterio</dt><dd>Conta i percorsi. Se sono più di uno, le tue regole valgono su un sottoinsieme, e prima o poi qualcuno userà l'altro. Un punto di ingresso unico è una precondizione, non una raffinatezza.</dd>
+        <dt>Hai deciso male se</dt><dd>esiste uno script che avvia un agente saltando i controlli, e qualcuno lo usa perché è più veloce.</dd>
+      </dl>
+    </div>
+
+    <div class="dec">
+      <div class="dec-h"><div class="dec-n">3</div><div class="dec-q">L'inventario è dichiarato o derivato?</div></div>
+      <dl>
+        <dt>Criterio</dt><dd>Se esiste una lista che qualcuno deve ricordarsi di aggiornare, quella lista divergerà. Chiediti se puoi derivarla dall'osservazione. Se non puoi, metti un controllo automatico che segnali la divergenza.</dd>
+        <dt>Hai deciso male se</dt><dd>hai già trovato almeno una volta un componente che esisteva e non era in elenco.</dd>
+      </dl>
+    </div>
+
+    <div class="dec">
+      <div class="dec-h"><div class="dec-n">4</div><div class="dec-q">Dove sta scritta la persona di un agente?</div></div>
+      <dl>
+        <dt>Criterio</dt><dd>In un posto solo, e il codice la importa. Se compare in due posti, cambierà in uno solo, e avrai due comportamenti a seconda del percorso.</dd>
+        <dt>Hai deciso male se</dt><dd>per capire come si comporta un agente devi leggere due file e confrontarli.</dd>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<section class="page" data-chap="Le decisioni che devi prendere tu">
+  <div class="pb">
+    <div class="dec">
+      <div class="dec-h"><div class="dec-n">5</div><div class="dec-q">Cosa succede a un componente non conforme?</div></div>
+      <dl>
+        <dt>Criterio</dt><dd>Tre esiti e nessun quarto: conformato con la deduzione scritta, in attesa perché manca un presupposto, trattenuto col motivo. Lo stato "gira ma non sappiamo in che condizioni" va eliminato per primo.</dd>
+        <dt>Hai deciso male se</dt><dd>quando qualcosa viene rifiutato, chi lo riceve deve indovinare cosa sistemare.</dd>
+      </dl>
+    </div>
+
+    <div class="dec">
+      <div class="dec-h"><div class="dec-n">6</div><div class="dec-q">In che direzione si risolve il dubbio?</div></div>
+      <dl>
+        <dt>Criterio</dt><dd>Sempre verso meno capacità. Il valore assegnato quando manca un'informazione deve essere quello che limita, non quello che abilita. Vale per la posizione nel grafo, per i permessi e per la classificazione.</dd>
+        <dt>Hai deciso male se</dt><dd>un componente scritto in fretta ottiene per default più diritti di quelli che gli avresti dato pensandoci.</dd>
+      </dl>
+    </div>
+
+    <div class="dec">
+      <div class="dec-h"><div class="dec-n">7</div><div class="dec-q">Cosa entra nella chiave della cache?</div></div>
+      <dl>
+        <dt>Criterio</dt><dd>Tutto ciò che ha concorso a determinare la risposta. Se la conversazione influenza l'output, la conversazione è nella chiave. Se il componente cambia, le risposte vecchie non sono più sue: o versioni la chiave, o invalidi al rilascio.</dd>
+        <dt>Hai deciso male se</dt><dd>ti è già capitato di ricevere una risposta corretta per una domanda che non avevi fatto.</dd>
+      </dl>
+    </div>
+
+    <div class="dec">
+      <div class="dec-h"><div class="dec-n">8</div><div class="dec-q">Questa unità di lavoro merita un'identità?</div></div>
+      <dl>
+        <dt>Criterio</dt><dd>Solo se incapsula una decisione che può cambiare da sola, e se ha senso darle un budget. Se esegue e basta, è una funzione: darle identità moltiplica il lavoro di governance senza produrre autonomia.</dd>
+        <dt>Hai deciso male se</dt><dd>hai agenti a cui non sapresti assegnare un budget separato, o funzioni di cui discuti il comportamento come se fossero persone.</dd>
+      </dl>
+    </div>
+
+    <div class="box">
+      <div class="lbl">Una domanda che vale per tutte e otto</div>
+      <p>Se questa regola venisse violata stanotte, me ne accorgerei domani? Dove la risposta è no,
+      la regola non può stare in un documento: deve stare in un punto di passaggio obbligato,
+      oppure deve essere resa inesprimibile.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ CAPITOLO 11 ═══════════════ -->
+<section class="page" data-chap="Fonti e letture">
+  <div class="pb">
+    <div class="eyebrow">Capitolo 11</div>
+    <h2>Fonti e letture</h2>
+
+    <p class="after-h2">Tutte consultate il 4 agosto 2026, raggruppate per il problema che aiutano
+    a risolvere.</p>
+
+    <div class="bib-group">
+      <div class="lbl">Come si orchestrano più agenti</div>
+      <div class="bib"><div class="bib-n">1</div><div class="bib-b"><b>Building effective agents</b>, Anthropic, 19 dicembre 2024.<span class="u">anthropic.com/engineering/building-effective-agents</span><span class="w">Il punto di partenza: i pattern di base, e l'avvertimento che la complessità va aggiunta solo quando migliora il risultato in modo dimostrabile.</span></div></div>
+      <div class="bib"><div class="bib-n">2</div><div class="bib-b"><b>How we built our multi-agent research system</b>, Anthropic, giugno 2025.<span class="u">anthropic.com/engineering/multi-agent-research-system</span><span class="w">I moltiplicatori di consumo, e la dichiarazione esplicita dei domini in cui la divisione fra agenti oggi non funziona.</span></div></div>
+      <div class="bib"><div class="bib-n">6</div><div class="bib-b"><b>Multi-agent architectures</b>, documentazione LangGraph, LangChain.<span class="u">langchain-ai.github.io/langgraph</span><span class="w">La tassonomia esplicita di rete, supervisor e gerarchico, e il passaggio del controllo fra agenti.</span></div></div>
+      <div class="bib"><div class="bib-n">7</div><div class="bib-b">B. Hayes-Roth, <b>A blackboard architecture for control</b>, Artificial Intelligence 26(3), 1985.<span class="w">La fonte originale del pattern a lavagna, dove il problema del controllo è affrontato più esplicitamente che nelle riscritture recenti.</span></div></div>
+    </div>
+
+    <div class="bib-group">
+      <div class="lbl">Come falliscono</div>
+      <div class="bib"><div class="bib-n">3</div><div class="bib-b">M. Cemri et al., <b>Why Do Multi-Agent LLM Systems Fail?</b>, arXiv:2503.13657, 17 marzo 2025.<span class="u">arxiv.org/abs/2503.13657</span><span class="w">Quattordici modi di fallire in tre categorie, da oltre milleseicento tracce su sette framework. Molti fallimenti vengono dal progetto, non dal modello.</span></div></div>
+      <div class="bib"><div class="bib-n">4</div><div class="bib-b">W. Yan, <b>Don't Build Multi-Agents</b>, Cognition, giugno 2025.<span class="u">cognition.ai/blog/dont-build-multi-agents</span><span class="w">L'argomento contrario, riportato per intero nel capitolo 9. Da leggere soprattutto se hai deciso di costruire un sistema multi-agente.</span></div></div>
+      <div class="bib"><div class="bib-n">5</div><div class="bib-b">N. F. Liu et al., <b>Lost in the Middle: How Language Models Use Long Contexts</b>, arXiv:2307.03172, 6 luglio 2023.<span class="u">arxiv.org/abs/2307.03172</span><span class="w">Perché accumulare contesto lungo la catena non è neutro: l'informazione in mezzo viene usata peggio di quella agli estremi.</span></div></div>
+    </div>
+
+    <div class="bib-group">
+      <div class="lbl">Perché i cicli si prevengono invece di rilevarli</div>
+      <div class="bib"><div class="bib-n">8</div><div class="bib-b">A. B. Kahn, <b>Topological sorting of large networks</b>, Communications of the ACM 5(11), novembre 1962.<span class="u">dl.acm.org/doi/10.1145/368996.369025</span><span class="w">Il legame formale fra aciclicità e ordinamento lineare dei nodi.</span></div></div>
+      <div class="bib"><div class="bib-n">9</div><div class="bib-b">E. G. Coffman, M. J. Elphick, A. Shoshani, <b>System Deadlocks</b>, ACM Computing Surveys 3(2), 1971.<span class="u">dl.acm.org/doi/10.1145/356586.356588</span><span class="w">Le quattro condizioni necessarie del deadlock, fra cui l'attesa circolare. Rende evidente che eliminare una condizione necessaria è diverso dal rilevare il fenomeno.</span></div></div>
+      <div class="bib"><div class="bib-n">15</div><div class="bib-b">J. W. Havender, <b>Avoiding deadlock in multitasking systems</b>, IBM Systems Journal 7(2), 1968.<span class="u">dl.acm.org/doi/10.1147/sj.72.0074</span><span class="w">L'ordinamento delle risorse: la stessa mossa dei rank, su un problema diverso, sessant'anni fa.</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="page" data-chap="Fonti e letture">
+  <div class="pb">
+    <div class="bib-group">
+      <div class="lbl">Dove si applicano le regole</div>
+      <div class="bib"><div class="bib-n">10</div><div class="bib-b">J. H. Saltzer, M. D. Schroeder, <b>The Protection of Information in Computer Systems</b>, Proceedings of the IEEE 63(9), 1975.<span class="u">cs.virginia.edu/~evans/cs551/saltzer</span><span class="w">Da qui vengono la mediazione completa, i default sicuri e il minimo privilegio. Se leggi una sola fonte di questo elenco, leggi questa.</span></div></div>
+      <div class="bib"><div class="bib-n">11</div><div class="bib-b"><b>Admission Control in Kubernetes</b>, documentazione Kubernetes.<span class="u">kubernetes.io/docs/reference/access-authn-authz/admission-controllers</span><span class="w">Il gating del capitolo 5 in un altro dominio: controlli che modificano o rifiutano prima della persistenza, e il rifiuto di uno che rifiuta tutta la richiesta.</span></div></div>
+      <div class="bib"><div class="bib-n">12</div><div class="bib-b"><b>Open Policy Agent</b>, documentazione del progetto, Cloud Native Computing Foundation.<span class="u">openpolicyagent.org/docs</span><span class="w">Le regole di autorizzazione come codice valutabile e versionato, fuori dall'applicazione.</span></div></div>
+      <div class="bib"><div class="bib-n">13</div><div class="bib-b"><b>Controllers</b>, documentazione Kubernetes.<span class="u">kubernetes.io/docs/concepts/architecture/controller</span><span class="w">Stato desiderato e stato osservato come campi distinti, e il ciclo che ne riduce la distanza. È il modello a cui la scoperta da disco rinuncia.</span></div></div>
+      <div class="bib"><div class="bib-n">19</div><div class="bib-b">J. B. Dennis, E. C. Van Horn, <b>Programming Semantics for Multiprogrammed Computations</b>, Communications of the ACM 9(3), 1966.<span class="u">dl.acm.org/doi/10.1145/365230.365252</span><span class="w">L'origine della protezione a capacità: il privilegio come oggetto che si possiede, non come attributo di chi agisce.</span></div></div>
+    </div>
+
+    <div class="bib-group">
+      <div class="lbl">Isolamento, granularità, costi</div>
+      <div class="bib"><div class="bib-n">14</div><div class="bib-b"><b>Config</b>, The Twelve-Factor App.<span class="u">12factor.net/config</span><span class="w">La configurazione, e in particolare i segreti, nell'ambiente e mai nel codice.</span></div></div>
+      <div class="bib"><div class="bib-n">16</div><div class="bib-b">R. Fielding, M. Nottingham, J. Reschke, <b>RFC 9111: HTTP Caching</b>, IETF, giugno 2022.<span class="u">rfc-editor.org/rfc/rfc9111.html</span><span class="w">Composizione della chiave, chiavi secondarie, e il divieto per le cache condivise di servire risposte a richieste autenticate. Il capitolo 8 ne è una rilettura.</span></div></div>
+      <div class="bib"><div class="bib-n">17</div><div class="bib-b">D. L. Parnas, <b>On the Criteria To Be Used in Decomposing Systems into Modules</b>, Communications of the ACM 15(12), dicembre 1972.<span class="u">dl.acm.org/doi/10.1145/361598.361623</span><span class="w">Ogni modulo nasconde una decisione che può cambiare. Ancora il miglior criterio per decidere dove passa un confine.</span></div></div>
+      <div class="bib"><div class="bib-n">18</div><div class="bib-b"><b>OWASP Top 10 for LLM Applications 2025</b>, voce LLM06 Excessive Agency, OWASP Foundation.<span class="u">owasp.org/www-project-top-10-for-large-language-model-applications</span><span class="w">Funzionalità, permessi e autonomia eccessivi come tre cause distinte da trattare separatamente.</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ CHIUSURA ═══════════════ -->
+<section class="page" data-chap="Governare uno swarm di agenti">
+  <div class="pb">
+    <div class="end">
+      <h2>Grazie per aver letto</h2>
+      <p class="p">Se questa guida ti è stata utile, girala a qualcuno che sta mettendo in fila
+      più di un agente e non ha ancora deciso come li tiene insieme. È il momento in cui serve.</p>
+
+      <div class="sig">
+        <div class="n">Omar Bortolato</div>
+        <div class="r">Chief AI Officer · Imprenditore · Speaker</div>
+        <div class="l">omarbortolato.it · linkedin.com/in/omarbortolato</div>
+      </div>
+    </div>
+  </div>
+  <div class="colophon">
+    Questa guida è stata redatta con l'assistenza di sistemi di intelligenza artificiale e
+    revisionata da un autore umano, che ne assume la responsabilità editoriale.<br>
+    Le fonti citate sono state consultate il 4 agosto 2026. Distribuzione gratuita consentita con
+    attribuzione.
+  </div>
+</section>

@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 578" width="640" height="578" font-family="Inter, system-ui, sans-serif">
+  <title>Cosa succede a una richiesta</title>
+  <rect width="640" height="578" fill="#FFFFFF"/>
+  <g class="fig-head">
+    <text x="0" y="11" font-size="8" font-weight="700" letter-spacing="1.1" fill="#B45309">GOVERNARE UNO SWARM DI AGENTI · FIG. 3</text>
+    <text x="0" y="28" font-size="14.5" font-weight="700" fill="#111827">Cosa succede a una richiesta</text>
+  </g>
+  <g transform="translate(0,38)">
+
+  <line x1="26" y1="34" x2="26" y2="500" stroke="#E5E7EB" stroke-width="2"/>
+
+  <g font-size="10.5">
+    <!-- 01 -->
+    <circle cx="26" cy="34" r="13" fill="#1E3A8A"/>
+    <text x="26" y="38" font-size="9" font-weight="700" fill="#fff" text-anchor="middle">01</text>
+    <text x="52" y="30" font-size="12.5" font-weight="700" fill="#111827">Esiste ed è conforme?</text>
+    <text x="52" y="48" fill="#6B7280">Il record viene letto dal disco, non da</text>
+    <text x="52" y="63" fill="#6B7280">una cache autorevole.</text>
+    <g font-family="Geist Mono, monospace" font-size="9">
+      <rect x="52" y="72" width="86" height="17" rx="4" fill="#FEF2F2" stroke="#FECACA"/>
+      <text x="61" y="84" fill="#B91C1C">404 inesistente</text>
+      <rect x="146" y="72" width="120" height="17" rx="4" fill="#FEF2F2" stroke="#FECACA"/>
+      <text x="155" y="84" fill="#B91C1C">409 quarantena</text>
+    </g>
+
+    <!-- 02 -->
+    <circle cx="26" cy="122" r="13" fill="#1E3A8A"/>
+    <text x="26" y="126" font-size="9" font-weight="700" fill="#fff" text-anchor="middle">02</text>
+    <text x="52" y="118" font-size="12.5" font-weight="700" fill="#111827">La profondità è nei limiti?</text>
+    <text x="52" y="136" fill="#6B7280">Il kernel limita già la ricorsione, ma è</text>
+    <text x="52" y="151" fill="#6B7280">codice che gira dentro l'agente. Qui siamo</text>
+    <text x="52" y="166" fill="#6B7280">sul confine di processo, che non si dimentica.</text>
+    <g font-family="Geist Mono, monospace" font-size="9">
+      <rect x="52" y="175" width="132" height="17" rx="4" fill="#FEF2F2" stroke="#FECACA"/>
+      <text x="61" y="187" fill="#B91C1C">400 oltre il limite</text>
+    </g>
+
+    <!-- 03 -->
+    <circle cx="26" cy="226" r="13" fill="#1E3A8A"/>
+    <text x="26" y="230" font-size="9" font-weight="700" fill="#fff" text-anchor="middle">03</text>
+    <text x="52" y="222" font-size="12.5" font-weight="700" fill="#111827">Il chiamante ha la clearance?</text>
+    <text x="52" y="240" fill="#6B7280">Applicata anche qui, non solo nel router:</text>
+    <text x="52" y="255" fill="#6B7280">un agente potrebbe chiamare l'endpoint</text>
+    <text x="52" y="270" fill="#6B7280">a mano e saltare il routing.</text>
+    <g font-family="Geist Mono, monospace" font-size="9">
+      <rect x="52" y="279" width="142" height="17" rx="4" fill="#FEF2F2" stroke="#FECACA"/>
+      <text x="61" y="291" fill="#B91C1C">403 clearance negata</text>
+    </g>
+
+    <!-- 04 -->
+    <circle cx="26" cy="330" r="13" fill="#B45309"/>
+    <text x="26" y="334" font-size="9" font-weight="700" fill="#fff" text-anchor="middle">04</text>
+    <text x="52" y="326" font-size="12.5" font-weight="700" fill="#111827">La risposta esiste già?</text>
+    <text x="52" y="344" fill="#6B7280">Answer-cache: stessa domanda, stesso</text>
+    <text x="52" y="359" fill="#6B7280">agente, stesso punto di conversazione.</text>
+    <text x="52" y="374" fill="#6B7280">Salta l'intero ragionamento.</text>
+    <g font-family="Geist Mono, monospace" font-size="9">
+      <rect x="52" y="383" width="182" height="17" rx="4" fill="#ECFDF5" stroke="#A7F3D0"/>
+      <text x="61" y="395" fill="#047857">nessun processo, nessun token</text>
+    </g>
+
+    <!-- 05 -->
+    <circle cx="26" cy="434" r="13" fill="#1E3A8A"/>
+    <text x="26" y="438" font-size="9" font-weight="700" fill="#fff" text-anchor="middle">05</text>
+    <text x="52" y="430" font-size="12.5" font-weight="700" fill="#111827">Esecuzione nel suo ambiente</text>
+    <text x="52" y="448" fill="#6B7280">Sottoprocesso controllato: nessuna chiave</text>
+    <text x="52" y="463" fill="#6B7280">del provider, timeout finito, payload su stdin.</text>
+    <g font-family="Geist Mono, monospace" font-size="9">
+      <rect x="52" y="472" width="144" height="17" rx="4" fill="#FEF2F2" stroke="#FECACA"/>
+      <text x="61" y="484" fill="#B91C1C">402 guardia di spesa</text>
+      <rect x="204" y="472" width="92" height="17" rx="4" fill="#FEF2F2" stroke="#FECACA"/>
+      <text x="213" y="484" fill="#B91C1C">504 timeout</text>
+    </g>
+
+    <!-- 06 -->
+    <circle cx="26" cy="512" r="13" fill="#047857"/>
+    <text x="26" y="516" font-size="9" font-weight="700" fill="#fff" text-anchor="middle">06</text>
+    <text x="52" y="508" font-size="12.5" font-weight="700" fill="#111827">Traduzione dell'esito</text>
+    <text x="52" y="526" fill="#6B7280">Successo, chiarimento o errore.</text>
+    <g font-family="Geist Mono, monospace" font-size="9">
+      <rect x="234" y="514" width="164" height="17" rx="4" fill="#ECFDF5" stroke="#A7F3D0"/>
+      <text x="243" y="526" fill="#047857">200 anche il chiarimento</text>
+    </g>
+  </g>
+
+  <!-- riquadri laterali -->
+  <rect x="372" y="16" width="268" height="152" rx="10" fill="#F9FAFB" stroke="#E5E7EB"/>
+  <text x="388" y="38" font-size="9" font-weight="700" letter-spacing="0.8" fill="#6B7280">PERCHÉ QUEST'ORDINE</text>
+  <text x="388" y="58" font-size="10.5" fill="#4B5563">I controlli che costano poco stanno</text>
+  <text x="388" y="74" font-size="10.5" fill="#4B5563">prima di quelli che costano molto.</text>
+  <text x="388" y="98" font-size="10.5" fill="#111827" font-weight="600">L'autorizzazione sta prima</text>
+  <text x="388" y="114" font-size="10.5" fill="#111827" font-weight="600">della cache.</text>
+  <text x="388" y="134" font-size="10.5" fill="#4B5563">Chi non può chiedere non riceve</text>
+  <text x="388" y="150" font-size="10.5" fill="#4B5563">risposta, nemmeno una già pronta.</text>
+
+  <rect x="372" y="306" width="268" height="128" rx="10" fill="#FFFBEB" stroke="#FDE68A"/>
+  <text x="388" y="328" font-size="9" font-weight="700" letter-spacing="0.8" fill="#B45309">IL CHIARIMENTO NON È UN GUASTO</text>
+  <text x="388" y="348" font-size="10.5" fill="#4B5563">Una domanda di ritorno è una</text>
+  <text x="388" y="364" font-size="10.5" fill="#4B5563">risposta valida. Marcarla 5xx farebbe</text>
+  <text x="388" y="380" font-size="10.5" fill="#4B5563">scattare i retry di qualsiasi client</text>
+  <text x="388" y="396" font-size="10.5" fill="#4B5563">ragionevole, e il sistema ripeterebbe</text>
+  <text x="388" y="412" font-size="10.5" fill="#4B5563">la domanda invece di aspettare.</text>
+
+  </g>
+</svg>

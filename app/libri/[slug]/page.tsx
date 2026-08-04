@@ -6,6 +6,7 @@ import { ArrowLeft, Lightbulb, Wrench, Target, Star, BookOpen } from "lucide-rea
 import { Badge } from "@/components/ui/badge";
 import { getBook, getBooks } from "@/lib/books";
 import { SubscribeForm } from "@/components/guide/subscribe-form";
+import { AiDisclosure } from "@/components/ui/ai-disclosure";
 
 // ─── Static params ────────────────────────────────────────────────────────────
 
@@ -183,8 +184,17 @@ export default async function SpremutaPage({
             </div>
             <SubscribeForm
               guide={`spremuta-${book.slug}`}
+              source="pagina-libro"
               overrideDownloadUrl={book.pdfUrl}
             />
+
+            {/* Informativa AI — le Spremute sono generate da un modello e revisionate */}
+            <div className="mt-8">
+              <AiDisclosure
+                variant="card"
+                text="Questa Spremuta è una rielaborazione generata con l'assistenza di sistemi di intelligenza artificiale a partire dal libro e dalle note di lettura, revisionata da Omar Bortolato prima della pubblicazione. Non sostituisce il libro e non è un contenuto ufficiale dell'editore."
+              />
+            </div>
           </>
         ) : (
           <div className="rounded-2xl border border-gray-100 bg-gray-50 p-8">

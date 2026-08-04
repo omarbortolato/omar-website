@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 468" width="640" height="468" font-family="Inter, system-ui, sans-serif">
+  <title>Il grafo di delega, quattro livelli</title>
+  <defs>
+    <marker id="a-ok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#1E3A8A"/>
+    </marker>
+    <marker id="a-exp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#B45309"/>
+    </marker>
+    <marker id="a-no" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#DC2626"/>
+    </marker>
+  </defs>
+
+  <rect width="640" height="468" fill="#FFFFFF"/>
+  <g class="fig-head">
+    <text x="0" y="11" font-size="8" font-weight="700" letter-spacing="1.1" fill="#B45309">GOVERNARE UNO SWARM DI AGENTI · FIG. 1</text>
+    <text x="0" y="28" font-size="14.5" font-weight="700" fill="#111827">Il grafo di delega, quattro livelli</text>
+  </g>
+  <g transform="translate(0,38)">
+
+  <!-- fasce di rank -->
+  <g font-size="10" font-weight="700" letter-spacing="0.9">
+    <rect x="0" y="34"  width="4" height="46" fill="#1E3A8A"/>
+    <rect x="0" y="130" width="4" height="46" fill="#1D3FD2"/>
+    <rect x="0" y="226" width="4" height="46" fill="#7C3AED"/>
+    <rect x="0" y="322" width="4" height="46" fill="#047857"/>
+    <text x="14" y="52"  fill="#111827" font-size="17" font-weight="900">0</text>
+    <text x="14" y="66"  fill="#6B7280">ENTRATA</text>
+    <text x="14" y="148" fill="#111827" font-size="17" font-weight="900">1</text>
+    <text x="14" y="162" fill="#6B7280">COORDINATORE</text>
+    <text x="14" y="244" fill="#111827" font-size="17" font-weight="900">2</text>
+    <text x="14" y="258" fill="#6B7280">PONTE</text>
+    <text x="14" y="340" fill="#111827" font-size="17" font-weight="900">3</text>
+    <text x="14" y="354" fill="#6B7280">FOGLIA</text>
+  </g>
+
+  <!-- archi ammessi -->
+  <g fill="none" stroke="#1E3A8A" stroke-width="1.6" marker-end="url(#a-ok)">
+    <path d="M250 166 L297 223"/>              <!-- cfo   -> ponte     -->
+    <path d="M412 166 L385 223"/>              <!-- cto   -> ponte     -->
+    <path d="M198 166 L188 319"/>              <!-- cfo   -> spec-fin  -->
+    <path d="M464 166 L474 319"/>              <!-- cto   -> spec-tech -->
+    <path d="M297 262 L245 319"/>              <!-- ponte -> spec-fin  -->
+    <path d="M383 262 L427 319"/>              <!-- ponte -> spec-tech -->
+    <path d="M412 55 C 578 58, 588 198, 428 240"/> <!-- concierge -> ponte -->
+  </g>
+
+  <!-- arco su chiamata esplicita -->
+  <g fill="none" stroke="#B45309" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#a-exp)">
+    <path d="M292 72 L242 127"/>
+  </g>
+  <text x="228" y="86" font-size="9.5" fill="#B45309" font-weight="600" text-anchor="end">solo su</text>
+  <text x="228" y="98" font-size="9.5" fill="#B45309" font-weight="600" text-anchor="end">chiamata esplicita</text>
+
+  <!-- archi vietati -->
+  <g fill="none" stroke="#DC2626" stroke-width="1.4" stroke-dasharray="5 4">
+    <path d="M296 153 L366 153" marker-end="url(#a-no)" marker-start="url(#a-no)"/>
+    <path d="M150 322 L150 180" marker-end="url(#a-no)"/>
+  </g>
+  <g stroke="#DC2626" stroke-width="1.9" stroke-linecap="round">
+    <path d="M326 146 L338 160 M338 146 L326 160"/>
+    <path d="M144 234 L156 248 M156 234 L144 248"/>
+  </g>
+  <text x="331" y="178" font-size="9.5" fill="#DC2626" font-weight="600" text-anchor="middle">stesso rank</text>
+  <text x="100" y="286" font-size="9.5" fill="#DC2626" font-weight="600" text-anchor="middle">una foglia</text>
+  <text x="100" y="298" font-size="9.5" fill="#DC2626" font-weight="600" text-anchor="middle">non delega</text>
+
+  <!-- nodi -->
+  <g font-size="11.5" font-weight="600" text-anchor="middle">
+    <g>
+      <rect x="222" y="34" width="188" height="34" rx="8" fill="#EFF4FF" stroke="#1E3A8A" stroke-width="1.1"/>
+      <text x="316" y="56" fill="#1E3A8A">concierge</text>
+    </g>
+    <g>
+      <rect x="150" y="130" width="146" height="34" rx="8" fill="#EFF4FF" stroke="#1D3FD2" stroke-width="1.1"/>
+      <text x="223" y="152" fill="#1D3FD2">cfo</text>
+    </g>
+    <g>
+      <rect x="366" y="130" width="146" height="34" rx="8" fill="#EFF4FF" stroke="#1D3FD2" stroke-width="1.1"/>
+      <text x="439" y="152" fill="#1D3FD2">cto</text>
+    </g>
+    <g>
+      <rect x="258" y="226" width="164" height="34" rx="8" fill="#F5F3FF" stroke="#7C3AED" stroke-width="1.1"/>
+      <text x="340" y="248" fill="#6D28D9">ponte-fin</text>
+    </g>
+    <g>
+      <rect x="118" y="322" width="146" height="34" rx="8" fill="#ECFDF5" stroke="#047857" stroke-width="1.1"/>
+      <text x="191" y="344" fill="#047857">spec-fin</text>
+    </g>
+    <g>
+      <rect x="398" y="322" width="146" height="34" rx="8" fill="#ECFDF5" stroke="#047857" stroke-width="1.1"/>
+      <text x="471" y="344" fill="#047857">spec-tech</text>
+    </g>
+  </g>
+
+  <!-- legenda -->
+  <g font-size="9.5" fill="#6B7280">
+    <line x1="14" y1="392" x2="44" y2="392" stroke="#1E3A8A" stroke-width="1.6" marker-end="url(#a-ok)"/>
+    <text x="50" y="396">delega automatica ammessa</text>
+    <line x1="228" y1="392" x2="258" y2="392" stroke="#B45309" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#a-exp)"/>
+    <text x="264" y="396">solo su chiamata esplicita</text>
+    <line x1="436" y1="392" x2="466" y2="392" stroke="#DC2626" stroke-width="1.4" stroke-dasharray="5 4" marker-end="url(#a-no)"/>
+    <text x="472" y="396">vietata</text>
+  </g>
+  <text x="14" y="418" font-size="10" fill="#111827" font-weight="600">Ogni arco ammesso scende. Nessun cammino può risalire, quindi nessun cammino può chiudersi.</text>
+
+  </g>
+</svg>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, Check, Terminal, Zap, Code2, Globe, GitBranch, Cpu } from "lucide-react";
 import { SubscribeForm } from "@/components/guide/subscribe-form";
+import { AiDisclosure } from "@/components/ui/ai-disclosure";
 
 export const metadata: Metadata = {
   title: "Come ho costruito questo sito con Claude Code — Guida Gratuita",
@@ -164,7 +165,11 @@ export default function GuidaClaudeCodePage() {
           <p className="mb-8 text-gray-500">
             Inserisci la tua email e ricevi il link di download immediato.
           </p>
-          <SubscribeForm guide="come-ho-costruito-questo-sito" />
+          <SubscribeForm guide="come-ho-costruito-questo-sito" source="landing-guida-claude-code" />
+
+          <div className="mt-10">
+            <AiDisclosure variant="card" />
+          </div>
         </div>
       </section>
 

@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 410" width="640" height="410" font-family="Inter, system-ui, sans-serif">
+  <title>Cicli rilevati contro cicli impossibili</title>
+  <defs>
+    <marker id="x-no" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#DC2626"/>
+    </marker>
+    <marker id="x-ok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#1E3A8A"/>
+    </marker>
+  </defs>
+  <rect width="640" height="410" fill="#FFFFFF"/>
+  <g class="fig-head">
+    <text x="0" y="11" font-size="8" font-weight="700" letter-spacing="1.1" fill="#B45309">GOVERNARE UNO SWARM DI AGENTI · FIG. 9</text>
+    <text x="0" y="28" font-size="14.5" font-weight="700" fill="#111827">Cicli rilevati contro cicli impossibili</text>
+  </g>
+  <g transform="translate(0,38)">
+
+  <!-- SINISTRA: rilevamento a runtime -->
+  <rect x="0" y="0" width="308" height="286" rx="10" fill="#FEF2F2" stroke="#FECACA" stroke-width="1.2"/>
+  <text x="20" y="28" font-size="8.5" font-weight="700" letter-spacing="0.9" fill="#B91C1C">RILEVAMENTO A RUNTIME</text>
+  <text x="20" y="50" font-size="13.5" font-weight="700" fill="#111827">Il ciclo è possibile,</text>
+  <text x="20" y="68" font-size="13.5" font-weight="700" fill="#111827">e viene scoperto dopo</text>
+
+  <g stroke="#DC2626" stroke-width="1.5" fill="none" marker-end="url(#x-no)">
+    <path d="M104 112 L184 112"/>
+    <path d="M196 128 L196 176"/>
+    <path d="M184 192 L104 192"/>
+    <path d="M92 176 L92 128"/>
+  </g>
+  <g text-anchor="middle" font-size="10.5" font-weight="600">
+    <circle cx="92" cy="112" r="14" fill="#fff" stroke="#DC2626" stroke-width="1.4"/><text x="92" y="116" fill="#B91C1C">A</text>
+    <circle cx="196" cy="112" r="14" fill="#fff" stroke="#DC2626" stroke-width="1.4"/><text x="196" y="116" fill="#B91C1C">B</text>
+    <circle cx="196" cy="192" r="14" fill="#fff" stroke="#DC2626" stroke-width="1.4"/><text x="196" y="196" fill="#B91C1C">C</text>
+    <circle cx="92" cy="192" r="14" fill="#fff" stroke="#DC2626" stroke-width="1.4"/><text x="92" y="196" fill="#B91C1C">D</text>
+  </g>
+  <text x="238" y="152" font-size="26" fill="#DC2626" font-weight="700">↻</text>
+
+  <text x="20" y="228" font-size="10.5" fill="#4B5563">Il contatore di profondità interrompe il giro,</text>
+  <text x="20" y="244" font-size="10.5" fill="#4B5563">ma solo dopo che il giro è avvenuto: il lavoro</text>
+  <text x="20" y="260" font-size="10.5" fill="#4B5563">è già stato fatto e già pagato.</text>
+  <text x="20" y="278" font-size="10.5" fill="#B91C1C" font-weight="600">Serve stato condiviso e aggiornato.</text>
+
+  <!-- DESTRA: ordine stretto -->
+  <rect x="332" y="0" width="308" height="286" rx="10" fill="#EFF4FF" stroke="#1E3A8A" stroke-width="1.2"/>
+  <text x="352" y="28" font-size="8.5" font-weight="700" letter-spacing="0.9" fill="#1E3A8A">ORDINE STRETTO SUI RANK</text>
+  <text x="352" y="50" font-size="13.5" font-weight="700" fill="#111827">Il ciclo non è vietato:</text>
+  <text x="352" y="68" font-size="13.5" font-weight="700" fill="#111827">è inesprimibile</text>
+
+  <g stroke="#1E3A8A" stroke-width="1.5" fill="none" marker-end="url(#x-ok)">
+    <path d="M424 106 L424 130"/>
+    <path d="M424 162 L424 186"/>
+  </g>
+  <g text-anchor="middle" font-size="10.5" font-weight="600">
+    <circle cx="424" cy="92" r="14" fill="#fff" stroke="#1E3A8A" stroke-width="1.4"/><text x="424" y="96" fill="#1E3A8A">A</text>
+    <circle cx="424" cy="146" r="14" fill="#fff" stroke="#1E3A8A" stroke-width="1.4"/><text x="424" y="150" fill="#1E3A8A">B</text>
+    <circle cx="424" cy="200" r="14" fill="#fff" stroke="#1E3A8A" stroke-width="1.4"/><text x="424" y="204" fill="#1E3A8A">C</text>
+  </g>
+  <g font-family="Geist Mono, monospace" font-size="9.5" fill="#6B7280">
+    <text x="446" y="96">rank 1</text>
+    <text x="446" y="150">rank 2</text>
+    <text x="446" y="204">rank 3</text>
+  </g>
+  <g stroke="#DC2626" stroke-width="1.4" fill="none" stroke-dasharray="4 3" marker-end="url(#x-no)">
+    <path d="M404 196 C 356 170, 356 118, 404 98"/>
+  </g>
+  <g stroke="#DC2626" stroke-width="2" stroke-linecap="round">
+    <path d="M342 140 L356 154 M356 140 L342 154"/>
+  </g>
+
+  <text x="352" y="234" font-size="10.5" fill="#4B5563">Perché un cammino tornasse al punto di</text>
+  <text x="352" y="250" font-size="10.5" fill="#4B5563">partenza servirebbe rank(a) &lt; rank(a).</text>
+  <text x="352" y="268" font-size="10.5" fill="#1E3A8A" font-weight="600">Nessun controllo, nessuno stato, nessun costo.</text>
+
+  <text x="0" y="322" font-size="10" font-weight="600" fill="#111827">La differenza non è di severità. È di categoria: nel primo caso il sistema si difende da una cosa che può accadere,</text>
+  <text x="0" y="338" font-size="10" font-weight="600" fill="#111827">nel secondo quella cosa non è rappresentabile.</text>
+  <text x="0" y="360" font-size="9.5" fill="#6B7280">È lo stesso meccanismo con cui si previene il deadlock ordinando le risorse, invece di rilevarlo quando si è già verificato.</text>
+
+  </g>
+</svg>

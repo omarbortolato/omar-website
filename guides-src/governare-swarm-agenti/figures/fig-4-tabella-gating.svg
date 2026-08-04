@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 508" width="640" height="508" font-family="Inter, system-ui, sans-serif">
+  <title>Conformato, in attesa, quarantena</title>
+  <rect width="640" height="508" fill="#FFFFFF"/>
+  <g class="fig-head">
+    <text x="0" y="11" font-size="8" font-weight="700" letter-spacing="1.1" fill="#B45309">GOVERNARE UNO SWARM DI AGENTI · FIG. 4</text>
+    <text x="0" y="28" font-size="14.5" font-weight="700" fill="#111827">Conformato, in attesa, quarantena</text>
+  </g>
+  <g transform="translate(0,38)">
+
+  <!-- intestazione -->
+  <g font-size="9" font-weight="700" letter-spacing="0.8" fill="#6B7280">
+    <text x="0" y="14">SITUAZIONE</text>
+    <text x="176" y="14">ESITO</text>
+    <text x="290" y="14">PERCHÉ</text>
+  </g>
+  <line x1="0" y1="22" x2="640" y2="22" stroke="#E5E7EB" stroke-width="1.2"/>
+
+  <g font-size="10.5">
+    <!-- 1 -->
+    <rect x="0" y="22" width="640" height="44" fill="#F0FDF4" opacity="0.55"/>
+    <text x="0" y="42" fill="#111827" font-weight="600">manifest assente</text>
+    <rect x="176" y="32" width="96" height="18" rx="4" fill="#ECFDF5" stroke="#A7F3D0"/>
+    <text x="184" y="45" font-family="Geist Mono, monospace" font-size="8.5" fill="#047857">CONFORMATO</text>
+    <text x="290" y="38" fill="#4B5563">dedotto da AGENT.md, non cambia il</text>
+    <text x="290" y="53" fill="#4B5563">comportamento dell'agente</text>
+
+    <!-- 2 -->
+    <rect x="0" y="66" width="640" height="44" fill="#F0FDF4" opacity="0.55"/>
+    <text x="0" y="86" fill="#111827" font-weight="600">dominio non dichiarato</text>
+    <rect x="176" y="76" width="96" height="18" rx="4" fill="#ECFDF5" stroke="#A7F3D0"/>
+    <text x="184" y="89" font-family="Geist Mono, monospace" font-size="8.5" fill="#047857">CONFORMATO</text>
+    <text x="290" y="82" fill="#4B5563">classificato dal testo, senza modello:</text>
+    <text x="290" y="97" fill="#4B5563">deterministico e quindi ispezionabile</text>
+
+    <!-- 3 -->
+    <rect x="0" y="110" width="640" height="34" fill="#F0FDF4" opacity="0.55"/>
+    <text x="0" y="132" fill="#111827" font-weight="600">descrizione assente</text>
+    <rect x="176" y="122" width="96" height="18" rx="4" fill="#ECFDF5" stroke="#A7F3D0"/>
+    <text x="184" y="135" font-family="Geist Mono, monospace" font-size="8.5" fill="#047857">CONFORMATO</text>
+    <text x="290" y="132" fill="#4B5563">prima riga di prosa della persona</text>
+
+    <!-- 4 -->
+    <rect x="0" y="144" width="640" height="44" fill="#FEF2F2" opacity="0.55"/>
+    <text x="0" y="164" font-family="Geist Mono, monospace" font-size="9.5" fill="#111827">#STREAM + #CLARIFY</text>
+    <rect x="176" y="154" width="96" height="18" rx="4" fill="#FEF2F2" stroke="#FECACA"/>
+    <text x="184" y="167" font-family="Geist Mono, monospace" font-size="8.5" fill="#B91C1C">QUARANTENA</text>
+    <text x="290" y="160" fill="#4B5563">protocolli incompatibili: il chiarimento</text>
+    <text x="290" y="175" fill="#4B5563">finirebbe nello stream come testo</text>
+
+    <!-- 5 -->
+    <rect x="0" y="188" width="640" height="44" fill="#FEF2F2" opacity="0.55"/>
+    <text x="0" y="208" fill="#111827" font-weight="600">nessun tag topologico</text>
+    <rect x="176" y="198" width="96" height="18" rx="4" fill="#FEF2F2" stroke="#FECACA"/>
+    <text x="184" y="211" font-family="Geist Mono, monospace" font-size="8.5" fill="#B91C1C">QUARANTENA</text>
+    <text x="290" y="204" fill="#4B5563">posizione nel DAG indefinita:</text>
+    <text x="290" y="219" fill="#4B5563">non si sa chi può chiamarlo</text>
+
+    <!-- 6 -->
+    <rect x="0" y="232" width="640" height="34" fill="#FEF2F2" opacity="0.55"/>
+    <text x="0" y="254" fill="#111827" font-weight="600">nessun entrypoint</text>
+    <rect x="176" y="244" width="96" height="18" rx="4" fill="#FEF2F2" stroke="#FECACA"/>
+    <text x="184" y="257" font-family="Geist Mono, monospace" font-size="8.5" fill="#B91C1C">QUARANTENA</text>
+    <text x="290" y="254" fill="#4B5563">c'è la persona ma non il codice</text>
+
+    <!-- 7 -->
+    <rect x="0" y="266" width="640" height="34" fill="#FEF2F2" opacity="0.55"/>
+    <text x="0" y="288" font-family="Geist Mono, monospace" font-size="9.5" fill="#111827">import</text>
+    <text x="46" y="288" fill="#111827" font-weight="600">del provider</text>
+    <rect x="176" y="278" width="96" height="18" rx="4" fill="#FEF2F2" stroke="#FECACA"/>
+    <text x="184" y="291" font-family="Geist Mono, monospace" font-size="8.5" fill="#B91C1C">QUARANTENA</text>
+    <text x="290" y="288" fill="#4B5563">aggira il varco, quindi aggira il budget</text>
+
+    <!-- 8 -->
+    <rect x="0" y="300" width="640" height="34" fill="#FEF2F2" opacity="0.55"/>
+    <text x="0" y="322" fill="#111827" font-weight="600">chiave API nel sorgente</text>
+    <rect x="176" y="312" width="96" height="18" rx="4" fill="#FEF2F2" stroke="#FECACA"/>
+    <text x="184" y="325" font-family="Geist Mono, monospace" font-size="8.5" fill="#B91C1C">QUARANTENA</text>
+    <text x="290" y="322" fill="#4B5563">le chiavi stanno solo nel varco</text>
+
+    <!-- 9 -->
+    <rect x="0" y="334" width="640" height="34" fill="#FFFBEB" opacity="0.7"/>
+    <text x="0" y="356" fill="#111827" font-weight="600">venv non provisionato</text>
+    <rect x="176" y="346" width="96" height="18" rx="4" fill="#FFFBEB" stroke="#FDE68A"/>
+    <text x="192" y="359" font-family="Geist Mono, monospace" font-size="8.5" fill="#B45309">IN ATTESA</text>
+    <text x="290" y="356" fill="#4B5563">conforme, ma senza dipendenze non parte</text>
+  </g>
+
+  <line x1="0" y1="368" x2="640" y2="368" stroke="#E5E7EB" stroke-width="1.2"/>
+
+  <!-- tre esiti -->
+  <g font-size="10">
+    <rect x="0" y="384" width="204" height="66" rx="8" fill="#ECFDF5" stroke="#A7F3D0"/>
+    <text x="14" y="404" font-size="9" font-weight="700" letter-spacing="0.8" fill="#047857">CONFORMATO</text>
+    <text x="14" y="422" fill="#4B5563">Ciò che manca ed è deducibile</text>
+    <text x="14" y="438" fill="#4B5563">viene dedotto. L'agente gira.</text>
+
+    <rect x="218" y="384" width="204" height="66" rx="8" fill="#FFFBEB" stroke="#FDE68A"/>
+    <text x="232" y="404" font-size="9" font-weight="700" letter-spacing="0.8" fill="#B45309">IN ATTESA</text>
+    <text x="232" y="422" fill="#4B5563">Conforme ma non eseguibile.</text>
+    <text x="232" y="438" fill="#4B5563">Manca un presupposto, non una regola.</text>
+
+    <rect x="436" y="384" width="204" height="66" rx="8" fill="#FEF2F2" stroke="#FECACA"/>
+    <text x="450" y="404" font-size="9" font-weight="700" letter-spacing="0.8" fill="#B91C1C">QUARANTENA</text>
+    <text x="450" y="422" fill="#4B5563">Trattenuto, col motivo scritto.</text>
+    <text x="450" y="438" fill="#4B5563">Non esiste il forse.</text>
+  </g>
+
+  <text x="0" y="466" font-size="10" font-weight="600" fill="#111827">Ogni riga della colonna centrale è una decisione presa una volta e applicata sempre, non un giudizio caso per caso.</text>
+
+  </g>
+</svg>

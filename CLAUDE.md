@@ -253,6 +253,70 @@ Stessa funzione `makeSlug` usata in `lib/books.ts` → `generateSlug`:
 - lowercase, rimuove diacritici, rimuove caratteri non alfanumerici (apostrofi inclusi), sostituisce spazi con `-`
 - Esempio: "L'ottava regola" → "lottava-regola"
 
+## Conformità AI Act e privacy — REGOLA PRIORITARIA
+
+Il Regolamento (UE) 2024/1689 (AI Act) è applicabile in via generale dal **2 agosto 2026**: gli
+obblighi di trasparenza dell'**articolo 50** sono in vigore adesso.
+
+Regola stabilita da Omar il 4 agosto 2026, valida per tutto ciò che è già sviluppato e per tutto
+ciò che verrà sviluppato: **ogni contenuto prodotto con assistenza AI va dichiarato.**
+
+- Pagina pubblica: `app/trasparenza-ai/page.tsx` — dove uso l'AI, dove non la uso, riferimento
+  normativo. Linkata dal footer.
+- Componente riusabile: `components/ui/ai-disclosure.tsx` (`variant="inline" | "card"`).
+  Applicato a: articoli del blog, pagine libro (Spremute), landing delle guide.
+- Il PDF di ogni guida riporta la dichiarazione nel colophon dell'ultima pagina.
+- Privacy: `app/privacy/page.tsx`, linkata dal footer. Titolare Omar Bortolato.
+
+**Cosa NON ricade su Omar:** la marcatura machine-readable dei contenuti sintetici (art. 50 par. 2)
+è obbligo del provider del modello, non del deployer.
+
+**Prima di aggiungere una feature che genera o pubblica contenuti AI, o che interagisce con
+l'utente, verificare se serve una disclosure e aggiungerla.**
+
+## Raccolta email e consenso
+
+Il gate email è in `components/guide/subscribe-form.tsx` e scrive via `app/api/subscribe/route.ts`
+sul DB Notion iscritti `c3a083f7da8340bd923d3e4312aafae2`.
+
+Schema del DB (aggiornato 4 agosto 2026):
+
+| Campo              | Tipo         | Uso                                                     |
+|--------------------|--------------|---------------------------------------------------------|
+| Email              | title        | Indirizzo                                                 |
+| Nome               | rich_text    | Facoltativo                                               |
+| Guida              | select       | Slug del contenuto richiesto                              |
+| Data               | date         | Data della richiesta                                      |
+| Source             | select       | `website`                                                 |
+| Tag provenienza    | multi_select | Punto esatto di raccolta (`landing-guida-swarm`, ecc.)    |
+| Consenso marketing | checkbox     | Spunta separata, mai preselezionata                       |
+| Data consenso      | date         | Compilata solo se il consenso è stato dato                |
+| Sequenza           | select       | Vuoto: punto di aggancio per una sequenza futura          |
+| Stato sequenza     | select       | `nessuna` / `da agganciare` / `in corso` / `completata`   |
+
+Regole non negoziabili: il consenso al marketing è **separato** dalla consegna del file, **mai
+preselezionato**, e chi non lo dà scarica comunque. Ogni nuovo form che raccoglie email deve
+passare `source` e includere la casella di consenso.
+
+## Guide scaricabili — pipeline di build
+
+Sorgenti in `guides-src/<slug>/`. La guida "Governare uno swarm di agenti" è il riferimento.
+
+```bash
+cd guides-src/governare-swarm-agenti
+node build.mjs --check      # SOLO controllo traboccamento pagine — usare a ogni modifica di testo
+node build.mjs              # PDF in public/downloads/ + anteprime in public/images/guide/
+node render-figures.mjs     # figures/*.svg → PNG 300 dpi
+```
+
+- Impaginazione a **pagine fisse**: ogni `<section class="page">` in `guida.html` è una A4.
+  Testatine e numeri di pagina li inietta `build.mjs`, non vanno scritti a mano.
+- `build.mjs --check` segnala le pagine che traboccano e quelle troppo vuote. Senza quel controllo
+  il contenuto in eccesso viene **tagliato in silenzio**.
+- Font Inter e Geist Mono incorporati in base64 in `fonts/`. Servono: la vecchia guida generata con
+  ReportLab perdeva tutti gli accenti ("perche", "piu").
+- L'indice va aggiornato a mano se cambia il numero di pagine.
+
 ## Common Commands
 ```bash
 # Development

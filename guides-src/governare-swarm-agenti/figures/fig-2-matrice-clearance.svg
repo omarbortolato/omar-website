@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 358" width="640" height="358" font-family="Inter, system-ui, sans-serif">
+  <title>Chi può chiamare chi</title>
+  <rect width="640" height="358" fill="#FFFFFF"/>
+  <g class="fig-head">
+    <text x="0" y="11" font-size="8" font-weight="700" letter-spacing="1.1" fill="#B45309">GOVERNARE UNO SWARM DI AGENTI · FIG. 2</text>
+    <text x="0" y="28" font-size="14.5" font-weight="700" fill="#111827">Chi può chiamare chi</text>
+  </g>
+  <g transform="translate(0,38)">
+
+  <!-- regione vuota per costruzione: tutto ciò che non scende di rank -->
+  <path d="M130 44 L630 44 L630 84 L330 84 L330 124 L330 164 L330 204 L430 204 L430 244 L530 244 L530 284 L130 284 Z"
+        fill="#FEF2F2" opacity="0"/>
+  <g fill="#FAFAFA">
+    <rect x="130" y="44" width="200" height="240"/>   <!-- colonne entrata+coordinatori: mai target automatico -->
+    <rect x="330" y="204" width="200" height="80"/>   <!-- ponte e foglia non risalgono -->
+    <rect x="430" y="164" width="100" height="40"/>
+  </g>
+
+  <!-- griglia -->
+  <g stroke="#E5E7EB" stroke-width="1">
+    <line x1="130" y1="44" x2="630" y2="44"/>
+    <line x1="130" y1="84" x2="630" y2="84"/>
+    <line x1="130" y1="124" x2="630" y2="124"/>
+    <line x1="130" y1="164" x2="630" y2="164"/>
+    <line x1="130" y1="204" x2="630" y2="204"/>
+    <line x1="130" y1="244" x2="630" y2="244"/>
+    <line x1="130" y1="284" x2="630" y2="284"/>
+    <line x1="130" y1="44" x2="130" y2="284"/>
+    <line x1="230" y1="44" x2="230" y2="284"/>
+    <line x1="330" y1="44" x2="330" y2="284"/>
+    <line x1="430" y1="44" x2="430" y2="284"/>
+    <line x1="530" y1="44" x2="530" y2="284"/>
+    <line x1="630" y1="44" x2="630" y2="284"/>
+  </g>
+
+  <!-- intestazioni di colonna -->
+  <g font-size="9" font-weight="700" letter-spacing="0.6" fill="#6B7280" text-anchor="middle">
+    <text x="180" y="34">CONCIERGE</text>
+    <text x="280" y="34">CFO</text>
+    <text x="380" y="34">CTO</text>
+    <text x="480" y="34">PONTE-FIN</text>
+    <text x="580" y="34">SPECIALISTA</text>
+  </g>
+  <text x="14" y="34" font-size="9" font-weight="700" letter-spacing="0.6" fill="#6B7280">DA \ VERSO</text>
+
+  <!-- intestazioni di riga -->
+  <g font-size="11" font-weight="600" fill="#111827">
+    <text x="14" y="70">concierge <tspan fill="#B45309" font-family="Geist Mono, monospace">0</tspan></text>
+    <text x="14" y="110">cfo <tspan fill="#B45309" font-family="Geist Mono, monospace">1</tspan></text>
+    <text x="14" y="150">cto <tspan fill="#B45309" font-family="Geist Mono, monospace">1</tspan></text>
+    <text x="14" y="190">ponte-fin <tspan fill="#B45309" font-family="Geist Mono, monospace">2</tspan></text>
+    <text x="14" y="230">specialista <tspan fill="#B45309" font-family="Geist Mono, monospace">3</tspan></text>
+    <text x="14" y="270" fill="#9CA3AF" font-weight="500" font-size="10">tutti gli altri</text>
+  </g>
+
+  <!-- celle: · = negato, ✓ = ammesso -->
+  <g font-size="13" fill="#D1D5DB" text-anchor="middle">
+    <text x="180" y="70">·</text><text x="280" y="70">·</text><text x="380" y="70">·</text>
+    <text x="180" y="110">·</text><text x="280" y="110">·</text><text x="380" y="110">·</text>
+    <text x="180" y="150">·</text><text x="280" y="150">·</text><text x="380" y="150">·</text>
+    <text x="180" y="190">·</text><text x="280" y="190">·</text><text x="380" y="190">·</text><text x="480" y="190">·</text>
+    <text x="180" y="230">·</text><text x="280" y="230">·</text><text x="380" y="230">·</text><text x="480" y="230">·</text><text x="580" y="230">·</text>
+    <text x="180" y="270">·</text><text x="280" y="270">·</text><text x="380" y="270">·</text><text x="480" y="270">·</text><text x="580" y="270">·</text>
+  </g>
+  <g font-size="14" font-weight="700" fill="#1E3A8A" text-anchor="middle">
+    <text x="480" y="71">✓</text><text x="580" y="71">✓</text>
+    <text x="480" y="111">✓</text><text x="580" y="111">✓</text>
+    <text x="480" y="151">✓</text><text x="580" y="151">✓</text>
+    <text x="580" y="191">✓</text>
+  </g>
+
+  <!-- annotazioni -->
+  <g font-size="9.5" font-weight="600">
+    <text x="0" y="304" fill="#6B7280">nessuno è mai bersaglio automatico di rank 0 o 1</text>
+    <text x="640" y="304" fill="#1E3A8A" text-anchor="end">il lavoro si accumula in fondo</text>
+  </g>
+  <text x="14" y="316" font-size="10" font-weight="600" fill="#111827">La metà vuota non è un buco: è la forma che l'ordine impone al grafo.</text>
+
+  </g>
+</svg>

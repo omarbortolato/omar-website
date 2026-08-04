@@ -1,17 +1,22 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { ArrowRight, Download, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface SubscribeFormProps {
   guide: string;
   overrideDownloadUrl?: string;
+  /** Punto esatto di raccolta: serve a distinguere la stessa email presa da
+   *  landing diverse, e a poter agganciare in futuro sequenze diverse. */
+  source?: string;
 }
 
-export function SubscribeForm({ guide, overrideDownloadUrl }: SubscribeFormProps) {
+export function SubscribeForm({ guide, overrideDownloadUrl, source }: SubscribeFormProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [consent, setConsent] = useState(false);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
   const [emailSent, setEmailSent] = useState(false);
@@ -34,6 +39,9 @@ export function SubscribeForm({ guide, overrideDownloadUrl }: SubscribeFormProps
           name: name.trim(),
           email: email.trim(),
           guide,
+          source: source ?? "sito",
+          // consenso al marketing: separato dalla richiesta del file e mai preselezionato
+          marketingConsent: consent,
           downloadUrl: overrideDownloadUrl ?? undefined,
         }),
       });
@@ -137,8 +145,30 @@ export function SubscribeForm({ guide, overrideDownloadUrl }: SubscribeFormProps
         <p className="text-sm text-red-600">{errorMsg}</p>
       )}
 
-      <p className="text-xs text-gray-400">
-        Zero spam. Solo risorse utili. Puoi cancellarti quando vuoi.
+      {/* Consenso separato e facoltativo: il file arriva comunque.
+          Art. 6 par. 1 lett. a GDPR — mai preselezionato, mai in bundle col download. */}
+      <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-gray-100 bg-gray-50 p-4">
+        <input
+          type="checkbox"
+          checked={consent}
+          onChange={(e) => setConsent(e.target.checked)}
+          className="mt-0.5 h-4 w-4 flex-shrink-0 cursor-pointer rounded border-gray-300 text-primary-800 focus:ring-primary-800/30"
+        />
+        <span className="text-xs leading-relaxed text-gray-500">
+          Voglio ricevere anche gli aggiornamenti su nuove guide e contenuti.{" "}
+          <span className="text-gray-400">
+            Facoltativo: senza questa spunta ricevi comunque il file e nient&apos;altro.
+          </span>
+        </span>
+      </label>
+
+      <p className="text-xs leading-relaxed text-gray-400">
+        Uso la tua email solo per mandarti quello che hai chiesto. Puoi cancellarti quando vuoi.
+        Dettagli su come tratto i dati nella{" "}
+        <Link href="/privacy" className="underline underline-offset-2 hover:text-primary-800">
+          privacy
+        </Link>
+        .
       </p>
     </form>
   );

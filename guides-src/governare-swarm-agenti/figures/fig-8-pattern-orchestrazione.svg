@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 490" width="640" height="490" font-family="Inter, system-ui, sans-serif">
+  <title>Cinque modi di orchestrare</title>
+  <defs>
+    <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#6B7280"/>
+    </marker>
+  </defs>
+  <rect width="640" height="490" fill="#FFFFFF"/>
+  <g class="fig-head">
+    <text x="0" y="11" font-size="8" font-weight="700" letter-spacing="1.1" fill="#B45309">GOVERNARE UNO SWARM DI AGENTI · FIG. 8</text>
+    <text x="0" y="28" font-size="14.5" font-weight="700" fill="#111827">Cinque modi di orchestrare</text>
+  </g>
+  <g transform="translate(0,38)">
+
+  <g font-size="10.5" fill="#6B7280">
+    <!-- 1. supervisor -->
+    <rect x="0" y="0" width="200" height="176" rx="10" fill="#FFFFFF" stroke="#E5E7EB"/>
+    <text x="16" y="26" font-size="11.5" font-weight="700" fill="#111827">Supervisor</text>
+    <g stroke="#6B7280" stroke-width="1.2" marker-end="url(#p-a)" fill="none">
+      <path d="M100 56 L54 82"/><path d="M100 56 L100 82"/><path d="M100 56 L146 82"/>
+    </g>
+    <circle cx="100" cy="48" r="9" fill="#1E3A8A"/>
+    <circle cx="48" cy="92" r="8" fill="#DBE8FE"/><circle cx="100" cy="92" r="8" fill="#DBE8FE"/><circle cx="152" cy="92" r="8" fill="#DBE8FE"/>
+    <text x="16" y="128">Uno decide, gli altri</text>
+    <text x="16" y="144">eseguono. Terminazione</text>
+    <text x="16" y="160">garantita, collo di</text>
+    <text x="16" y="176" font-size="0">.</text>
+    <text x="16" y="176" font-size="10.5">bottiglia al centro.</text>
+
+    <!-- 2. gerarchico -->
+    <rect x="220" y="0" width="200" height="176" rx="10" fill="#FFFFFF" stroke="#E5E7EB"/>
+    <text x="236" y="26" font-size="11.5" font-weight="700" fill="#111827">Gerarchico</text>
+    <g stroke="#6B7280" stroke-width="1.2" marker-end="url(#p-a)" fill="none">
+      <path d="M320 50 L284 66"/><path d="M320 50 L356 66"/>
+      <path d="M276 82 L258 96"/><path d="M276 82 L294 96"/>
+      <path d="M364 82 L346 96"/><path d="M364 82 L382 96"/>
+    </g>
+    <circle cx="320" cy="44" r="8" fill="#1E3A8A"/>
+    <circle cx="274" cy="74" r="7" fill="#93B4FD"/><circle cx="366" cy="74" r="7" fill="#93B4FD"/>
+    <circle cx="254" cy="102" r="6" fill="#DBE8FE"/><circle cx="298" cy="102" r="6" fill="#DBE8FE"/>
+    <circle cx="342" cy="102" r="6" fill="#DBE8FE"/><circle cx="386" cy="102" r="6" fill="#DBE8FE"/>
+    <text x="236" y="136">Supervisori di supervisori.</text>
+    <text x="236" y="152">Scala in ampiezza, allunga</text>
+    <text x="236" y="168">la catena dell'errore.</text>
+
+    <!-- 3. rete -->
+    <rect x="440" y="0" width="200" height="176" rx="10" fill="#FFFFFF" stroke="#E5E7EB"/>
+    <text x="456" y="26" font-size="11.5" font-weight="700" fill="#111827">Rete</text>
+    <g stroke="#DC2626" stroke-width="1.1" fill="none" opacity="0.75">
+      <path d="M505 54 L575 54"/><path d="M505 54 L505 100"/><path d="M575 54 L575 100"/>
+      <path d="M505 100 L575 100"/><path d="M505 54 L575 100"/><path d="M575 54 L505 100"/>
+    </g>
+    <circle cx="505" cy="54" r="7" fill="#FCA5A5"/><circle cx="575" cy="54" r="7" fill="#FCA5A5"/>
+    <circle cx="505" cy="100" r="7" fill="#FCA5A5"/><circle cx="575" cy="100" r="7" fill="#FCA5A5"/>
+    <text x="456" y="136">Tutti possono chiamare</text>
+    <text x="456" y="152">tutti. Massima flessibilità,</text>
+    <text x="456" y="168" fill="#B91C1C" font-weight="600">nessuna terminazione.</text>
+
+    <!-- 4. handoff -->
+    <rect x="0" y="196" width="308" height="150" rx="10" fill="#FFFFFF" stroke="#E5E7EB"/>
+    <text x="16" y="222" font-size="11.5" font-weight="700" fill="#111827">Handoff</text>
+    <g stroke="#6B7280" stroke-width="1.2" marker-end="url(#p-a)" fill="none">
+      <path d="M70 256 L110 256"/><path d="M138 256 L178 256"/><path d="M206 256 L246 256"/>
+    </g>
+    <circle cx="60" cy="256" r="8" fill="#DBE8FE"/><circle cx="128" cy="256" r="8" fill="#DBE8FE"/>
+    <circle cx="196" cy="256" r="8" fill="#DBE8FE"/><circle cx="256" cy="256" r="8" fill="#DBE8FE"/>
+    <text x="16" y="294">Il controllo passa di mano, non torna indietro.</text>
+    <text x="16" y="310">Semplice da seguire. Nessuno ha la visione</text>
+    <text x="16" y="326">d'insieme, e l'errore viaggia col testimone.</text>
+
+    <!-- 5. blackboard -->
+    <rect x="332" y="196" width="308" height="150" rx="10" fill="#FFFFFF" stroke="#E5E7EB"/>
+    <text x="348" y="222" font-size="11.5" font-weight="700" fill="#111827">Blackboard</text>
+    <rect x="430" y="238" width="112" height="30" rx="6" fill="#F3F4F6" stroke="#D1D5DB"/>
+    <text x="486" y="257" font-size="9.5" fill="#6B7280" text-anchor="middle">stato condiviso</text>
+    <g stroke="#6B7280" stroke-width="1.1" fill="none" marker-end="url(#p-a)">
+      <path d="M400 253 L426 253"/><path d="M572 253 L546 253"/>
+      <path d="M486 286 L486 272"/>
+    </g>
+    <circle cx="392" cy="253" r="7" fill="#DBE8FE"/><circle cx="580" cy="253" r="7" fill="#DBE8FE"/>
+    <circle cx="486" cy="293" r="7" fill="#DBE8FE"/>
+    <text x="348" y="326">Nessuno chiama nessuno: si scrive e si legge</text>
+    <text x="348" y="342">da una lavagna comune.</text>
+  </g>
+
+  <!-- posizionamento -->
+  <rect x="0" y="366" width="640" height="62" rx="10" fill="#EFF4FF" stroke="#1E3A8A" stroke-width="1.2"/>
+  <text x="18" y="388" font-size="9" font-weight="700" letter-spacing="0.9" fill="#1E3A8A">DOVE SI COLLOCA L'ARCHITETTURA DESCRITTA</text>
+  <text x="18" y="408" font-size="10.5" fill="#4B5563">Gerarchica con un vincolo in più: i livelli sono ordinati, e la delega può solo scendere. È la variante che</text>
+  <text x="18" y="424" font-size="10.5" fill="#4B5563">rinuncia alla flessibilità della rete in cambio di una garanzia che nessun controllo a runtime può dare.</text>
+
+  <text x="0" y="448" font-size="10" font-weight="600" fill="#111827">Nessuno dei cinque è migliore in assoluto. Cambia cosa garantiscono, e quindi cosa devi controllare tu.</text>
+
+  </g>
+</svg>

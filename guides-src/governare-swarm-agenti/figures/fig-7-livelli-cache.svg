@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 438" width="640" height="438" font-family="Inter, system-ui, sans-serif">
+  <title>I due livelli di cache</title>
+  <defs>
+    <marker id="c-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#9CA3AF"/>
+    </marker>
+    <pattern id="hatch" width="7" height="7" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="0" x2="0" y2="7" stroke="#DC2626" stroke-width="2.4" opacity="0.28"/>
+    </pattern>
+  </defs>
+  <rect width="640" height="438" fill="#FFFFFF"/>
+  <g class="fig-head">
+    <text x="0" y="11" font-size="8" font-weight="700" letter-spacing="1.1" fill="#B45309">GOVERNARE UNO SWARM DI AGENTI · FIG. 7</text>
+    <text x="0" y="28" font-size="14.5" font-weight="700" fill="#111827">I due livelli di cache</text>
+  </g>
+  <g transform="translate(0,38)">
+
+  <!-- percorso della richiesta -->
+  <line x1="70" y1="70" x2="70" y2="300" stroke="#D1D5DB" stroke-width="2" marker-end="url(#c-arrow)"/>
+
+  <text x="0" y="22" font-size="9" font-weight="700" letter-spacing="0.9" fill="#6B7280">IL PERCORSO DI UNA RICHIESTA</text>
+
+  <!-- richiesta -->
+  <circle cx="70" cy="56" r="7" fill="#111827"/>
+  <text x="88" y="60" font-size="11" font-weight="600" fill="#111827">richiesta</text>
+
+  <!-- tier 1 -->
+  <rect x="150" y="76" width="490" height="72" rx="10" fill="#EFF4FF" stroke="#1E3A8A" stroke-width="1.3"/>
+  <line x1="70" y1="112" x2="148" y2="112" stroke="#1E3A8A" stroke-width="1.6"/>
+  <circle cx="70" cy="112" r="5.5" fill="#1E3A8A"/>
+  <text x="166" y="96" font-size="8.5" font-weight="700" letter-spacing="0.9" fill="#1E3A8A">TIER 1 · NEL CONTROL-PLANE</text>
+  <text x="166" y="116" font-size="13" font-weight="700" fill="#1E3A8A">Answer-cache</text>
+  <text x="166" y="136" font-size="10.5" fill="#4B5563">Salta l'intero ragionamento: nessun processo, nessun token.</text>
+  <text x="400" y="116" font-size="9.5" font-family="Geist Mono, monospace" fill="#1E3A8A">chiave = agente + domanda + storia</text>
+
+  <!-- esecuzione -->
+  <rect x="150" y="168" width="490" height="46" rx="10" fill="#F9FAFB" stroke="#E5E7EB"/>
+  <line x1="70" y1="191" x2="148" y2="191" stroke="#9CA3AF" stroke-width="1.4"/>
+  <circle cx="70" cy="191" r="5.5" fill="#9CA3AF"/>
+  <text x="166" y="188" font-size="11.5" font-weight="700" fill="#111827">Il processo dell'agente parte</text>
+  <text x="166" y="205" font-size="10.5" fill="#6B7280">Ragionamento, strumenti, eventuali chiamate al modello</text>
+
+  <!-- tier 0 -->
+  <rect x="150" y="234" width="490" height="72" rx="10" fill="#FFFBEB" stroke="#F59E0B" stroke-width="1.3"/>
+  <line x1="70" y1="270" x2="148" y2="270" stroke="#B45309" stroke-width="1.6"/>
+  <circle cx="70" cy="270" r="5.5" fill="#B45309"/>
+  <text x="166" y="254" font-size="8.5" font-weight="700" letter-spacing="0.9" fill="#B45309">TIER 0 · NEL KERNEL</text>
+  <text x="166" y="274" font-size="13" font-weight="700" fill="#B45309">Cache LLM</text>
+  <text x="166" y="294" font-size="10.5" fill="#4B5563">Salta la singola chiamata al modello. Vale per tutto il processo.</text>
+  <text x="400" y="274" font-size="9.5" font-family="Geist Mono, monospace" fill="#B45309">chi chiama non è nella chiave</text>
+
+  <!-- guardia di spesa -->
+  <rect x="0" y="322" width="640" height="44" rx="8" fill="url(#hatch)"/>
+  <rect x="0" y="322" width="640" height="44" rx="8" fill="none" stroke="#DC2626" stroke-width="1.6"/>
+  <text x="20" y="341" font-size="11.5" font-weight="700" fill="#B91C1C">GUARDIA DI SPESA</text>
+  <text x="20" y="358" font-size="10.5" fill="#7F1D1D">Nessuno dei due livelli la attraversa. Un hit costa zero token, ma un agente bloccato resta bloccato.</text>
+
+  <text x="0" y="386" font-size="10" font-weight="600" fill="#111827">Le cache tolgono lavoro. Non tolgono mai un permesso: servire dalla cache a chi è bloccato significherebbe aggirare il blocco.</text>
+
+  </g>
+</svg>

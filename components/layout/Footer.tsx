@@ -15,6 +15,11 @@ const footerLinks = [
   { href: "/collabora", label: "Collabora" },
 ];
 
+const legalLinks = [
+  { href: "/privacy", label: "Privacy" },
+  { href: "/trasparenza-ai", label: "Trasparenza AI" },
+];
+
 export function Footer() {
   return (
     <footer className="border-t border-border/40 bg-gray-50">
@@ -64,6 +69,17 @@ export function Footer() {
         </div>
 
         <div className="mt-8 border-t border-border/40 pt-6 text-center text-xs text-gray-400">
+          <nav className="mb-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+            {legalLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="hover:text-primary-800 transition-colors"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
           © {new Date().getFullYear()} Omar Bortolato. Built with Next.js &amp; Tailwind CSS.
         </div>
       </div>
