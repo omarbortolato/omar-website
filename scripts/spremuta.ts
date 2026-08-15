@@ -20,7 +20,15 @@ import * as fs from "fs";
 import * as path from "path";
 import * as readline from "readline";
 import { execSync } from "child_process";
-import { loadEnv, makeSlug, fillTemplate, generatePdf, SpremutaContent, BookData } from "../lib/pdf-generator";
+import {
+  loadEnv,
+  makeSlug,
+  fillTemplate,
+  generatePdf,
+  fetchPagePlainText,
+  SpremutaContent,
+  BookData,
+} from "../lib/pdf-generator";
 
 const ROOT = process.cwd();
 loadEnv(ROOT);
@@ -104,7 +112,33 @@ async function main() {
     if (!ok) { console.log("Annullato."); process.exit(0); }
   }
 
-  // ── 3. Genera contenuto con Anthropic ────────────────────────────────────
+  // ── 3. Leggi gli appunti dal corpo della pagina Notion ────────────────────
+  console.log("\n📝  Leggo gli appunti dal corpo pagina...");
+  let appunti = "";
+  try {
+    appunti = await fetchPagePlainText(NOTION_KEY as string, pageId);
+  } catch (e) {
+    console.warn(`⚠️   Lettura appunti fallita: ${e instanceof Error ? e.message : e}`);
+  }
+  if (appunti) {
+    console.log(`✅  Appunti: ${appunti.length} caratteri passati al modello`);
+  } else {
+    console.warn("⚠️   Nessun appunto trovato, Spremuta generata senza grounding");
+  }
+
+  // Sezione di grounding: presente solo se ci sono appunti, così un libro senza
+  // appunti mantiene esattamente il comportamento precedente.
+  const groundingBlock = appunti
+    ? `\n<appunti_lettura>\n${appunti}\n</appunti_lettura>\n\n` +
+      `Regole vincolanti sul materiale:\n` +
+      `- Gli appunti in <appunti_lettura> sono la fonte primaria e vincolante.\n` +
+      `- Ogni idea, azione, citazione e riferimento deve derivare da quel materiale.\n` +
+      `- Non aggiungere aneddoti, nomi, cifre, date o studi che non compaiono negli appunti.\n` +
+      `- Se un campo dello schema non è ricavabile dagli appunti, riempilo restando su ciò che gli appunti supportano, senza inventare fatti verificabili.\n` +
+      `- Non menzionare mai nell'output gli appunti, la loro esistenza, la loro provenienza o il processo di generazione. Il PDF deve leggersi come rielaborazione diretta dell'autore del sito.\n\n`
+    : "";
+
+  // ── 4. Genera contenuto con Anthropic ────────────────────────────────────
   console.log("\n🤖  Genero contenuto con Claude...");
 
   const aiRes = await fetch("https://api.anthropic.com/v1/messages", {
@@ -125,6 +159,7 @@ async function main() {
         role: "user",
         content:
           `Crea una Spremuta per il libro "${title}" di ${author} (categoria: ${category}).\n` +
+          groundingBlock +
           `Restituisci SOLO questo JSON valido, nessun testo fuori:\n` +
           `{\n` +
           `  "intro": "2-3 righe — perché questa non è una sintesi ma una rielaborazione personale",\n` +
@@ -164,7 +199,7 @@ async function main() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const rawText: string = ((await aiRes.json()) as any).content[0].text;
 
-  // ── 4. Parsa JSON ─────────────────────────────────────────────────────────
+  // ── 5. Parsa JSON ─────────────────────────────────────────────────────────
   const cleaned = rawText.replace(/^```(?:json)?\s*/m, "").replace(/```\s*$/m, "").trim();
   let content: SpremutaContent;
   try {
@@ -176,7 +211,7 @@ async function main() {
   }
   console.log("✅  Contenuto generato");
 
-  // ── 5. Genera PDF ─────────────────────────────────────────────────────────
+  // ── 6. Genera PDF ─────────────────────────────────────────────────────────
   const slug = makeSlug(title);
   const pdfPath = path.join(ROOT, "public", "spremute", `${slug}.pdf`);
 
@@ -188,7 +223,7 @@ async function main() {
   const sizeKb = Math.round(fs.statSync(pdfPath).size / 1024);
   console.log(`✅  PDF: public/spremute/${slug}.pdf (${sizeKb} KB)`);
 
-  // ── 6. Aggiorna Notion PRIMA del push ─────────────────────────────────────
+  // ── 7. Aggiorna Notion PRIMA del push ─────────────────────────────────────
   // (così Vercel vede pdfUrl già impostato durante il build)
   const pdfUrl = `https://www.omarbortolato.it/spremute/${slug}.pdf`;
   console.log("\n📝  Aggiorno Notion...");
@@ -207,14 +242,14 @@ async function main() {
     console.log(`✅  Notion aggiornato: ${pdfUrl}`);
   }
 
-  // ── 7. Git push ───────────────────────────────────────────────────────────
+  // ── 8. Git push ───────────────────────────────────────────────────────────
   console.log("\n🚀  Deploy...");
   execSync(`git add public/spremute/${slug}.pdf`, { stdio: "inherit", cwd: ROOT });
   execSync(`git commit -m "Add Spremuta: ${title}"`, { stdio: "inherit", cwd: ROOT });
   execSync("git push", { stdio: "inherit", cwd: ROOT });
   console.log("✅  Pushato su GitHub");
 
-  // ── 8. Output finale ──────────────────────────────────────────────────────
+  // ── 9. Output finale ──────────────────────────────────────────────────────
   console.log(`\n${border}`);
   console.log("🍊  SPREMUTA COMPLETATA");
   console.log(border);

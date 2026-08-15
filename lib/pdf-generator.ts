@@ -47,6 +47,108 @@ export function makeSlug(title: string): string {
     .trim();
 }
 
+// ─── Appunti Notion (corpo pagina) ────────────────────────────────────────────
+// Legge i blocchi del corpo di una pagina Notion e li appiattisce in testo semplice,
+// da usare come fonte primaria per la generazione della Spremuta.
+
+const NOTION_VERSION = "2022-06-28";
+
+/** Oltre questa soglia il testo viene troncato prima di finire nel prompt. */
+export const APPUNTI_MAX_CHARS = 40_000;
+
+/** Profondità massima di ricorsione sui blocchi annidati (guardia anti-loop). */
+const MAX_BLOCK_DEPTH = 6;
+
+/** Tipi di blocco da cui estraiamo i rich_text. Tutto il resto viene ignorato. */
+const TEXT_BLOCK_TYPES = new Set([
+  "paragraph",
+  "heading_1",
+  "heading_2",
+  "heading_3",
+  "bulleted_list_item",
+  "numbered_list_item",
+  "quote",
+  "callout",
+  "toggle",
+  "code",
+]);
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type NotionBlock = Record<string, any>;
+
+function plainText(rich: { plain_text?: string }[] | undefined): string {
+  return Array.isArray(rich) ? rich.map((r) => r.plain_text ?? "").join("") : "";
+}
+
+/** Un livello di blocchi, con paginazione completa (start_cursor / has_more). */
+async function listChildren(notionKey: string, blockId: string): Promise<NotionBlock[]> {
+  const blocks: NotionBlock[] = [];
+  let cursor: string | undefined;
+
+  do {
+    const url = new URL(`https://api.notion.com/v1/blocks/${blockId}/children`);
+    url.searchParams.set("page_size", "100");
+    if (cursor) url.searchParams.set("start_cursor", cursor);
+
+    const res = await fetch(url, {
+      headers: { Authorization: `Bearer ${notionKey}`, "Notion-Version": NOTION_VERSION },
+    });
+    if (!res.ok) {
+      throw new Error(`Notion blocks.children.list ${res.status}: ${await res.text()}`);
+    }
+
+    const data = (await res.json()) as {
+      results?: NotionBlock[];
+      has_more?: boolean;
+      next_cursor?: string | null;
+    };
+    blocks.push(...(data.results ?? []));
+    cursor = data.has_more ? data.next_cursor ?? undefined : undefined;
+  } while (cursor);
+
+  return blocks;
+}
+
+async function collectText(
+  notionKey: string,
+  blockId: string,
+  out: string[],
+  depth: number
+): Promise<void> {
+  if (depth > MAX_BLOCK_DEPTH) return;
+
+  for (const block of await listChildren(notionKey, blockId)) {
+    const type: string = block.type;
+    if (TEXT_BLOCK_TYPES.has(type)) {
+      const text = plainText(block[type]?.rich_text).trim();
+      if (text) out.push(text);
+    }
+    // I tipi non gestiti vengono ignorati, ma i loro figli no: un blocco
+    // annidato dentro una colonna o una tabella resta comunque un appunto.
+    if (block.has_children === true) {
+      await collectText(notionKey, block.id, out, depth + 1);
+    }
+  }
+}
+
+/**
+ * Estrae in testo semplice il corpo di una pagina Notion (appunti di lettura).
+ * Restituisce "" se la pagina non ha corpo. Lancia se l'API Notion fallisce.
+ */
+export async function fetchPagePlainText(notionKey: string, pageId: string): Promise<string> {
+  const parts: string[] = [];
+  await collectText(notionKey, pageId, parts, 0);
+
+  const text = parts.join("\n").trim();
+  if (text.length > APPUNTI_MAX_CHARS) {
+    console.warn(
+      `⚠️   Appunti troncati: ${text.length} caratteri → ${APPUNTI_MAX_CHARS} (limite prompt)`
+    );
+    return text.slice(0, APPUNTI_MAX_CHARS);
+  }
+  return text;
+}
+
 // ─── Env loader ───────────────────────────────────────────────────────────────
 
 export function loadEnv(root: string): void {
