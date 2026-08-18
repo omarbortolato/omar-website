@@ -9,7 +9,7 @@
  *
  * Env richiesti in .env.local:
  *   NOTION_API_KEY
- *   ANTHROPIC_API_KEY
+ *   OPENAI_API_KEY
  */
 
 const PAGE_ID = "CAMBIA_QUESTO_CON_IL_PAGE_ID_NOTION";
@@ -47,12 +47,18 @@ if (!NOTION_KEY) {
   process.exit(1);
 }
 
-const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY;
-if (!ANTHROPIC_KEY) {
-  console.error("❌  ANTHROPIC_API_KEY mancante in .env.local");
-  console.error('   Aggiungila: echo "ANTHROPIC_API_KEY=sk-ant-..." >> .env.local');
+const OPENAI_KEY = process.env.OPENAI_API_KEY;
+if (!OPENAI_KEY) {
+  console.error("❌  OPENAI_API_KEY mancante in .env.local");
+  console.error('   Aggiungila: echo "OPENAI_API_KEY=sk-..." >> .env.local');
   process.exit(1);
 }
+
+// gpt-5.5 è un modello reasoning: i token di ragionamento pesano su
+// max_completion_tokens, quindi il budget è più alto dello stretto necessario
+// per il JSON (~1.700 token) per non troncare l'output a metà.
+const OPENAI_MODEL = "gpt-5.5";
+const MAX_COMPLETION_TOKENS = 8000;
 
 const TEMPLATE_PATH = path.join(ROOT, "templates", "spremute", "TEMPLATE.html");
 if (!fs.existsSync(TEMPLATE_PATH)) {
@@ -138,24 +144,26 @@ async function main() {
       `- Non menzionare mai nell'output gli appunti, la loro esistenza, la loro provenienza o il processo di generazione. Il PDF deve leggersi come rielaborazione diretta dell'autore del sito.\n\n`
     : "";
 
-  // ── 4. Genera contenuto con Anthropic ────────────────────────────────────
-  console.log("\n🤖  Genero contenuto con Claude...");
+  // ── 4. Genera contenuto con OpenAI ───────────────────────────────────────
+  console.log(`\n🤖  Genero contenuto con OpenAI (${OPENAI_MODEL})...`);
 
-  const aiRes = await fetch("https://api.anthropic.com/v1/messages", {
+  const aiRes = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: {
-      "x-api-key": ANTHROPIC_KEY as string,
-      "anthropic-version": "2023-06-01",
-      "content-type": "application/json",
+      Authorization: `Bearer ${OPENAI_KEY as string}`,
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      model: "claude-sonnet-4-6",
-      max_tokens: 2000,
-      system:
-        "Sei Omar Bortolato, imprenditore italiano e AI practitioner. " +
-        "Scrivi in prima persona, tono diretto, ottimista e friendly. " +
-        "Restituisci SOLO JSON valido, nessun testo fuori.",
+      model: OPENAI_MODEL,
+      max_completion_tokens: MAX_COMPLETION_TOKENS,
+      response_format: { type: "json_object" },
       messages: [{
+        role: "system",
+        content:
+          "Sei Omar Bortolato, imprenditore italiano e AI practitioner. " +
+          "Scrivi in prima persona, tono diretto, ottimista e friendly. " +
+          "Restituisci SOLO JSON valido, nessun testo fuori.",
+      }, {
         role: "user",
         content:
           `Crea una Spremuta per il libro "${title}" di ${author} (categoria: ${category}).\n` +
@@ -193,11 +201,23 @@ async function main() {
     }),
   });
   if (!aiRes.ok) {
-    console.error(`❌  Anthropic error ${aiRes.status}: ${await aiRes.text()}`);
+    console.error(`❌  OpenAI error ${aiRes.status}: ${await aiRes.text()}`);
     process.exit(1);
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const rawText: string = ((await aiRes.json()) as any).content[0].text;
+  const aiJson = (await aiRes.json()) as any;
+  const choice = aiJson.choices?.[0];
+  // Con un modello reasoning il budget può esaurirsi prima del JSON: meglio
+  // fermarsi qui che tentare di parsare un output tronco.
+  if (choice?.finish_reason === "length") {
+    console.error(`❌  Output troncato (max_completion_tokens=${MAX_COMPLETION_TOKENS}). Alza il budget.`);
+    process.exit(1);
+  }
+  const rawText: string = choice?.message?.content ?? "";
+  if (!rawText.trim()) {
+    console.error(`❌  Risposta vuota da OpenAI (finish_reason: ${choice?.finish_reason})`);
+    process.exit(1);
+  }
 
   // ── 5. Parsa JSON ─────────────────────────────────────────────────────────
   const cleaned = rawText.replace(/^```(?:json)?\s*/m, "").replace(/```\s*$/m, "").trim();
