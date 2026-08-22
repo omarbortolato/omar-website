@@ -9,7 +9,9 @@
  *   1. Legge metadati da Notion
  *   2. Se manca Amazon Link → costruisce URL ricerca con tag affiliato
  *   3. Se manca Cover Image → cerca su Open Library
- *   4. Chiama Claude Sonnet API → genera SpremutaContent JSON
+ *   4. Chiede il contenuto al VARCO LLM della holding → SpremutaContent JSON
+ *      (oppure lo legge da un file con `--contenuto file.json`: è la via da usare quando la
+ *       spremuta la si genera in sessione, cioè sull'abbonamento invece che a consumo)
  *   5. Genera PDF con Puppeteer
  *   6. Git commit + push (Vercel autodeploy)
  *   7. Aggiorna Notion (Link PDF, Cover Image, Amazon Link)
@@ -17,10 +19,12 @@
  *
  * Usage:
  *   npx tsx scripts/auto-genera-spremuta.ts
+ *   npx tsx scripts/auto-genera-spremuta.ts --contenuto spremuta.json   (zero spesa API)
  *
  * Richiede in .env.local:
  *   NOTION_API_KEY
- *   ANTHROPIC_API_KEY
+ *   LITELLM_KEY_SITO   (chiave del varco, con tetto proprio — vedi llm-gateway/chiavi.py)
+ *   LITELLM_BASE_URL   (default http://127.0.0.1:4000/v1)
  */
 
 import fs from "fs";
@@ -41,17 +45,37 @@ const ROOT = process.cwd();
 loadEnv(ROOT);
 
 const NOTION_KEY = process.env.NOTION_API_KEY ?? "";
-const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY ?? "";
+// La generazione passa dal VARCO della holding, non più da api.anthropic.com diretto.
+// Perché (card #42, 2026-08-22): questa chiave Anthropic era viva, propria di questo repo e
+// senza alcun tetto — il cron girava ogni 15 minuti e il giorno che avesse trovato tre libri
+// in coda avremmo scoperto la spesa dalla fattura. Ora la chiave è del gateway, ha un tetto
+// mensile suo (3 €, vedi board/platform/llm-gateway/chiavi.py) e la spesa si legge per servizio.
+const GATEWAY_URL = (process.env.LITELLM_BASE_URL ?? "http://127.0.0.1:4000/v1").replace(/\/+$/, "");
+const GATEWAY_KEY = process.env.LITELLM_KEY_SITO ?? "";
 const BOOKS_DB_ID = "0daef582d259833da7bb014a34479f60";
 const NOTION_VERSION = "2022-06-28";
 const TEMPLATE_PATH = path.join(ROOT, "templates", "spremute", "TEMPLATE.html");
 const OUTPUT_DIR = path.join(ROOT, "public", "spremute");
 const COVERS_DIR = path.join(ROOT, "public", "covers");
 const AMAZON_TAG = "omarbortolato-21";
-const CLAUDE_MODEL = "claude-sonnet-4-5";
+// Storia breve, perché spiega il presente. Il 2026-08-10 si era scoperto che l'alias
+// "claude-sonnet-4-5" non esisteva più fra i modelli dell'API, e si era rimesso l'id datato
+// lasciando un "da fare: instradare sul gateway". Il 22/08 quel da-fare è stato chiuso: la
+// chiamata passa dal varco, e il modello non è più un id di provider ma un alias di gateway.
+// Il modello lo espone il gateway, che accetta solo quelli in allowlist (config.yaml). Si
+// cambia da .env senza toccare il codice.
+const MODELLO = process.env.SPREMUTA_MODEL ?? "gpt-4o";
+
+// `--contenuto file.json`: salta del tutto la chiamata a pagamento e usa il JSON che gli
+// passi. Con più libri in coda vale per il primo — è pensato per la lavorazione a mano di
+// un libro, non per un giro automatico.
+const CONTENUTO_DA_FILE = (() => {
+  const i = process.argv.indexOf("--contenuto");
+  return i >= 0 && process.argv[i + 1] ? process.argv[i + 1] : "";
+})();
 
 if (!NOTION_KEY) throw new Error("NOTION_API_KEY mancante in .env.local");
-if (!ANTHROPIC_KEY) throw new Error("ANTHROPIC_API_KEY mancante in .env.local");
+if (!GATEWAY_KEY) throw new Error("LITELLM_KEY_SITO mancante in .env.local (chiave del varco LLM)");
 
 // ─── Notion helpers ───────────────────────────────────────────────────────────
 
@@ -262,15 +286,17 @@ Regole:
 - Accenti corretti (à, è, é, ì, ò, ù)
 - Rispondi SOLO con il JSON, niente altro`;
 
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
+  // `/messages` sul gateway parla il dialetto Anthropic: il corpo e la lettura della risposta
+  // restano identici a prima, cambia solo dove si bussa e con quale chiave.
+  const res = await fetch(`${GATEWAY_URL}/messages`, {
     method: "POST",
     headers: {
-      "x-api-key": ANTHROPIC_KEY,
+      "x-api-key": GATEWAY_KEY,
       "anthropic-version": "2023-06-01",
       "content-type": "application/json",
     },
     body: JSON.stringify({
-      model: CLAUDE_MODEL,
+      model: MODELLO,
       max_tokens: 4000,
       messages: [{ role: "user", content: prompt }],
     }),
@@ -278,7 +304,9 @@ Regole:
 
   if (!res.ok) {
     const err = await res.text();
-    throw new Error(`Claude API error (${res.status}): ${err}`);
+    // Un 400 qui è quasi sempre "modello non in allowlist" e un 429 "tetto esaurito":
+    // vale la pena dirlo, o si perde mezz'ora a cercare un guasto di rete.
+    throw new Error(`Varco LLM (${res.status}) sul modello ${MODELLO}: ${err}`);
   }
 
   const data = await res.json() as { content: { type: string; text: string }[] };
@@ -412,10 +440,21 @@ async function main() {
         }
       }
 
-      // 3. Genera contenuto con Claude
-      console.log(`  Claude: generando contenuto...`);
-      const content = await generateContent(book);
-      console.log(`  Claude: OK`);
+      // 3. Contenuto: da file se ce l'hanno già passato, altrimenti dal varco LLM.
+      //
+      // La via col file esiste per la regola sui costi ratificata il 2026-08-22:
+      // l'abbonamento copre il lavoro fatto in sessione, l'API a consumo serve solo a ciò
+      // che gira da solo. Se la spremuta la scrivi in sessione e la passi qui, questo script
+      // torna a essere quello che è davvero — un impaginatore — e non spende niente.
+      let content: SpremutaContent;
+      if (CONTENUTO_DA_FILE) {
+        console.log(`  Contenuto: letto da ${CONTENUTO_DA_FILE} (nessuna chiamata a consumo)`);
+        content = JSON.parse(fs.readFileSync(CONTENUTO_DA_FILE, "utf-8")) as SpremutaContent;
+      } else {
+        console.log(`  Varco LLM (${MODELLO}): generando contenuto...`);
+        content = await generateContent(book);
+        console.log(`  Varco LLM: OK`);
+      }
 
       // 4. Genera PDF
       const bookData: BookData = {
