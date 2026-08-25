@@ -9,7 +9,8 @@
  *
  * Env richiesti in .env.local:
  *   NOTION_API_KEY
- *   OPENAI_API_KEY
+ *   LITELLM_KEY_SITO   chiave del varco LLM (non la chiave del provider)
+ *   LITELLM_BASE_URL   facoltativo, default http://127.0.0.1:4000/v1
  */
 
 const PAGE_ID = "CAMBIA_QUESTO_CON_IL_PAGE_ID_NOTION";
@@ -47,10 +48,15 @@ if (!NOTION_KEY) {
   process.exit(1);
 }
 
-const OPENAI_KEY = process.env.OPENAI_API_KEY;
-if (!OPENAI_KEY) {
-  console.error("❌  OPENAI_API_KEY mancante in .env.local");
-  console.error('   Aggiungila: echo "OPENAI_API_KEY=sk-..." >> .env.local');
+// Anche questo script passa dal VARCO della holding (card #42, 22/08): stessa chiave con
+// tetto proprio dello script automatico, stessa spesa leggibile per servizio. Il modello NON
+// cambia — `gpt-5.5` è stato aggiunto all'allowlist del gateway apposta: mettere in regola
+// una cosa non deve volerne dire cambiarne un'altra.
+const GATEWAY_URL = (process.env.LITELLM_BASE_URL ?? "http://127.0.0.1:4000/v1").replace(/\/+$/, "");
+const GATEWAY_KEY = process.env.LITELLM_KEY_SITO;
+if (!GATEWAY_KEY) {
+  console.error("❌  LITELLM_KEY_SITO mancante in .env.local (chiave del varco LLM)");
+  console.error("   La crea board/platform/llm-gateway/chiavi.py --applica");
   process.exit(1);
 }
 
@@ -145,12 +151,12 @@ async function main() {
     : "";
 
   // ── 4. Genera contenuto con OpenAI ───────────────────────────────────────
-  console.log(`\n🤖  Genero contenuto con OpenAI (${OPENAI_MODEL})...`);
+  console.log(`\n🤖  Genero contenuto dal varco LLM (${OPENAI_MODEL})...`);
 
-  const aiRes = await fetch("https://api.openai.com/v1/chat/completions", {
+  const aiRes = await fetch(`${GATEWAY_URL}/chat/completions`, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${OPENAI_KEY as string}`,
+      Authorization: `Bearer ${GATEWAY_KEY as string}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({

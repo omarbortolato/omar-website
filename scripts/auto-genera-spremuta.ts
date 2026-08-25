@@ -45,7 +45,7 @@ const ROOT = process.cwd();
 loadEnv(ROOT);
 
 const NOTION_KEY = process.env.NOTION_API_KEY ?? "";
-// La generazione passa dal VARCO della holding, non più da api.anthropic.com diretto.
+// La generazione passa dal VARCO della holding, non più dal provider chiamato in diretta.
 // Perché (card #42, 2026-08-22): questa chiave Anthropic era viva, propria di questo repo e
 // senza alcun tetto — il cron girava ogni 15 minuti e il giorno che avesse trovato tre libri
 // in coda avremmo scoperto la spesa dalla fattura. Ora la chiave è del gateway, ha un tetto
