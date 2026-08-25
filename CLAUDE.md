@@ -300,22 +300,28 @@ passare `source` e includere la casella di consenso.
 
 ## Guide scaricabili — pipeline di build
 
-Sorgenti in `guides-src/<slug>/`. La guida "Governare uno swarm di agenti" è il riferimento.
+Il sistema di design sta in **`guides-src/_shared/`** (stile, font, script) e vale per tutte le
+guide: se cambia il brand, cambia in un posto solo. Ogni guida è una cartella `guides-src/<slug>/`
+con `meta.json`, `guida.html`, opzionale `style-extra.css` e opzionale `figures/`.
 
 ```bash
-cd guides-src/governare-swarm-agenti
-node build.mjs --check      # SOLO controllo traboccamento pagine — usare a ogni modifica di testo
-node build.mjs              # PDF in public/downloads/ + anteprime in public/images/guide/
-node render-figures.mjs     # figures/*.svg → PNG 300 dpi
+cd guides-src
+node _shared/build.mjs <cartella> --check   # SOLO controllo pagine — a ogni modifica di testo
+node _shared/build.mjs <cartella>           # PDF in public/downloads/ + anteprime
+node _shared/render-figures.mjs <cartella>  # figures/*.svg → PNG 300 dpi
 ```
 
 - Impaginazione a **pagine fisse**: ogni `<section class="page">` in `guida.html` è una A4.
-  Testatine e numeri di pagina li inietta `build.mjs`, non vanno scritti a mano.
-- `build.mjs --check` segnala le pagine che traboccano e quelle troppo vuote. Senza quel controllo
-  il contenuto in eccesso viene **tagliato in silenzio**.
-- Font Inter e Geist Mono incorporati in base64 in `fonts/`. Servono: la vecchia guida generata con
-  ReportLab perdeva tutti gli accenti ("perche", "piu").
-- L'indice va aggiornato a mano se cambia il numero di pagine.
+  Testatine e numeri di pagina li inietta il build, non vanno scritti a mano.
+- `--check` segnala le pagine che **traboccano** (contenuto tagliato in silenzio) e quelle
+  **troppo vuote** (guida che sembra gonfiata). Usarlo sempre dopo aver toccato il testo.
+- Il riempimento si misura dal fondo dell'ultimo figlio di `.pb`, non da `scrollHeight`: per un
+  contenuto più corto del contenitore `scrollHeight` vale sempre `clientHeight` e il rapporto
+  sarebbe 1 anche su una pagina mezza vuota.
+- Font Inter e Geist Mono incorporati in base64 in `_shared/fonts/`. Servono: la vecchia guida
+  generata con ReportLab perdeva tutti gli accenti ("perche", "piu").
+- **L'indice va aggiornato a mano** se cambia il numero di pagine, e va aggiornato anche il numero
+  di pagine citato nella landing e nel promo di fine articolo.
 
 ## Common Commands
 ```bash

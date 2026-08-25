@@ -1,0 +1,632 @@
+<!-- La Richiesta di Crescita — sorgente della guida.
+     Impaginazione a pagine fisse: ogni <section class="page"> è una pagina A4.
+     Testatine e numeri di pagina vengono iniettati da _shared/build.mjs. -->
+
+<!-- ═══════════════ COPERTINA ═══════════════ -->
+<section class="page cover" data-nohead>
+  <div class="pb">
+    <div class="cover-badge">Guida gratuita</div>
+    <div class="cover-title">La Richiesta<br>di <span>Crescita</span></div>
+    <div class="cover-sub">Il metodo in sei passi per costruire valore reale in azienda e farlo
+    riconoscere. Con i prompt che ho usato davvero.</div>
+  </div>
+  <div class="cover-foot">
+    <div class="cover-author">Omar Bortolato</div>
+    <div class="cover-role">Chief AI Officer · Imprenditore · Speaker</div>
+    <div class="cover-site">omarbortolato.it</div>
+    <div class="cover-payoff">AI pratica per chi vuole fare, non solo sapere.</div>
+  </div>
+</section>
+
+<!-- ═══════════════ INDICE ═══════════════ -->
+<section class="page">
+  <div class="pb">
+    <div class="eyebrow">Indice</div>
+    <h2>Cosa c'è dentro</h2>
+
+    <div class="toc">
+      <div class="toc-row"><div class="toc-n">—</div><div class="toc-t"><b>Premessa</b><span>Il problema non è che vali poco. È che sei silenzioso. E perché il capitale viene prima della richiesta.</span></div><div class="toc-p">3</div></div>
+      <div class="toc-row"><div class="toc-n">1</div><div class="toc-t"><b>Creare il bisogno</b><span>Far esistere il bisogno nella testa di chi decide, prima di chiedere qualsiasi cosa.</span></div><div class="toc-p">5</div></div>
+      <div class="toc-row"><div class="toc-n">2</div><div class="toc-t"><b>Le persone giuste, non le persone potenti</b><span>Perché un'idea portata al vertice troppo presto muore, e come si costruisce in orizzontale.</span></div><div class="toc-p">6</div></div>
+      <div class="toc-row"><div class="toc-n">3</div><div class="toc-t"><b>Dove muore quasi tutto: il follow-up</b><span>L'entusiasmo scade in due settimane. Come si trasforma un picco in una linea.</span></div><div class="toc-p">7</div></div>
+      <div class="toc-row"><div class="toc-n">4</div><div class="toc-t"><b>Istituzionalizzare: la governance</b><span>Finché dipende da te è un hobby. Con una struttura diventa un asset aziendale.</span></div><div class="toc-p">8</div></div>
+      <div class="toc-row"><div class="toc-n">5</div><div class="toc-t"><b>Preparare il dossier</b><span>Sondare il terreno, dare tutto in pasto all'AI, ancorare la richiesta a un benchmark esterno.</span></div><div class="toc-p">9</div></div>
+      <div class="toc-row"><div class="toc-n">6</div><div class="toc-t"><b>La conversazione</b><span>L'ordine degli argomenti conta più del contenuto. E cosa aspettarsi davvero.</span></div><div class="toc-p">11</div></div>
+      <div class="toc-row"><div class="toc-n">T</div><div class="toc-t"><b>Toolkit · I cinque prompt</b><span>I prompt che ho usato davvero, con i campi da compilare e come si legge l'output.</span></div><div class="toc-p">12</div></div>
+      <div class="toc-row"><div class="toc-n">T</div><div class="toc-t"><b>Toolkit · La presentazione, slide per slide</b><span>Otto slide, e la regola che le tiene insieme se vieni interrotto a metà.</span></div><div class="toc-p">16</div></div>
+      <div class="toc-row"><div class="toc-n">T</div><div class="toc-t"><b>Toolkit · Checklist pre-meeting</b><span>Dieci caselle. Se più di due restano vuote, sposta la riunione.</span></div><div class="toc-p">17</div></div>
+      <div class="toc-row"><div class="toc-n">T</div><div class="toc-t"><b>Toolkit · I sette errori</b><span>Quelli che affondano una richiesta prima ancora che venga valutata.</span></div><div class="toc-p">18</div></div>
+      <div class="toc-row"><div class="toc-n">—</div><div class="toc-t"><b>E se la risposta è no?</b><span>Le tre cose da portare a casa comunque, e una nota finale sull'AI.</span></div><div class="toc-p">19</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ PREMESSA ═══════════════ -->
+<section class="page" data-chap="Premessa">
+  <div class="pb">
+    <div class="eyebrow">Premessa</div>
+    <h2>Il problema non è che vali poco. È che sei silenzioso.</h2>
+
+    <p class="lead after-h2">Questa guida nasce da un percorso reale: come sono passato
+    dall'essere incuriosito dall'AI ad avere un ruolo di Chief AI Officer, un team di governance e
+    una conversazione retributiva costruita su dati invece che su risentimento.</p>
+
+    <p>Partiamo dalla cosa più scomoda, quella che quasi nessuno ti dice.</p>
+
+    <p>Se performi bene, sei affidabile e non chiedi mai niente, tu sei un green flag. Nessun
+    problema aperto. Zero rumore. E proprio per questo, nessuna attenzione.</p>
+
+    <p>Il tuo capo ha decine di persone da gestire e una lista di priorità che non ha scritto lui.
+    Le sue energie vanno per forza sui red flag: i progetti che scricchiolano, i conflitti da
+    spegnere, le persone che stanno per andarsene.</p>
+
+    <p>Non è cattiveria. È allocazione dell'attenzione sotto scarsità. È esattamente quello che
+    faresti tu al suo posto.</p>
+
+    <div class="box">
+      <div class="lbl">Il punto della guida</div>
+      <p>La conseguenza pratica è una sola: se vuoi qualcosa, devi chiederla. Ma prima devi
+      costruire qualcosa che renda quella richiesta difficile da rifiutare. Le due cose vanno in
+      questo ordine, e non nell'altro.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ PRIMA IL CAPITALE ═══════════════ -->
+<section class="page" data-chap="Premessa">
+  <div class="pb">
+    <h3>Prima il capitale, poi la richiesta</h3>
+    <p>Cal Newport lo chiama capitale di carriera: accumuli competenze rare e preziose, e poi le
+    spendi per ottenere autonomia, ruolo e retribuzione. Non il contrario.</p>
+
+    <p>La maggior parte delle richieste di aumento fallisce non perché la persona non valga, ma
+    perché arriva a mani vuote. Porta un bisogno personale invece di un valore aziendale. E un
+    bisogno personale, per un'azienda, è solo un costo.</p>
+
+    <h3>Come è strutturata</h3>
+    <div class="rows">
+      <div class="r"><div class="k">Fase 1<br>Costruire il capitale</div><div class="v">Passi 1-4: creare il bisogno, coinvolgere le persone giuste, trasformare l'entusiasmo in un programma, istituzionalizzarlo.</div></div>
+      <div class="r"><div class="k">Fase 2<br>Spendere il capitale</div><div class="v">Passi 5-6: preparare il dossier con l'AI, condurre la conversazione.</div></div>
+      <div class="r"><div class="k">Toolkit</div><div class="v">Cinque prompt pronti all'uso, la struttura della presentazione slide per slide, la checklist pre-meeting, gli errori da evitare.</div></div>
+    </div>
+
+    <div class="box box--warn">
+      <div class="lbl">Una cosa da mettere in conto subito</div>
+      <p>Il percorso che descrivo ha richiesto mesi, non settimane. L'AI non accorcia il tempo
+      necessario a produrre risultati veri: accorcia il tempo di analisi, ricerca, strutturazione e
+      preparazione. È tanto, ma non è magia.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ PASSO 1 ═══════════════ -->
+<section class="page" data-chap="Passo 1 · Creare il bisogno">
+  <div class="pb">
+    <div class="phase">Fase 1 · Costruire il capitale</div>
+    <div class="step-n">Passo 1</div>
+    <h2>Creare il bisogno</h2>
+
+    <p class="step-lead after-h2">Nessuno ti promuove per un ruolo che non esiste. Il primo lavoro
+    non è chiedere: è far esistere il bisogno nella testa di chi decide.</p>
+
+    <p>Il punto di partenza deve essere qualcosa che ti interessa davvero, non qualcosa che ti
+    sembra strategico. Il percorso è lungo e nessuna finzione regge mesi di lavoro extra.</p>
+
+    <p>Nel mio caso è stato un libro sul ruolo di Chief AI Officer. Poteva essere un corso, una
+    conferenza, un problema che vedevo ripetersi. Quello che conta è che ti dia un vocabolario e un
+    modello che in azienda ancora non esistono.</p>
+
+    <h3>Il primo uso serio dell'AI</h3>
+    <p>Qui l'AI smette di essere un riassuntore. Le dai due cose insieme: la fonte esterna (il
+    libro, il framework, il modello) e il contesto interno (organigramma, processi, vincoli,
+    linguaggio della tua azienda). Poi le chiedi di fare la traduzione tra i due.</p>
+
+    <div class="box">
+      <div class="lbl">Dettaglio che cambia tutto</div>
+      <p>Se la tua azienda ha un assistente AI interno, usa quello. Conosce i processi, i nomi, i
+      vincoli reali. Un modello generico ti dà una risposta da manuale. Un modello contestualizzato
+      ti dà una risposta che sta in piedi in riunione. Se non ce l'hai, ricostruisci tu il contesto:
+      organigramma, documenti pubblici interni, obiettivi dell'anno, glossario aziendale.</p>
+    </div>
+
+    <p>L'output non è un'idea. È un documento: definizione del ruolo o dell'iniziativa, piano di
+    attività, benefici attesi, rischi, il perché per l'azienda.</p>
+    <h3>La prima conversazione con il capo</h3>
+    <p>Porta il documento, non l'entusiasmo. E soprattutto, non chiedere niente: a questo stadio
+    non hai ancora nulla da spendere.</p>
+
+    <p>La risposta realistica e migliore che puoi ottenere non è un sì. È: se riesci a metterlo in
+    piedi, ti supporto. Tradotto: dimostramelo. È esattamente il punto di partenza corretto, perché ti
+    dà copertura politica senza costare niente a nessuno.</p>
+
+  </div>
+</section>
+
+<!-- ═══════════════ PASSO 2 ═══════════════ -->
+<section class="page" data-chap="Passo 2 · Le persone giuste">
+  <div class="pb">
+    <div class="phase">Fase 1 · Costruire il capitale</div>
+    <div class="step-n">Passo 2</div>
+    <h2>Le persone giuste, non le persone potenti</h2>
+
+    <p class="step-lead after-h2">Il primo istinto quando hai un'idea è portarla in alto. È
+    l'errore che la uccide.</p>
+
+    <p>Un'idea portata al vertice troppo presto diventa una proposta da valutare. Un'idea costruita
+    in orizzontale diventa un movimento a cui aderire. La differenza è enorme.</p>
+
+    <p>Cerca colleghi di aree diverse dalla tua. Non i più senior: i più curiosi e i più
+    trasversali. Ti servono tre cose da loro: casi d'uso reali che tu non conosci, credibilità in
+    reparti dove tu non ce l'hai, e testimoni che diranno bene del progetto quando tu non sarai
+    nella stanza.</p>
+
+    <h3>Il formato: un evento, non un documento</h3>
+    <p>Un documento lo leggono in tre. Un evento crea un ricordo condiviso, e soprattutto crea
+    complici.</p>
+
+    <p>Nel mio caso è stato un incontro interno per mostrare a tutti le potenzialità concrete
+    dell'AI. Non teoria: cose che i colleghi potevano rifare il lunedì mattina.</p>
+
+    <div class="box">
+      <div class="lbl">Criterio di selezione</div>
+      <p>Il test è semplice: dopo la prima conversazione, quella persona ti riscrive
+      spontaneamente? Se sì, è un alleato. Se devi inseguirla, è un contatto. Investi il tuo tempo
+      sugli alleati, sono pochissimi e valgono tutto.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ PASSO 3 ═══════════════ -->
+<section class="page" data-chap="Passo 3 · Il follow-up">
+  <div class="pb">
+    <div class="phase">Fase 1 · Costruire il capitale</div>
+    <div class="step-n">Passo 3</div>
+    <h2>Dove muore quasi tutto: il follow-up</h2>
+
+    <p class="step-lead after-h2">Il rischio più grande di una cosa andata bene è che finisca lì,
+    in una bella diapositiva dentro una cartella condivisa.</p>
+
+    <p>L'entusiasmo ha una data di scadenza brevissima. Due settimane, forse tre. Dopo, l'evento
+    diventa un ricordo piacevole e il progetto smette di esistere.</p>
+
+    <p>La contromisura è una sola: trasformare il picco in una linea. Nel mio caso sono nati gli
+    AI-Friday, un appuntamento ricorrente e a bassa frizione, dove l'AI ha smesso di essere un
+    evento ed è diventata un'abitudine aziendale.</p>
+
+    <h3>Le tre regole di un formato ricorrente</h3>
+    <div class="numbered">
+      <div class="item"><p><b>Cadenza fissa e prevedibile.</b> Stesso giorno, stessa ora. Se ogni volta va negoziata, muore.</p></div>
+      <div class="item"><p><b>Costo di partecipazione bassissimo.</b> Trenta minuti, nessuna preparazione richiesta, nessun obbligo di presenza.</p></div>
+      <div class="item"><p><b>Un contenuto utile ogni volta.</b> Anche piccolo. La gente torna per quello che si porta a casa, non per il progetto.</p></div>
+    </div>
+
+    <div class="box box--warn">
+      <div class="lbl">Perché conta per la tua richiesta</div>
+      <p>Un'iniziativa è un picco: fa parlare per una settimana. Un programma è una linea:
+      costruisce un track record misurabile. Quando arriverai al passo 5 con il tuo dossier, la
+      differenza tra «ho organizzato un evento» e «gestisco un programma da otto mesi con
+      partecipazione media di X persone» è la differenza tra un no e un sì.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ PASSO 4 ═══════════════ -->
+<section class="page" data-chap="Passo 4 · La governance">
+  <div class="pb">
+    <div class="phase">Fase 1 · Costruire il capitale</div>
+    <div class="step-n">Passo 4</div>
+    <h2>Istituzionalizzare: la governance</h2>
+
+    <p class="step-lead after-h2">Finché il progetto dipende da te, è un tuo hobby. Quando ha una
+    struttura, è un asset aziendale. Solo il secondo si può retribuire.</p>
+
+    <p>Il passo successivo è stato costruire un Governance Team: un gruppo con rappresentanti delle
+    varie aree, un mandato, e una cadenza di lavoro.</p>
+
+    <p>Qui è successa la cosa più interessante di tutto il percorso. L'idea di una collaborazione
+    intra-aree è piaciuta, ed è stata percepita come un progetto di tutti. Il che ha cambiato
+    completamente la dinamica politica.</p>
+
+    <p>Non era più «il progetto di Omar» da vendere ai dirigenti. Era un progetto che aveva già
+    portavoce in ogni area, e che ai dirigenti arrivava da più direzioni contemporaneamente.</p>
+
+    <div class="box">
+      <div class="lbl">Il principio</div>
+      <p>Se vuoi che un'idea cammini in azienda, deve avere più gambe delle tue. Questo sembra
+      togliere merito a te. In realtà fa l'opposto: chi ha costruito il tavolo è sempre
+      riconoscibile, e un progetto che sopravvive senza di te è la prova più forte che tu sappia
+      fare il manager e non solo l'esecutore.</p>
+    </div>
+
+    <h3>Cosa deve produrre la governance</h3>
+    <ul>
+      <li>Un perimetro chiaro: cosa è dentro e cosa è fuori.</li>
+      <li>Regole d'uso condivise, che è il modo meno noioso di dire policy.</li>
+      <li>Un canale unico per raccogliere le richieste che arrivano dal resto dell'azienda.</li>
+      <li><strong>Numeri.</strong> Anche approssimativi. Ore risparmiate, casi d'uso attivi, persone
+      coinvolte, processi toccati. Questi numeri sono il carburante del passo 5: se non li raccogli
+      mentre succedono, dopo non li ricostruisci più.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════════ PASSO 5 ═══════════════ -->
+<section class="page" data-chap="Passo 5 · Preparare il dossier">
+  <div class="pb">
+    <div class="phase">Fase 2 · Spendere il capitale</div>
+    <div class="step-n">Passo 5</div>
+    <h2>Preparare il dossier</h2>
+
+    <p class="step-lead after-h2">Chiedere non significa entrare dal capo a brutto muso e dire
+    «voglio più soldi». E non significa nemmeno buttarla sul ridere alla macchinetta del caffè. È un
+    evento importante e va preparato meticolosamente.</p>
+
+    <h3>Prima di tutto: sondare il terreno</h3>
+    <p>Prima ancora di scrivere una riga, capisci come funziona davvero la retribuzione nella tua
+    azienda. Quando si aprono le finestre di revisione. Che leve esistono oltre al fisso: bonus,
+    welfare, formazione, budget, titolo, perimetro di responsabilità. Chi ha potere di firma su
+    cosa.</p>
+
+    <div class="box box--warn">
+      <div class="lbl">L'errore più fatale</div>
+      <p>Chiedere una cosa che il tuo capo non ha il potere di darti. Lo metti in imbarazzo, bruci
+      l'occasione e la risposta è no per motivi che non hanno niente a che fare con il tuo valore.
+      Questo lavoro di ricognizione interna vale più di qualsiasi tecnica di negoziazione.</p>
+    </div>
+
+    <h3>Poi: dare tutto in pasto all'AI</h3>
+    <p>Nel mio caso ho usato l'agente aziendale, che conosceva già il contesto. Dentro ci è finito
+    tutto:</p>
+    <ul>
+      <li>Il contesto completo: ruolo attuale, storia, progetti, risultati con numeri.</li>
+      <li>L'obiettivo: cosa voglio ottenere e perché ha senso per l'azienda, non per me.</li>
+      <li>Le regole retributive interne, per non fare proposte fuori contesto.</li>
+      <li>Le leve realistiche emerse dalla ricognizione.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="page" data-chap="Passo 5 · Preparare il dossier">
+  <div class="pb">
+    <h3>Il benchmark di mercato</h3>
+    <p>Poi una ricerca approfondita sul benchmark retributivo per un profilo come il mio: ruolo,
+    settore, dimensione aziendale, area geografica.</p>
+
+    <p>Non serve a minacciare. Serve ad ancorare. Un numero costruito su dati esterni sposta la
+    conversazione da «quanto ti sembra giusto», che è una discussione tra opinioni, a «quanto vale
+    questo ruolo sul mercato», che è una discussione tra fatti.</p>
+
+    <p>E in una discussione tra fatti il tuo capo può diventare tuo alleato invece che tua
+    controparte, perché è quello il numero che dovrà difendere lui davanti a HR.</p>
+
+    <h3>L'output</h3>
+    <p>Una presentazione, con il template aziendale. Sembra un dettaglio estetico. Non lo è: un
+    documento che ha l'aspetto dei documenti che circolano ai piani alti viene letto come un
+    documento aziendale, non come una richiesta personale.</p>
+
+  </div>
+</section>
+
+<!-- ═══════════════ PASSO 6 ═══════════════ -->
+<section class="page" data-chap="Passo 6 · La conversazione">
+  <div class="pb">
+    <div class="phase">Fase 2 · Spendere il capitale</div>
+    <div class="step-n">Passo 6</div>
+    <h2>La conversazione</h2>
+
+    <p class="step-lead after-h2">Prenota uno slot ufficiale. Non meno di mezz'ora. In agenda, con
+    un titolo, come qualsiasi riunione seria.</p>
+
+    <p>Il contesto comunica prima di te. Una richiesta importante fatta nei ritagli di tempo dice al
+    tuo interlocutore che nemmeno tu la consideri importante.</p>
+
+    <h3>L'ordine conta più del contenuto</h3>
+    <div class="rows">
+      <div class="r"><div class="k">1. Risultati</div><div class="v">Cosa è stato fatto, con numeri. Fatti, non impressioni. Qui costruisci il diritto di parlare del resto.</div></div>
+      <div class="r"><div class="k">2. Visione</div><div class="v">Dove può arrivare questa cosa nei prossimi 12-36 mesi. Qui sposti la conversazione dal passato al futuro, cioè dal costo all'investimento.</div></div>
+      <div class="r"><div class="k">3. Mezzi mancanti</div><div class="v">Cosa serve per arrivarci: perimetro, ruolo, budget, persone. La tua crescita entra qui come uno degli strumenti, non come il tema.</div></div>
+      <div class="r"><div class="k">4. Dettaglio</div><div class="v">Solo ora il documento: proposta, percorso a tre anni, riconoscimento per i collaboratori.</div></div>
+    </div>
+
+    <div class="box">
+      <div class="lbl">Non dimenticare il team</div>
+      <p>Includere come premiare i collaboratori che hanno contribuito non è un tocco di eleganza.
+      È il singolo elemento che ti fa passare, agli occhi di chi ti ascolta, da «persona che chiede
+      per sé» a «manager che ragiona sul sistema». Costa poco e vale moltissimo.</p>
+    </div>
+    <h3>Cosa aspettarti</h3>
+    <p>Non ti garantisco la promozione. Nessuno può. Ci sono budget, tempi e vincoli che non
+    dipendono da te.</p>
+
+    <p>Ti garantisco che verrai visto in modo diverso: come un professionista che tiene all'azienda
+    e non solo al proprio stipendio. E questo effetto non scade con quella riunione. Resta.</p>
+
+    <p>Il massimo che ti può succedere è ricevere un no. Ma avrai espresso la tua richiesta, saprai
+    esattamente perché la risposta è no, e sarà comunque infinitamente meglio che rimuginare da
+    solo.</p>
+
+  </div>
+</section>
+
+<!-- ═══════════════ TOOLKIT · I PROMPT ═══════════════ -->
+<section class="page" data-chap="Toolkit · I cinque prompt">
+  <div class="pb">
+    <div class="eyebrow">Toolkit</div>
+    <h2>I cinque prompt</h2>
+
+    <p class="lead after-h2">Sostituisci il testo tra parentesi quadre. Più contesto dai, più
+    l'output è utilizzabile: questi prompt danno risultati mediocri se non li nutri.</p>
+
+    <div class="prompt">
+      <div class="prompt-h"><div class="prompt-n">1</div><div class="prompt-t">Tradurre una fonte esterna nel tuo contesto</div></div>
+      <pre>Ti allego [LIBRO / FRAMEWORK / REPORT] e una descrizione del contesto
+della mia azienda: [SETTORE], [DIMENSIONE], [STRUTTURA ORGANIZZATIVA],
+[OBIETTIVI DICHIARATI DELL'ANNO], [VINCOLI NOTI].
+
+Il mio ruolo attuale e' [RUOLO], riporto a [FUNZIONE].
+
+Non voglio un riassunto. Voglio una traduzione operativa:
+
+1. Quali principi della fonte sono applicabili nel mio contesto e
+   quali no, con il motivo specifico
+2. Una proposta di ruolo o iniziativa che colmi un vuoto reale in
+   questa azienda, non un vuoto teorico
+3. Un piano di attivita' a 6 mesi, con primo passo eseguibile entro
+   due settimane e a costo zero
+4. I benefici attesi per l'azienda, espressi nel linguaggio che usa
+   il mio settore
+5. I tre rischi principali e come li mitigo
+6. Chi in un'organizzazione come questa avrebbe interesse a
+   sostenere l'iniziativa e chi invece potrebbe opporsi, e perche'
+
+Sii concreto e scettico. Se una parte della proposta e' debole,
+dimmelo invece di abbellirla.</pre>
+    </div>
+  </div>
+</section>
+
+<section class="page" data-chap="Toolkit · I cinque prompt">
+  <div class="pb">
+    <div class="prompt">
+      <div class="prompt-h"><div class="prompt-n">2</div><div class="prompt-t">Mappare gli alleati</div></div>
+      <p class="prompt-when">Da usare prima del passo 2, per non sprecare energia sulle persone sbagliate.</p>
+      <pre>Sto per proporre [INIZIATIVA] nella mia azienda.
+Ecco le aree aziendali e i ruoli con cui posso realisticamente
+parlare: [ELENCO AREE E RUOLI].
+
+Aiutami a costruire una mappa degli stakeholder:
+
+- Per ogni area, quale problema concreto e quotidiano potrebbe
+  risolvere questa iniziativa
+- Chi ha piu' probabilita' di diventare un alleato attivo e non
+  solo un sostenitore passivo
+- Chi potrebbe percepire l'iniziativa come una minaccia al proprio
+  perimetro, e come affrontarlo apertamente
+- Per i tre alleati piu' promettenti, come imposteresti la prima
+  conversazione: quale problema loro apro, cosa chiedo, cosa offro
+
+Il mio obiettivo non e' convincere: e' trovare chi ha gia' il
+problema che questa iniziativa risolve.</pre>
+    </div>
+
+  </div>
+</section>
+
+<section class="page" data-chap="Toolkit · I cinque prompt">
+  <div class="pb">
+    <div class="prompt">
+      <div class="prompt-h"><div class="prompt-n">3</div><div class="prompt-t">Costruire il dossier dei risultati</div></div>
+      <p class="prompt-when">Il cuore del passo 5. Fallo almeno due settimane prima della riunione.</p>
+      <pre>Devo preparare una richiesta formale di crescita professionale.
+Ti do tutto il materiale: [DOCUMENTI, REPORT, NUMERI, EMAIL,
+CRONOLOGIA DEI PROGETTI].
+
+Contesto: lavoro in [AZIENDA / SETTORE / DIMENSIONE], ruolo [X],
+da [TEMPO]. Riporto a [FUNZIONE]. Le regole retributive interne
+prevedono: [REGOLE E FINESTRE DI REVISIONE]. Le leve disponibili
+sembrano essere: [FISSO, BONUS, WELFARE, TITOLO, PERIMETRO,
+BUDGET, FORMAZIONE].
+
+Costruiscimi:
+
+1. Un elenco dei risultati ottenuti, ordinati per impatto sul
+   business e non per fatica personale. Ogni voce deve avere un
+   numero o un fatto verificabile. Se un risultato non e'
+   quantificabile, dimmelo e proponi una proxy onesta
+2. La differenza tra cio' che era nel mio mandato e cio' che ho
+   fatto oltre il mandato: questa distinzione e' il vero
+   argomento della richiesta
+3. Una visione a 12, 24 e 36 mesi: dove puo' arrivare questo
+   lavoro e cosa serve per arrivarci
+4. Una proposta di percorso di crescita coerente con le regole
+   interne che ti ho descritto, non con quelle ideali
+5. Una proposta di riconoscimento per i collaboratori coinvolti
+6. Le tre obiezioni piu' probabili e la risposta a ciascuna
+
+Tono: professionale, orientato al valore per l'azienda.
+Mai rivendicativo, mai lamentoso.</pre>
+    </div>
+  </div>
+</section>
+
+<section class="page" data-chap="Toolkit · I cinque prompt">
+  <div class="pb">
+    <div class="prompt">
+      <div class="prompt-h"><div class="prompt-n">4</div><div class="prompt-t">Benchmark retributivo</div></div>
+      <p class="prompt-when">Attiva la funzione di ricerca approfondita del modello, non la memoria.</p>
+      <pre>Fai una ricerca approfondita sul benchmark retributivo per un
+profilo cosi' definito:
+
+- Ruolo e responsabilita' reali: [DESCRIZIONE, non job title]
+- Settore: [SETTORE]
+- Dimensione azienda: [FATTURATO / DIPENDENTI]
+- Area geografica: [PAESE / REGIONE]
+- Anni di esperienza: [X]
+- Elementi distintivi: [COMPETENZE RARE, PERIMETRO INSOLITO]
+
+Voglio:
+1. Un intervallo retributivo con minimo, mediana e massimo
+2. Le fonti di ogni dato, con data di rilevazione
+3. Come cambia il quadro se il ruolo viene formalizzato con un
+   titolo diverso
+4. Quali componenti non monetarie sono standard di mercato per
+   questo profilo
+5. Le fonti dove il dato e' piu' debole o poco affidabile, cosi'
+   evito di citarlo in riunione
+
+Segnalami esplicitamente ogni dato che non riesci a verificare.</pre>
+    </div>
+
+    <div class="prompt">
+      <div class="prompt-h"><div class="prompt-n">5</div><div class="prompt-t">Stress test della richiesta</div></div>
+      <p class="prompt-when">Da fare il giorno prima. È il prompt che salva la riunione.</p>
+      <pre>Ti allego il documento che presentero'.
+
+Ora fai il ruolo del mio capo: [DESCRIZIONE DEL SUO PROFILO,
+PRIORITA', PRESSIONI CHE SUBISCE, STILE DECISIONALE].
+
+Sii duro ma realistico. Fammi le domande scomode che mi fara' lui:
+sui numeri che ho dichiarato, sui meriti che mi sto attribuendo,
+sulla sostenibilita' della proposta, sul precedente che crea per
+gli altri colleghi.
+
+Dopo il confronto, dimmi:
+- Quali dei miei argomenti crollano sotto pressione
+- Dove sto rivendicando invece di dimostrare
+- Quale singola slide taglierei perche' indebolisce il resto
+- Qual e' il punto piu' forte che sto sottovalutando</pre>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════ TOOLKIT · LA PRESENTAZIONE ═══════════════ -->
+<section class="page" data-chap="Toolkit · La presentazione">
+  <div class="pb">
+    <div class="eyebrow">Toolkit</div>
+    <h2>La presentazione, slide per slide</h2>
+
+    <p class="lead after-h2">Otto slide. Se ne servono di più, non hai ancora capito qual è il
+    messaggio.</p>
+
+    <div class="rows">
+      <div class="r"><div class="k">1. Copertina</div><div class="v">Titolo neutro e orientato all'azienda. Non «richiesta di aumento» ma per esempio «Programma AI: risultati e prossimi 36 mesi».</div></div>
+      <div class="r"><div class="k">2. Punto di partenza</div><div class="v">Dov'era l'azienda su questo tema quando hai iniziato. Serve a rendere visibile il delta.</div></div>
+      <div class="r"><div class="k">3. Cosa è stato fatto</div><div class="v">Tre o quattro risultati, ciascuno con un numero. Non una lista di attività: una lista di effetti.</div></div>
+      <div class="r"><div class="k">4. Oltre il mandato</div><div class="v">La distinzione tra ciò che era il tuo lavoro e ciò che hai costruito in più. È qui che si gioca tutto.</div></div>
+      <div class="r"><div class="k">5. Visione</div><div class="v">Dove può arrivare questo nei prossimi tre anni, e cosa vale per l'azienda.</div></div>
+      <div class="r"><div class="k">6. Cosa serve</div><div class="v">Ruolo, perimetro, risorse. La tua crescita compare qui, come uno degli abilitatori.</div></div>
+      <div class="r"><div class="k">7. Mercato e proposta</div><div class="v">Il benchmark esterno e la proposta interna, coerente con le regole aziendali.</div></div>
+      <div class="r"><div class="k">8. Il team</div><div class="v">Come riconoscere chi ha contribuito. Chiudi qui, non sulla tua richiesta.</div></div>
+    </div>
+
+    <div class="box box--warn">
+      <div class="lbl">Regola di sopravvivenza</div>
+      <p>Le slide 1-5 devono funzionare anche senza le slide 6-8. Se il tuo capo ti interrompe a
+      metà, quello che ha visto fin lì deve già averlo convinto che sei una risorsa strategica. La
+      parte economica è la conclusione di un ragionamento, mai la sua premessa.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ TOOLKIT · CHECKLIST ═══════════════ -->
+<section class="page" data-chap="Toolkit · Checklist pre-meeting">
+  <div class="pb">
+    <div class="eyebrow">Toolkit</div>
+    <h2>Checklist pre-meeting</h2>
+
+    <p class="lead after-h2">Da spuntare nei giorni precedenti. Se più di due caselle restano
+    vuote, sposta la riunione.</p>
+
+    <div class="check">
+      <div class="check-row"><div class="check-box"></div><p>Ho almeno tre risultati con un numero verificabile accanto.</p></div>
+      <div class="check-row"><div class="check-box"></div><p>So distinguere, e so dire ad alta voce, cosa era nel mio mandato e cosa no.</p></div>
+      <div class="check-row"><div class="check-box"></div><p>Ho verificato internamente quali leve il mio capo può effettivamente attivare.</p></div>
+      <div class="check-row"><div class="check-box"></div><p>Conosco le finestre temporali di revisione retributiva della mia azienda.</p></div>
+      <div class="check-row"><div class="check-box"></div><p>Ho un benchmark esterno con fonti citabili e datate.</p></div>
+      <div class="check-row"><div class="check-box"></div><p>La mia proposta è coerente con le regole interne, non con quelle ideali.</p></div>
+      <div class="check-row"><div class="check-box"></div><p>Ho previsto come riconoscere i collaboratori che hanno contribuito.</p></div>
+      <div class="check-row"><div class="check-box"></div><p>Ho fatto lo stress test e ho risposto alle tre obiezioni più probabili.</p></div>
+      <div class="check-row"><div class="check-box"></div><p>La riunione è in agenda, con un titolo, e dura almeno trenta minuti.</p></div>
+      <div class="check-row"><div class="check-box"></div><p>So qual è la mia richiesta minima accettabile e cosa faccio se la risposta è no.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ TOOLKIT · I SETTE ERRORI ═══════════════ -->
+<section class="page" data-chap="Toolkit · I sette errori">
+  <div class="pb">
+    <div class="eyebrow">Toolkit</div>
+    <h2>I sette errori che affondano la richiesta</h2>
+
+    <div class="numbered after-h2">
+      <div class="item"><p><b>Chiedere prima di aver costruito.</b> Senza capitale da spendere, resti un costo. L'ordine dei passi non è negoziabile.</p></div>
+      <div class="item"><p><b>Portare bisogni personali.</b> Il mutuo, il figlio, il costo della vita sono ragioni vere ma non sono argomenti aziendali. Non entrano in questa conversazione.</p></div>
+      <div class="item"><p><b>Confrontarsi con i colleghi.</b> «Tizio prende più di me» sposta la discussione sull'equità interna, un terreno dove il tuo capo deve difendere il sistema. Il benchmark esterno fa l'opposto: lo rende tuo alleato.</p></div>
+      <div class="item"><p><b>Minacciare, anche velatamente.</b> Un'offerta esterna usata come leva può funzionare una volta sola, e ti riclassifica permanentemente come persona a rischio. Il prezzo lo paghi dopo.</p></div>
+      <div class="item"><p><b>Chiedere l'impossibile.</b> Una richiesta fuori dalle regole interne non viene valutata: viene archiviata. E ti costa credibilità sulla prossima.</p></div>
+      <div class="item"><p><b>Fare della riunione un monologo.</b> Devi lasciare spazio per le domande. Se il tuo capo non interviene, non sta valutando: sta aspettando che finisci.</p></div>
+      <div class="item"><p><b>Non chiedere mai.</b> L'errore più comune di tutti. Resti un green flag silenzioso, e continui a rimuginare da solo.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ SE LA RISPOSTA È NO ═══════════════ -->
+<section class="page" data-chap="E se la risposta è no?">
+  <div class="pb">
+    <div class="eyebrow">Ultimo capitolo</div>
+    <h2>E se la risposta è no?</h2>
+
+    <p class="step-lead after-h2">Succede, e non significa quello che pensi. Ma un no vago è
+    l'unico esito davvero da evitare.</p>
+
+    <p>Prima di uscire da quella stanza, devi portare a casa tre cose. Non sono negoziabili e le
+    puoi chiedere anche dopo un rifiuto secco.</p>
+
+    <div class="numbered">
+      <div class="item"><p><b>Il motivo reale.</b> È un vincolo di budget, di tempistica, di regole interne, o è una valutazione sul mio contributo? Sono situazioni completamente diverse e richiedono risposte opposte.</p></div>
+      <div class="item"><p><b>Le condizioni.</b> Cosa dovrebbe essere vero perché la risposta diventi sì? Chiedi criteri osservabili, non aggettivi.</p></div>
+      <div class="item"><p><b>Una data.</b> Quando ne riparliamo. Fissala in agenda prima di uscire, non «tra qualche mese».</p></div>
+    </div>
+
+    <p>Se ottieni tutte e tre, il no si trasforma in un piano. Se non ottieni nessuna delle tre, hai
+    comunque un'informazione importantissima su dove stai lavorando, e vale la pena guardarla in
+    faccia.</p>
+
+    <h3>Una nota sull'AI, per chiudere</h3>
+    <p>In tutto questo percorso l'AI non è la protagonista. Non ha creato il ruolo, non ha
+    coinvolto i colleghi, non è entrata in riunione al posto mio.</p>
+
+    <p>Ha fatto una cosa sola, ma enorme: ha permesso a una persona sola di fare il lavoro di
+    analisi, ricerca, strutturazione e preparazione che prima richiedeva un team o un consulente. Ha
+    compresso le settimane di preparazione in giorni. Il resto, i mesi di lavoro vero, quelli non li
+    comprime nessuno.</p>
+
+    <p>Il vantaggio competitivo oggi non è avere accesso all'AI: ce l'hanno tutti. È usarla per
+    costruire qualcosa, invece che per sbrigare più in fretta le stesse cose di ieri.</p>
+  </div>
+</section>
+
+<!-- ═══════════════ CHIUSURA ═══════════════ -->
+<section class="page" data-chap="La Richiesta di Crescita">
+  <div class="pb">
+    <div class="end">
+      <h2>Se ti è servita</h2>
+      <p class="p">Scrivo di AI applicata al lavoro e alla vita reale su omarbortolato.it e su
+      LinkedIn. Niente teoria: cose che ho provato, con quello che ha funzionato e quello che no.</p>
+      <p class="p">Se metti in pratica questo metodo, raccontami com'è andata. Le storie vere sono
+      il materiale migliore che ho.</p>
+
+      <div class="sig">
+        <div class="n">Omar Bortolato</div>
+        <div class="r">Chief AI Officer · Imprenditore · Speaker</div>
+        <div class="l">omarbortolato.it · linkedin.com/in/omarbortolato</div>
+      </div>
+    </div>
+  </div>
+  <div class="colophon">
+    Questa guida è stata redatta con l'assistenza di sistemi di intelligenza artificiale e
+    revisionata da un autore umano, che ne assume la responsabilità editoriale.<br>
+    Distribuzione gratuita consentita con attribuzione.
+  </div>
+</section>

@@ -10,6 +10,15 @@ export interface Guide {
 
 export const guides: Guide[] = [
   {
+    slug: "la-richiesta-di-crescita",
+    title: "La Richiesta di Crescita",
+    description:
+      "Come costruire valore reale in azienda e farlo riconoscere. Il metodo in sei passi, cinque prompt pronti all'uso, la presentazione slide per slide e cosa fare se la risposta è no.",
+    type: "free",
+    ctaText: "Scarica gratis",
+    available: true,
+  },
+  {
     slug: "governare-swarm-agenti",
     title: "Governare uno swarm di agenti",
     description:
@@ -60,7 +69,17 @@ const SWARM_PROMO: GuidePromo = {
   micro: "PDF, 41 pagine, con fonti e date di consultazione. Basta l'email, niente spam.",
 };
 
+const CRESCITA_PROMO: GuidePromo = {
+  slug: "la-richiesta-di-crescita",
+  heading: "La Richiesta di Crescita",
+  body:
+    "Se questo articolo ti ha lasciato la domanda «ok, ma concretamente da dove comincio», la risposta lunga è in una guida di 20 pagine: i sei passi in sequenza, i cinque prompt che ho usato davvero con i campi da compilare, la presentazione slide per slide, la checklist pre-meeting e i sette errori che affondano una richiesta.",
+  cta: "Scarica la guida gratuita",
+  micro: "PDF, 20 pagine, con i prompt pronti all'uso. Basta l'email, niente spam.",
+};
+
 const PROMO_BY_POST: Record<string, GuidePromo> = {
+  "lai-puo-darti-un-aumento-di-stipendio": CRESCITA_PROMO,
   "da-utente-ad-architetto-costruire-la-piattaforma-prima-delle-idee": SWARM_PROMO,
   "come-ho-costruito-un-sistema-quasi-automatico-per-trasformare-unidea-in-un-articolo": SWARM_PROMO,
   "stiamo-costruendo-cose-bellissime-per-risolvere-il-problema-sbagliato": SWARM_PROMO,

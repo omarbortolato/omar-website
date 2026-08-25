@@ -13,17 +13,20 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
-const DIR = path.dirname(fileURLToPath(import.meta.url));
+const SHARED = path.dirname(fileURLToPath(import.meta.url));
+const dirName = process.argv[2];
+if (!dirName) { console.error("Uso: node _shared/render-figures.mjs <cartella-guida> [filtro]"); process.exit(1); }
+const DIR = path.resolve(SHARED, "..", dirName);
 const FIG = path.join(DIR, "figures");
 const OUT = path.join(FIG, "png");
 const DPI_SCALE = 300 / 96; // 300 dpi partendo dai px CSS a 96 dpi
 
 const fontCss = [
-  fs.readFileSync(path.join(DIR, "fonts/inter-embedded.css"), "utf-8"),
-  fs.readFileSync(path.join(DIR, "fonts/mono-embedded.css"), "utf-8"),
+  fs.readFileSync(path.join(SHARED, "fonts/inter-embedded.css"), "utf-8"),
+  fs.readFileSync(path.join(SHARED, "fonts/mono-embedded.css"), "utf-8"),
 ].join("\n");
 
-const filter = process.argv[2] ?? "";
+const filter = process.argv[3] ?? "";
 const files = fs
   .readdirSync(FIG)
   .filter((f) => f.endsWith(".svg") && f.includes(filter))
