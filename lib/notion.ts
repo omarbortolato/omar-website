@@ -53,6 +53,13 @@ function extractRichText(rich: { plain_text: string }[]): string {
   return rich.map((r) => r.plain_text).join("");
 }
 
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
 // Converts a rich_text array to HTML, handling bold and italic annotations
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function richTextToHtml(rich: any[]): string {
@@ -61,11 +68,7 @@ function richTextToHtml(rich: any[]): string {
     .map((r) => {
       let text = r.plain_text ?? "";
       if (!text) return "";
-      // Escape HTML entities
-      text = text
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
+      text = escapeHtml(text);
       if (r.annotations?.bold) text = `<strong>${text}</strong>`;
       if (r.annotations?.italic) text = `<em>${text}</em>`;
       if (r.annotations?.code) text = `<code>${text}</code>`;
@@ -102,19 +105,31 @@ function renderVideoBlock(url: string): string {
 async function getPageBlocks(pageId: string): Promise<string> {
   if (!NOTION_API_KEY) return "";
 
-  const res = await fetch(
-    `https://api.notion.com/v1/blocks/${pageId}/children`,
-    {
+  // Notion restituisce al massimo 100 blocchi per chiamata: senza seguire il
+  // cursore un articolo lungo si tronca in silenzio.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const blocks: any[] = [];
+  let cursor: string | undefined;
+  do {
+    const url = new URL(`https://api.notion.com/v1/blocks/${pageId}/children`);
+    url.searchParams.set("page_size", "100");
+    if (cursor) url.searchParams.set("start_cursor", cursor);
+
+    const res = await fetch(url.toString(), {
       headers: notionHeaders(),
       next: { revalidate: 300 },
-    }
-  );
+    });
+    if (!res.ok) return "";
 
-  if (!res.ok) return "";
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const data: { results: any[] } = await res.json();
-  const blocks = data.results ?? [];
+    const data: {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      results: any[];
+      has_more?: boolean;
+      next_cursor?: string | null;
+    } = await res.json();
+    blocks.push(...(data.results ?? []));
+    cursor = data.has_more ? data.next_cursor ?? undefined : undefined;
+  } while (cursor);
 
   const html: string[] = [];
   let i = 0;
@@ -167,7 +182,7 @@ async function getPageBlocks(pageId: string): Promise<string> {
         break;
       }
       case "code": {
-        const text = extractRichText(block.code.rich_text);
+        const text = escapeHtml(extractRichText(block.code.rich_text));
         if (text) html.push(`<pre><code>${text}</code></pre>`);
         break;
       }

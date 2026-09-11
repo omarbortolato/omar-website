@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowRight, BookOpen, Calendar, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CoverImage } from "@/components/ui/cover-image";
 import { AiDisclosure } from "@/components/ui/ai-disclosure";
+import { CopyCodeButtons } from "@/components/ui/copy-code-buttons";
 import { getBlogPost, getBlogPosts } from "@/lib/notion";
 import { guidePromoForPost } from "@/lib/guides";
 
@@ -129,6 +130,7 @@ export default async function BlogPostPage(
         <div className="container mx-auto max-w-3xl px-4 py-12 md:py-16">
           {hasContent ? (
             <div
+              data-article-body
               className="prose prose-slate prose-lg max-w-none
                 prose-headings:font-bold prose-headings:text-gray-900
                 prose-p:text-gray-600 prose-p:leading-relaxed
@@ -136,7 +138,10 @@ export default async function BlogPostPage(
                 prose-strong:text-gray-900
                 prose-li:text-gray-600
                 prose-h2:mt-10 prose-h2:mb-4
-                prose-h3:mt-8 prose-h3:mb-3"
+                prose-h3:mt-8 prose-h3:mb-3
+                prose-pre:whitespace-pre-wrap prose-pre:break-words
+                prose-pre:rounded-xl prose-pre:border prose-pre:border-slate-200
+                prose-pre:bg-slate-50 prose-pre:text-slate-800"
               dangerouslySetInnerHTML={{ __html: post.content }}
             />
           ) : (
@@ -145,6 +150,7 @@ export default async function BlogPostPage(
               <p className="mt-2 text-sm text-gray-400">{post.abstract}</p>
             </div>
           )}
+          <CopyCodeButtons selector="[data-article-body]" />
 
           {/* Guida collegata all'articolo, se ce n'è una */}
           {guidePromo && (

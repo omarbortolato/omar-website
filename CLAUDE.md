@@ -125,6 +125,12 @@ export function buildBlogUrl(title: string): string  // https://www.omarbortolat
 
 ### Note tecniche
 - Body articolo: letto dai block Notion (paragraph, heading_2, heading_3, quote, code, list)
+- I blocchi si leggono seguendo il cursore di Notion (100 per chiamata): prima un articolo oltre
+  i 100 blocchi si troncava in silenzio (corretto l'11/09/2026)
+- Blocchi `code`: testo con escape HTML, a capo automatico e pulsante «Copia»
+  (`components/ui/copy-code-buttons.tsx`), pensati per i prompt da copiare. Le fence ``` scritte
+  via MCP arrivano su Notion come `javascript`: rimetterle a `plain text` (cosmetico, il sito
+  ignora il linguaggio)
 - Notion API header: `"Notion-Version": "2022-06-28"`
 - Cover image: se nome file → `/post-images/{filename}`, se URL esterno → usato direttamente
 - Cover image: validata per estensione (.jpg .jpeg .png .webp .gif), null altrimenti
