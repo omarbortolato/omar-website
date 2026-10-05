@@ -108,7 +108,7 @@ export default function CollaboraPage() {
             Oppure prenota direttamente
           </h2>
           <iframe
-            src="https://cal.eu/omarbortolato?embed=true"
+            src="https://cal.com/omar-bortolato-fdgtxd?embed=true"
             className="w-full rounded-2xl border border-gray-100"
             style={{ height: "700px" }}
             frameBorder="0"
