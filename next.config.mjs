@@ -6,6 +6,12 @@ const nextConfig = {
       { protocol: "https", hostname: "**" },
     ],
   },
+  async rewrites() {
+    return [
+      // Guida di viaggio personale: pagina statica in public/thailandia/
+      { source: "/thailandia", destination: "/thailandia/index.html" },
+    ];
+  },
 };
 
 export default nextConfig;
