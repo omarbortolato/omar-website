@@ -86,6 +86,7 @@ const PROMO_BY_POST: Record<string, GuidePromo> = {
   "gauntlet-loop-il-prompt-che-lavora-per-ore-e-quando-e-troppo": SWARM_PROMO,
   "sulle-spalle-dei-giganti": SWARM_PROMO,
   "il-cantiere-infinito": SWARM_PROMO,
+  "ai-friday-se-vuoi-cambiare-le-cose-cambia": CRESCITA_PROMO,
 };
 
 export function guidePromoForPost(slug: string): GuidePromo | null {
