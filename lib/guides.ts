@@ -58,6 +58,10 @@ export interface GuidePromo {
   body: string;
   cta: string;
   micro: string;
+  /** Link esterno al posto della guida (es. un prodotto): se c'è, il bottone porta lì. */
+  href?: string;
+  /** Etichetta del riquadro; senza, «Guida gratuita». */
+  label?: string;
 }
 
 const SWARM_PROMO: GuidePromo = {
@@ -78,6 +82,17 @@ const CRESCITA_PROMO: GuidePromo = {
   micro: "PDF, 20 pagine, con i prompt pronti all'uso. Basta l'email, niente spam.",
 };
 
+const FABRIKA_PROMO: GuidePromo = {
+  slug: "",
+  label: "Prova AI Fabrika",
+  heading: "Il tuo software è sicuro e in regola?",
+  body:
+    "Collega il repository Git o carica uno zip: in pochi minuti il Report Lite, gratis, ti dà l'esito da A a E, il voto dei sei pilastri e quanti problemi ci sono. Se ti serve il dettaglio, il Report Plus con il codice OMARWEBSITE20 ha un ulteriore 20% di sconto, oltre al prezzo di lancio.",
+  cta: "Prova il Plus con il 20% di sconto",
+  micro: "Codice OMARWEBSITE20, già applicato dal link. Il Report Lite è gratis, senza carta: app.ai-fabrika.com",
+  href: "https://app.ai-fabrika.com/plus/new?coupon=OMARWEBSITE20",
+};
+
 const PROMO_BY_POST: Record<string, GuidePromo> = {
   "lai-puo-darti-un-aumento-di-stipendio": CRESCITA_PROMO,
   "da-utente-ad-architetto-costruire-la-piattaforma-prima-delle-idee": SWARM_PROMO,
@@ -87,6 +102,7 @@ const PROMO_BY_POST: Record<string, GuidePromo> = {
   "sulle-spalle-dei-giganti": SWARM_PROMO,
   "il-cantiere-infinito": SWARM_PROMO,
   "ai-friday-se-vuoi-cambiare-le-cose-cambia": CRESCITA_PROMO,
+  "il-software-fatto-con-lai-funziona-ma-e-sicuro-e-in-regola": FABRIKA_PROMO,
 };
 
 export function guidePromoForPost(slug: string): GuidePromo | null {

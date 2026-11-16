@@ -33,7 +33,7 @@ export const metadata: Metadata = {
 
 const credibilityItems = [
   { icon: Briefcase, label: "CAIO @ Aspiag ICS" },
-  { icon: Building2, label: "Co-founder @ Azoa Seed" },
+  { icon: Building2, label: "Co-founder @ Sidelia" },
   { icon: Mic,       label: "Speaker AI Week Milano 2026" },
   { icon: Cpu,       label: "6+ progetti AI operativi" },
 ];
@@ -50,6 +50,20 @@ interface Project {
 }
 
 const projects: Project[] = [
+  {
+    id: "ai-fabrika",
+    badge: {
+      label:   "Active",
+      classes: "bg-green-100 text-green-700 border border-green-200",
+    },
+    logo:        "/images/aifabrika-logo.png",
+    title:       "AI Fabrika",
+    description:
+      "Il tuo software è sicuro e in regola? Controllo del codice con l'AI: in pochi minuti sicurezza e conformità a GDPR, NIS2, CRA e AI Act. Report Lite gratis.",
+    tags:     ["Code Security", "Compliance", "AI"],
+    href:     "https://www.ai-fabrika.com/it/",
+    external: true,
+  },
   {
     id: "aifriday",
     badge: {
@@ -95,8 +109,8 @@ const projects: Project[] = [
   {
     id: "fastlien",
     badge: {
-      label:   "In Development",
-      classes: "bg-blue-100 text-blue-700 border border-blue-200",
+      label:   "Active",
+      classes: "bg-green-100 text-green-700 border border-green-200",
     },
     logo:        "/images/fastlien-logo.png",
     title:       "Fastlien",

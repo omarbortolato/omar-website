@@ -30,15 +30,15 @@ const roles = [
   },
   {
     icon: Rocket,
-    title: "Co-founder @ Azoa Seed",
+    title: "Co-founder @ Sidelia",
     description:
-      "Startup factory AI-native. La visione: potenziare individui e piccoli team ad alto potenziale attraverso l'AI, trasformandoli in unità produttive autonome e ad alta leva cognitiva.",
+      "La holding dei miei business diretti, fondata con Emiliano: AI Fabrika, l'e-commerce multi-paese e le collaborazioni. Una piattaforma operativa dove agenti AI e persone lavorano insieme. In costruzione, presto su sidelia.it.",
   },
   {
     icon: TrendingUp,
     title: "Imprenditore AI-First",
     description:
-      "Phoenix RE Capital, Herbalife ecommerce (6 paesi), Fastlien, FastLand, DocBit. Ogni business è un laboratorio dove l'AI viene testata in produzione, non in teoria.",
+      "AI Fabrika, Phoenix RE Capital, Herbalife ecommerce (6 paesi), Fastlien, FastLand, DocBit. Ogni business è un laboratorio dove l'AI viene testata in produzione, non in teoria.",
   },
   {
     icon: Mic2,

@@ -101,6 +101,18 @@ function renderVideoBlock(url: string): string {
   return `<p><a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a></p>`;
 }
 
+// Immagine dentro l'articolo (16/11/2026): solo https o percorsi del sito,
+// la didascalia di Notion fa da testo alternativo e da didascalia visibile.
+function renderImageBlock(url: string, caption: string): string {
+  const safe = url.trim();
+  if (!/^(https:\/\/|\/)[^\s"'<>]+$/.test(safe)) return "";
+  const alt = escapeHtml(caption).replace(/"/g, "&quot;");
+  const figcaption = caption
+    ? `<figcaption style="text-align:center;font-size:0.875rem;color:#6B7280;margin-top:0.5rem;">${escapeHtml(caption)}</figcaption>`
+    : "";
+  return `<figure style="margin:2rem 0;"><img src="${safe}" alt="${alt}" loading="lazy" style="display:block;max-width:100%;height:auto;margin:0 auto;border-radius:12px;" />${figcaption}</figure>`;
+}
+
 // Fetches page blocks and converts them to an HTML string
 async function getPageBlocks(pageId: string): Promise<string> {
   if (!NOTION_API_KEY) return "";
@@ -195,6 +207,14 @@ async function getPageBlocks(pageId: string): Promise<string> {
       case "embed": {
         const url: string = block.embed?.url ?? "";
         if (url) html.push(renderVideoBlock(url));
+        break;
+      }
+      case "image": {
+        const url: string =
+          block.image?.external?.url ?? block.image?.file?.url ?? "";
+        const caption = extractRichText(block.image?.caption ?? []);
+        const img = url ? renderImageBlock(url, caption) : "";
+        if (img) html.push(img);
         break;
       }
       case "bookmark": {

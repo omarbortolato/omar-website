@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 export const metadata: Metadata = {
   title: "Progetti — Omar Bortolato | AI in Produzione",
   description:
-    "7 progetti reali dove l'AI viene applicata ogni giorno: e-commerce, real estate, startup, software. Numeri concreti, non teoria.",
+    "8 progetti reali dove l'AI viene applicata ogni giorno: sicurezza del software, holding, e-commerce, real estate, software. Numeri concreti, non teoria.",
 };
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -44,6 +44,46 @@ const STATUS = {
 };
 
 const projects: Project[] = [
+  {
+    id: "ai-fabrika",
+    status: { label: "Active", classes: STATUS.active },
+    title: "AI Fabrika",
+    subtitle: "Il tuo software è sicuro e in regola? Il controllo del codice fatto con l'AI, in pochi minuti.",
+    description: [
+      "Con l'AI oggi chiunque si costruisce il software su misura: reparti, freelance, PMI, agenzie. Funziona, ma nessuno sa se è sicuro e in regola. AI Fabrika legge il codice in un ambiente chiuso e dice se è solido, sicuro e conforme a GDPR, NIS2, Cyber Resilience Act e AI Act, con cosa correggere prima che diventi un problema o una sanzione.",
+      "17 controlli automatici trovano i problemi, il programma conta i numeri, l'AI verifica ogni rilievo e scrive il piano di correzione. Il Report Lite è gratis; il Plus dà ogni difetto con file e riga, il PDF per la direzione e il piano di remediation, che può arrivare come pull request sul tuo repository Git.",
+    ],
+    metrics: [
+      { value: "17", label: "controlli automatici sul codice" },
+      { value: "Minuti", label: "per il Report Lite, gratis" },
+      { value: "4 norme", label: "GDPR, NIS2, CRA, AI Act" },
+      { value: "97,8%", label: "concordanza con un esperto" },
+    ],
+    tags: ["Claude", "Code Security", "Compliance", "SaaS"],
+    image: "/images/aifabrika-screenshot.png",
+    imageAlt: "AI Fabrika — Il tuo software è sicuro e in regola?",
+    imagePosition: "object-left",
+    href: "https://www.ai-fabrika.com/it/",
+  },
+  {
+    id: "sidelia",
+    status: { label: "Starting", classes: STATUS.founding },
+    title: "Sidelia",
+    subtitle: "La holding che tiene insieme i miei business: la stiamo costruendo adesso.",
+    description: [
+      "Sidelia è la holding che ho fondato con Emiliano: il contenitore dei progetti che seguiamo direttamente, da AI Fabrika all'e-commerce multi-paese, e delle collaborazioni con altre aziende. È anche il posto dove le cose si fanno davvero: fatturazione, clienti, ordini.",
+      "Il cuore è una piattaforma operativa costruita con l'AI: una squadra di agenti che lavora su marketing, siti, e-commerce, email, SEO e numeri, con le persone a decidere. Il sito sidelia.it è in arrivo.",
+    ],
+    metrics: [
+      { value: "Holding", label: "dei business diretti" },
+      { value: "Agenti", label: "al lavoro ogni giorno" },
+      { value: "AI-first", label: "piattaforma operativa" },
+      { value: "2026", label: "in costruzione" },
+    ],
+    tags: ["Claude Code", "Agenti AI", "Holding", "Piattaforma"],
+    image: null,
+    imageAlt: "Sidelia",
+  },
   {
     id: "aifriday",
     status: { label: "Active", classes: STATUS.active },
@@ -127,7 +167,7 @@ const projects: Project[] = [
   },
   {
     id: "fastlien",
-    status: { label: "In Development", classes: STATUS.dev },
+    status: { label: "Active", classes: STATUS.active },
     title: "Fastlien",
     subtitle: "Software per investimenti in tax lien e tax deed — analisi aste e scoring delle opportunità.",
     description: [
@@ -164,44 +204,6 @@ const projects: Project[] = [
     image: "/images/fastland-screenshot.png",
     imageAlt: "FastLand",
     href: "https://fastland.co",
-  },
-  {
-    id: "azoa",
-    status: { label: "Founding", classes: STATUS.founding },
-    title: "Azoa Seed",
-    subtitle: "AI-native startup factory — potenziare individui ad alta leva cognitiva per creare il futuro.",
-    description: [
-      "Azoa Seed è il progetto più ambizioso: una startup factory costruita nativamente sull'AI, co-fondata con Nicola Brisotto e Gianpaolo Greco.",
-      "La visione: in un mondo dove il valore non è più prodotto da grandi strutture ma da individui aumentati, Azoa Seed è la piattaforma che abilita questa transizione. Sistemi componibili, agenti AI specializzati, riduzione delle dipendenze strutturali. Un ecosistema di SPV dove ogni startup nasce AI-first. Non è una scommessa su un prodotto. È una scommessa su un nuovo tipo di individuo.",
-    ],
-    metrics: [
-      { value: "3", label: "co-founders" },
-      { value: "AI+", label: "amplification platform" },
-      { value: "SPV", label: "ecosistema di startup" },
-      { value: "AI-first", label: "ogni prodotto nasce così" },
-    ],
-    tags: ["Claude Code", "Cowork", "Full Stack AI", "DAO Governance"],
-    image: "/images/Azoa-Process.png",
-    imageAlt: "Azoa Seed — Dal'Idea alla Startup",
-  },
-  {
-    id: "wahooapp",
-    status: { label: "Active", classes: STATUS.active },
-    title: "Wahooapp",
-    subtitle: "Piattaforma di business messaging su WhatsApp — comunicazione professionale su scala.",
-    description: [
-      "Wahooapp è una piattaforma per la messaggistica business su WhatsApp, con pricing tiers e programma affiliati. Un tool che permette alle aziende di gestire la comunicazione con i clienti in modo professionale e scalabile.",
-    ],
-    metrics: [
-      { value: "SaaS", label: "piattaforma live" },
-      { value: "Tiers", label: "pricing attivi" },
-      { value: "Affiliati", label: "programma attivo" },
-      { value: "WA API", label: "integrazione nativa" },
-    ],
-    tags: ["WhatsApp Business API", "SaaS", "Automation"],
-    image: "/images/wahooapp-screenshot.png",
-    imageAlt: "Wahooapp — WhatsApp Business Platform",
-    href: "https://wahooapp.io",
   },
 ];
 

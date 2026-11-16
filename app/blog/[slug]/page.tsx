@@ -157,17 +157,24 @@ export default async function BlogPostPage(
             <div className="mt-14 rounded-2xl border border-primary-800/15 bg-primary-800/5 p-6 md:p-8">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-green-200 bg-green-50 px-2.5 py-0.5 text-xs font-semibold text-green-700">
                 <BookOpen size={10} />
-                Guida gratuita
+                {guidePromo.label ?? "Guida gratuita"}
               </span>
               <h2 className="mt-4 text-xl font-bold leading-snug text-gray-900 md:text-2xl">
                 {guidePromo.heading}
               </h2>
               <p className="mt-3 leading-relaxed text-gray-600">{guidePromo.body}</p>
               <Button asChild variant="default" size="lg" className="mt-6">
-                <Link href={`/guide/${guidePromo.slug}`}>
-                  {guidePromo.cta}
-                  <ArrowRight size={16} />
-                </Link>
+                {guidePromo.href ? (
+                  <a href={guidePromo.href} target="_blank" rel="noopener">
+                    {guidePromo.cta}
+                    <ArrowRight size={16} />
+                  </a>
+                ) : (
+                  <Link href={`/guide/${guidePromo.slug}`}>
+                    {guidePromo.cta}
+                    <ArrowRight size={16} />
+                  </Link>
+                )}
               </Button>
               <p className="mt-3 text-xs text-gray-400">{guidePromo.micro}</p>
             </div>
